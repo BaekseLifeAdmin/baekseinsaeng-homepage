@@ -1,0 +1,49 @@
+﻿<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>게시판 | 백세인생 방문간호</title>
+  <meta name="description" content="백세인생 방문간호의 활동과 소식을 확인하실 수 있는 게시판입니다.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css?v=20260826-r1">
+  <link rel="stylesheet" href="css/board.css?v=20260721-r5">
+  <link rel="stylesheet" href="css/consistency.css?v=20260826-r13">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' https:; connect-src 'self' https://script.google.com https://script.googleusercontent.com; object-src 'none'; base-uri 'self'; form-action 'self';">
+</head>
+<body data-page="board">
+  <div id="header-placeholder"></div>
+
+  <section class="page-header page-image-hero">
+    <div class="container">
+      <p class="section-tag">Board</p>
+      <div class="page-header-content">
+        <h1>게시판</h1>
+        <p class="page-header-desc">
+          <strong>백세인생 방문간호센터의 다양한 활동과 새로운 소식을 확인하실 수 있습니다.</strong>
+          <span>센터의 주요 활동과 방문간호 관련 소식, 안내사항을 게시판을 통해 빠르게 확인하실 수 있습니다.</span>
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <main class="board-main">
+    <section class="board-section">
+      <div class="container">
+        <div class="board-toolbar" aria-live="polite">
+          <p class="board-summary" id="boardSummary">게시글을 불러오는 중입니다.</p>
+        </div>
+        <div id="boardList" class="board-grid" role="list" data-reveal-group></div>
+        <nav id="boardPagination" class="board-pagination" aria-label="페이지 네비게이션"></nav>
+      </div>
+    </section>
+  </main>
+
+  <div id="footer-placeholder"></div>
+  <script src="js/board-data.js"></script>
+  <script src="js/board.js?v=20260722-r4"></script>
+  <script src="js/main.js?v=20260826-r15"></script>
+</body>
+</html>

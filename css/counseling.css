@@ -1,0 +1,789 @@
+/* ============================================================
+   counseling.css — 보호자상담 페이지 전용 스타일
+   ============================================================ */
+
+/* ── Page Header ──────────────────────────────────────────── */
+.page-header {
+  background: var(--navy-dark);
+  color: #fff;
+  padding: 80px 0 60px;
+  text-align: center;
+}
+.page-header .section-tag { color: var(--teal); margin-bottom: 12px; }
+.page-header h1 { font-size: 2.2rem; font-weight: 800; color: #fff; margin-bottom: 12px; }
+.page-header-desc { font-size: 1rem; color: rgba(255,255,255,.65); }
+
+/* ── Counseling Main ──────────────────────────────────────── */
+.counseling-main { padding: 72px 0; }
+.counseling-grid {
+  display: grid;
+  grid-template-columns: 1fr 400px;
+  gap: 48px;
+  align-items: start;
+}
+.counseling-info {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* ── Form Wrap ────────────────────────────────────────────── */
+.form-head { margin-bottom: 32px; }
+.form-head h2 {
+  font-size: 1.7rem;
+  font-weight: 800;
+  color: var(--navy-dark);
+  margin-bottom: 10px;
+}
+.form-desc {
+  font-size: 0.88rem;
+  color: var(--gray-500);
+  line-height: 1.75;
+}
+
+/* ── Form Styles ──────────────────────────────────────────── */
+.consult-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 36px;
+}
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.form-group label {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--navy-dark);
+}
+.required {
+  color: #E04444;
+  margin-left: 2px;
+}
+.form-group input[type="text"],
+.form-group input[type="tel"],
+.form-group textarea {
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  padding: 11px 14px;
+  font-size: 0.9rem;
+  font-family: inherit;
+  color: var(--navy-dark);
+  transition: border-color 0.25s ease, box-shadow 0.25s ease;
+  background: #fff;
+  outline: none;
+  width: 100%;
+}
+.form-group input:focus,
+.form-group textarea:focus {
+  border-color: var(--navy);
+  box-shadow: 0 0 0 3px rgba(27,58,92,.1);
+}
+.form-group input.error,
+.form-group textarea.error {
+  border-color: #E04444;
+}
+.form-group textarea {
+  resize: vertical;
+  min-height: 120px;
+  line-height: 1.7;
+}
+.form-group input::placeholder,
+.form-group textarea::placeholder { color: var(--gray-400); }
+.form-error {
+  font-size: 0.78rem;
+  color: #E04444;
+  min-height: 18px;
+  display: block;
+}
+
+/* ── Radio Group ──────────────────────────────────────────── */
+.radio-group {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.radio-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  color: var(--gray-700);
+  font-weight: 400;
+  padding: 10px 16px;
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  transition: border-color 0.25s ease, background 0.25s ease;
+  user-select: none;
+}
+.radio-label:hover { border-color: var(--navy); background: var(--blue-gray); }
+.radio-label input[type="radio"] { display: none; }
+.radio-mark {
+  width: 16px;
+  height: 16px;
+  border: 2px solid var(--border);
+  border-radius: 50%;
+  flex-shrink: 0;
+  position: relative;
+  transition: border-color 0.2s ease;
+}
+.radio-mark::after {
+  content: '';
+  width: 8px;
+  height: 8px;
+  background: var(--navy);
+  border-radius: 50%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  transition: transform 0.2s ease;
+}
+.radio-label input[type="radio"]:checked + .radio-mark {
+  border-color: var(--navy);
+}
+.radio-label input[type="radio"]:checked + .radio-mark::after {
+  transform: translate(-50%, -50%) scale(1);
+}
+.radio-label:has(input:checked) {
+  border-color: var(--navy);
+  background: var(--blue-gray);
+  font-weight: 600;
+  color: var(--navy);
+}
+
+/* ── Checkbox Group ───────────────────────────────────────── */
+.checkbox-group {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  font-size: 0.88rem;
+  color: var(--gray-700);
+  font-weight: 400;
+  padding: 10px 14px;
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  transition: border-color 0.25s ease, background 0.25s ease;
+  user-select: none;
+}
+.checkbox-label:hover { border-color: var(--teal); background: var(--teal-light); }
+.checkbox-label input[type="checkbox"] { display: none; }
+.check-mark {
+  width: 18px;
+  height: 18px;
+  border: 2px solid var(--border);
+  border-radius: 4px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+.check-mark::after {
+  content: '';
+  width: 10px;
+  height: 10px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'/%3E%3C/svg%3E");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+.checkbox-label input:checked + .check-mark {
+  background: var(--teal);
+  border-color: var(--teal);
+}
+.checkbox-label input:checked + .check-mark::after { opacity: 1; }
+.checkbox-label:has(input:checked) {
+  border-color: var(--teal);
+  background: var(--teal-light);
+  color: var(--teal-dark);
+  font-weight: 600;
+}
+
+/* ── Privacy ──────────────────────────────────────────────── */
+.privacy-agree {
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 20px;
+  text-align: center;
+}
+.privacy-agree .checkbox-label {
+  width: fit-content;
+  max-width: 100%;
+  justify-content: center;
+  text-align: center;
+}
+.privacy-agree .checkbox-label:hover {
+  border-color: var(--navy);
+  background: var(--blue-gray);
+}
+.privacy-agree .checkbox-label input:checked ~ .check-mark {
+  background: var(--navy);
+  border-color: var(--navy);
+}
+.privacy-agree .checkbox-label input:checked ~ .check-mark::after {
+  opacity: 1;
+}
+.privacy-agree .checkbox-label:has(input:checked) {
+  border-color: var(--navy);
+  background: var(--blue-gray);
+  color: var(--navy);
+  font-weight: 600;
+}
+.privacy-agree .checkbox-label:has(input:checked) .privacy-detail-btn {
+  color: var(--navy);
+}
+.privacy-agree .form-error {
+  width: 100%;
+  text-align: center;
+}
+.privacy-detail-btn {
+  background: none;
+  border: none;
+  color: var(--teal-dark);
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: underline;
+  padding: 0;
+  font-family: inherit;
+}
+.privacy-detail-btn:hover { color: var(--navy); }
+.privacy-detail {
+  background: var(--blue-gray);
+  border-radius: 8px;
+  padding: 16px 18px;
+  font-size: 0.82rem;
+}
+.privacy-detail h4 {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--navy-dark);
+  margin-bottom: 10px;
+}
+.privacy-detail ul {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-bottom: 10px;
+}
+.privacy-detail li {
+  color: var(--gray-600);
+  line-height: 1.7;
+}
+.privacy-detail p { color: var(--gray-500); margin: 0; }
+
+/* ── Submit Button ────────────────────────────────────────── */
+.btn-full { width: 100%; justify-content: center; gap: 8px; }
+#submitBtn { margin-top: -20px; }
+.btn-navy {
+  background: var(--color-primary);
+  color: var(--color-surface);
+  border: 2px solid var(--color-primary);
+}
+.btn-navy:hover {
+  background: var(--color-primary-dark);
+  border-color: var(--color-primary-dark);
+  color: var(--color-surface);
+}
+
+/* ── Status Messages ──────────────────────────────────────── */
+.form-status {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  border-radius: 10px;
+  padding: 18px 20px;
+}
+.form-status[hidden] { display: none; }
+.form-status-success {
+  background: #ECFDF5;
+  border: 1px solid rgba(22, 163, 74, .25);
+  color: var(--color-success);
+}
+.form-status-error {
+  background: #FEF2F2;
+  border: 1px solid rgba(220, 38, 38, .24);
+  color: var(--color-error);
+}
+.status-icon {
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 1px;
+  color: #fff;
+}
+.form-status-success .status-icon { background: var(--color-success); }
+.form-status-error .status-icon { background: var(--color-error); }
+.form-status strong { display: block; font-size: 0.95rem; font-weight: 700; margin-bottom: 4px; }
+.form-status p { font-size: 0.85rem; margin: 0; }
+
+/* ── Info Card ────────────────────────────────────────────── */
+.info-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  box-shadow: none;
+  padding: 28px 24px;
+  color: var(--color-text-sub);
+}
+.info-card h3 {
+  font-size: 1rem;
+  font-weight: 800;
+  color: var(--color-text-main);
+  margin-bottom: 16px;
+}
+.info-items {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  margin-bottom: 24px;
+}
+.info-item {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+.info-icon {
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  background: var(--color-primary-soft);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-primary-dark);
+}
+.info-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.info-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-text-muted);
+}
+.info-value {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--color-text-main);
+}
+.info-value.phone-link {
+  color: var(--color-primary-dark);
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 1rem;
+}
+.info-value.phone-link:hover { color: var(--color-text-main); }
+.info-sub {
+  font-size: 0.78rem;
+  color: var(--color-text-muted);
+}
+/* ── Consult Process ──────────────────────────────────────── */
+.consult-process {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  box-shadow: none;
+  padding: 28px 24px;
+}
+.consult-process h3 {
+  font-size: 1rem;
+  font-weight: 800;
+  color: var(--color-text-main);
+  margin-bottom: 16px;
+}
+.consult-steps {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  counter-reset: step;
+}
+.consult-steps li {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+.cs-num {
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  background: var(--color-primary);
+  color: var(--color-surface);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.78rem;
+  font-weight: 800;
+  margin-top: 2px;
+}
+.consult-steps strong {
+  display: block;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--color-text-main);
+  margin-bottom: 2px;
+}
+.consult-steps p { font-size: 0.9rem; color: var(--color-text-sub); margin: 0; }
+
+/* ── Consult Notice ───────────────────────────────────────── */
+.consult-notice {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  background: var(--color-primary-soft);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  padding: 14px 16px;
+  color: var(--color-text-sub);
+  box-shadow: none;
+}
+.consult-notice svg { flex-shrink: 0; margin-top: 2px; color: var(--color-primary-dark); }
+.consult-notice p { font-size: 0.78rem; line-height: 1.75; margin: 0; }
+
+/* ── Responsive ───────────────────────────────────────────── */
+@media (max-width: 1024px) {
+  .counseling-grid { grid-template-columns: 1fr; gap: 40px; }
+  .counseling-info { order: -1; }
+  .info-card { display: grid; grid-template-columns: 1fr auto; align-items: start; gap: 24px; }
+  .info-items { margin-bottom: 0; }
+}
+@media (max-width: 768px) {
+  .page-header { padding: 60px 0 40px; }
+  .page-header h1 { font-size: 1.7rem; }
+  .counseling-main { padding: 48px 0; }
+  .counseling-grid { min-width: 0; }
+  .counseling-form-wrap { order: -1; min-width: 0; }
+  .counseling-info { order: 0; min-width: 0; }
+  .consult-form { padding: 24px 20px; }
+  .form-row { grid-template-columns: 1fr; }
+  .checkbox-group { grid-template-columns: 1fr; }
+  .radio-group { flex-direction: column; }
+  .info-card { width: 100%; min-width: 0; grid-template-columns: 1fr; padding: 28px 24px; }
+  .consult-process, .consult-notice { width: 100%; min-width: 0; }
+}
+@media (max-width: 480px) {
+  .form-head h2 { font-size: 1.4rem; }
+  .consult-form { padding: 20px 16px; }
+}
+
+/* Medical White Redesign Overrides */
+.counseling-main { background: var(--color-bg); }
+.form-head h2,
+.form-group label {
+  color: var(--color-text-main);
+}
+.form-desc {
+  color: var(--color-text-sub);
+}
+.consult-form {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  box-shadow: none;
+}
+.form-group input[type="text"],
+.form-group input[type="tel"],
+.form-group textarea {
+  border: 1.5px solid var(--color-border);
+  border-radius: 8px;
+  color: var(--color-text-main);
+  background: var(--color-surface);
+  min-height: 52px;
+  font-size: 16px;
+}
+.form-group input:focus,
+.form-group textarea:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 4px var(--color-primary-soft);
+}
+.form-group input.error,
+.form-group textarea.error {
+  border-color: var(--color-error);
+}
+.required,
+.form-error { color: var(--color-error); }
+.radio-label,
+.checkbox-label {
+  border-color: var(--color-border);
+  border-radius: 8px;
+  color: var(--color-text-sub);
+  background: var(--color-surface);
+}
+.radio-mark,
+.check-mark { border-color: var(--color-border); }
+.radio-label:hover,
+.checkbox-label:hover,
+.radio-label:has(input:checked),
+.checkbox-label:has(input:checked),
+.privacy-agree .checkbox-label:hover,
+.privacy-agree .checkbox-label:has(input:checked) {
+  border-color: var(--color-primary);
+  background: var(--color-primary-soft);
+  color: var(--color-primary-dark);
+}
+.radio-mark::after,
+.checkbox-label input:checked + .check-mark,
+.privacy-agree .checkbox-label input:checked ~ .check-mark {
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+}
+.radio-label input[type="radio"]:checked + .radio-mark {
+  border-color: var(--color-primary);
+}
+.privacy-detail {
+  background: var(--color-surface-soft);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+}
+.privacy-detail-btn,
+.privacy-agree .checkbox-label:has(input:checked) .privacy-detail-btn {
+  color: var(--color-primary-dark);
+}
+.form-group input::placeholder,
+.form-group textarea::placeholder { color: var(--color-text-muted); }
+#submitBtn { margin-top: 0; }
+
+/* ── Left Information Column — Guide Price Table Pattern ───── */
+body[data-page="counseling"] .counseling-info {
+  gap: 56px;
+  padding-top: 40px;
+}
+
+body[data-page="counseling"] .counseling-info :is(.info-card, .consult-process) {
+  display: block;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+body[data-page="counseling"] .counseling-info :is(.info-card, .consult-process) h3 {
+  margin: 0;
+  padding: 0 0 18px;
+  border-bottom: 1px solid var(--color-border);
+  color: var(--color-text-main);
+}
+
+body[data-page="counseling"] .info-items,
+body[data-page="counseling"] .consult-steps {
+  gap: 0;
+  margin: 0;
+}
+
+body[data-page="counseling"] .info-item {
+  display: block;
+  padding: 18px 0;
+  border-bottom: 1px solid var(--color-border);
+}
+
+body[data-page="counseling"] .info-icon {
+  display: none;
+}
+
+body[data-page="counseling"] .info-text {
+  display: grid;
+  grid-template-columns: 112px minmax(0, 1fr);
+  gap: 4px 18px;
+  width: 100%;
+}
+
+body[data-page="counseling"] .info-label {
+  grid-column: 1;
+  grid-row: 1 / span 4;
+  align-self: start;
+  color: var(--color-primary-dark);
+  text-transform: none;
+  letter-spacing: -.01em;
+}
+
+body[data-page="counseling"] .info-value,
+body[data-page="counseling"] .info-sub {
+  grid-column: 2;
+  min-width: 0;
+}
+
+body[data-page="counseling"] .info-value.phone-link {
+  color: var(--color-text-main);
+}
+
+body[data-page="counseling"] .consult-steps li {
+  display: grid;
+  grid-template-columns: 64px minmax(0, 1fr);
+  gap: 18px;
+  align-items: start;
+  padding: 18px 0;
+  border-bottom: 1px solid var(--color-border);
+}
+
+body[data-page="counseling"] .consult-steps li:last-child {
+  border-bottom: 0;
+}
+
+body[data-page="counseling"] .cs-num {
+  width: auto;
+  height: auto;
+  margin: 0;
+  justify-content: flex-start;
+  border-radius: 0;
+  background: transparent;
+  color: var(--color-primary-dark);
+}
+
+body[data-page="counseling"] .consult-steps strong {
+  margin-bottom: 4px;
+  color: var(--color-text-main);
+}
+
+body[data-page="counseling"] .consult-notice {
+  padding: 18px 0 0;
+  border: 0;
+  border-top: 1px solid var(--color-border);
+  border-radius: 0;
+  background: transparent;
+  color: var(--color-text-muted);
+}
+
+body[data-page="counseling"] .consult-notice svg {
+  color: var(--color-text-muted);
+}
+
+body[data-page="counseling"] .counseling-main > .container > .consult-notice {
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  margin-top: 120px;
+  padding: 22px 0 24px;
+  white-space: nowrap;
+}
+
+body[data-page="counseling"] main.counseling-main {
+  padding-bottom: 0;
+}
+
+@media (max-width: 480px) {
+  body[data-page="counseling"] .counseling-info {
+    gap: 48px;
+    padding-top: 32px;
+  }
+
+  body[data-page="counseling"] .info-text {
+    grid-template-columns: 92px minmax(0, 1fr);
+    gap: 4px 12px;
+  }
+
+  body[data-page="counseling"] .consult-steps li {
+    grid-template-columns: 48px minmax(0, 1fr);
+    gap: 12px;
+  }
+
+  body[data-page="counseling"] .counseling-main > .container > .consult-notice {
+    align-items: flex-start;
+    justify-content: flex-start;
+    margin-top: 72px;
+    padding-bottom: 16px;
+    white-space: normal;
+  }
+}
+
+/* ── Counseling Form Inner Scale — card/layout unchanged ───── */
+body[data-page="counseling"] .consult-form .form-group > label,
+body[data-page="counseling"] .consult-form :is(.radio-label, .checkbox-label) {
+  font-size: 20px !important;
+  line-height: 1.45 !important;
+}
+
+body[data-page="counseling"] .consult-form .form-group input[type="text"],
+body[data-page="counseling"] .consult-form .form-group input[type="tel"],
+body[data-page="counseling"] .consult-form .form-group textarea {
+  min-height: 52px;
+  padding: 12px 15px;
+  font-size: 20px !important;
+  line-height: 1.45 !important;
+}
+
+body[data-page="counseling"] .consult-form :is(.radio-label, .checkbox-label) {
+  min-height: 46px;
+  padding: 9px 14px;
+}
+
+body[data-page="counseling"] .consult-form :is(.radio-label, .checkbox-label) span,
+body[data-page="counseling"] .consult-form .required {
+  font-size: 20px !important;
+  line-height: 1.45 !important;
+}
+
+body[data-page="counseling"] .consult-form .privacy-detail-btn {
+  font-size: 17px !important;
+  line-height: 1.45 !important;
+}
+
+body[data-page="counseling"] .consult-form .form-error {
+  min-height: 18px;
+  font-size: 16px !important;
+  line-height: 1.45 !important;
+}
+
+body[data-page="counseling"] .consult-form .privacy-detail h4 {
+  font-size: 20px !important;
+  line-height: 1.45 !important;
+}
+
+body[data-page="counseling"] .consult-form .privacy-detail :is(p, li, span, div, strong) {
+  font-size: 18px !important;
+  line-height: 1.6 !important;
+}
+
+body[data-page="counseling"] .consult-form #submitBtn {
+  min-height: 54px;
+  padding: 14px 26px;
+  font-size: 20px !important;
+  line-height: 1.3 !important;
+}
+
+body[data-page="counseling"] .consult-form #submitBtn svg {
+  width: 20px;
+  height: 20px;
+}
+
+body[data-page="counseling"] .consult-form .form-status strong {
+  font-size: 20px !important;
+  line-height: 1.45 !important;
+}
+
+body[data-page="counseling"] .consult-form .form-status p {
+  font-size: 18px !important;
+  line-height: 1.55 !important;
+}

@@ -1,0 +1,5038 @@
+/* ============================================================
+   Site-wide consistency layer
+   역할이 같은 요소는 모든 페이지에서 같은 크기와 간격을 사용한다.
+   ============================================================ */
+
+:root {
+  /* 전 페이지 3단 텍스트 크기 — 이 세 값만 사용한다 */
+  --text-title: 40px;    /* 제목 및 중요 내용 키워드 */
+  --text-subtitle: 30px; /* 부제목 및 상세 내용 제목 */
+  --text-body: 25px;     /* 모든 정보 내용 */
+
+  /* 기존 변수명은 3단 값을 그대로 가리키도록 통합(하위 호환) */
+  --type-display: var(--text-title);
+  --type-page-title: var(--text-title);
+  --type-section-title: var(--text-subtitle);
+  --type-card-title: var(--text-subtitle);
+  --type-body: var(--text-body);
+  --type-card-body: var(--text-body);
+  --type-eyebrow: var(--text-body);
+  --type-subnav: var(--text-body);
+  --type-small: var(--text-body);
+  --guide-title-size: var(--text-title);
+  --guide-section-title-size: var(--text-subtitle);
+  --guide-card-title-size: var(--text-subtitle);
+  --guide-body-size: var(--text-body);
+  --icon-lg: 40px;
+  --icon-md: 30px;
+  --icon-sm: 25px;
+  /* 좌우 여백(컨테이너 바깥 여백) — 모든 페이지·모든 레이어가 이 값 하나를 공유한다 */
+  --gutter: 64px;
+  /* 상하 여백(섹션 간 리듬) — 기존 대비 균일한 비율로 확대 */
+  --space-section: 128px;
+  --space-section-medium: 96px;
+  --space-section-small: 56px;
+  --space-section-mobile: 88px;
+  --content-reading: 760px;
+  --card-radius: 12px;
+  --card-padding: 28px;
+  --grid-gap: 24px;
+  /* 배경 대역(섹션 밴드) 경계의 공간감 — 애니메이션 없이 고정된 음영, 더 연하게.
+     경계 하나당 그림자는 한 번만: 아래로 향하는 그림자(현재 섹션의 아래쪽이 다음 섹션과
+     만나는 지점)와 위로 향하는 그림자(헤더 바로 아래, 위쪽 경계)를 서로 다른 요소에
+     나눠 적용해 같은 경계선에서 두 겹으로 겹치지 않게 한다. */
+  --edge-shadow-top: inset 0 30px 42px -34px rgba(0, 0, 0, .09);
+  --edge-shadow-bottom: inset 0 -30px 42px -34px rgba(0, 0, 0, .09);
+  --container-max: 1400px;
+  --container-wide-max: 1400px;
+}
+
+html { font-size: 16px; }
+body {
+  font-size: var(--type-body);
+  line-height: 1.75;
+  color: var(--color-text-sub);
+}
+
+/* ============================================================
+   배경 대역(섹션 밴드) 공간감 — 종이처럼 납작해 보이는 문제 해결.
+   각 경계마다 그림자는 한쪽에서만: 헤더 바로 아래 첫 섹션은 위쪽 경계에만
+   그림자를 주고("위로 향하는 그림자"), 그 아래로 이어지는 섹션들은 각자
+   아래쪽 경계에만 그림자를 준다("아래로 향하는 그림자"). 애니메이션 없음.
+   ============================================================ */
+
+/* 헤더 바로 아래, 페이지에서 가장 먼저 나오는 배경 — 위쪽 경계만 */
+.home-hero,
+.page-header {
+  position: relative;
+  box-shadow: var(--edge-shadow-top);
+}
+
+/* 그 아래로 이어지는 배경 대역들 — 아래쪽 경계만 */
+.home-proof,
+.home-choice,
+.home-services,
+.about-panel,
+.svc-overview,
+.svc-detail,
+.case-main,
+.board-intro,
+.board-section,
+.counseling-main,
+.guide-panel,
+.cta-banner,
+.counseling-cta-banner {
+  position: relative;
+  box-shadow: var(--edge-shadow-bottom);
+}
+
+.container {
+  width: min(calc(100% - var(--gutter)), var(--container-max));
+  max-width: none;
+  margin-inline: auto;
+  padding-inline: 0;
+}
+
+/* Wide: hero, alternating image/text 등 화면을 넓게 쓰는 섹션 전용 */
+.container-wide {
+  width: min(calc(100% - var(--gutter)), var(--container-wide-max));
+  max-width: none;
+  margin-inline: auto;
+  padding-inline: 0;
+}
+
+/* 공통 헤더 — 확대된 내비게이션 텍스트를 담기 위해 높이 확장 */
+.site-header .header-inner { height: 92px; }
+.main-nav a { font-size: var(--text-body); line-height: 1.3; padding: 8px 10px; }
+
+/* 모든 서브페이지의 시작 영역 */
+.page-header {
+  min-height: 360px;
+  padding: 168px 0 68px;
+  display: flex;
+  align-items: center;
+  text-align: center;
+  background: #fff;
+  border-bottom: 1px solid var(--color-border);
+}
+.page-header .container { width: min(calc(100% - var(--gutter)), var(--container-max)); }
+.page-header .section-tag { margin-bottom: 16px; }
+.page-header h1 {
+  margin: 0 0 18px;
+  font-size: var(--type-page-title);
+  line-height: 1.12;
+  letter-spacing: -.04em;
+  font-weight: 800;
+  color: var(--color-text-main);
+}
+.page-header .page-header-desc,
+.page-header > .container > p:last-child {
+  margin: 0 auto;
+  max-width: var(--content-reading);
+  font-size: var(--type-body);
+  line-height: 1.75;
+  color: #000;
+}
+
+@media (max-width: 768px) {
+  .page-header .page-header-desc,
+  .page-header > .container > p:last-child {
+    font-size: 1.0625rem;
+  }
+}
+
+/* 공통 텍스트 계층 */
+.section-tag {
+  display: inline-block;
+  margin-bottom: 14px;
+  font-size: var(--type-eyebrow);
+  line-height: 1.5;
+  letter-spacing: .14em;
+  font-weight: 800;
+  color: var(--color-blue);
+}
+
+:where(
+  .section-header,
+  .section-head,
+  .guide-section-head,
+  .case-intro,
+  .form-head,
+  .panel-head,
+  .location-head,
+  .system-head,
+  .services-head
+) h2,
+.svc-detail h2 {
+  margin: 0 0 18px;
+  font-size: var(--type-section-title);
+  line-height: 1.35;
+  letter-spacing: -.035em;
+  font-weight: 700;
+  color: var(--color-text-main);
+}
+
+/* 페이지별 기존 선택자의 우선순위를 넘겨 동일한 H2 체계를 보장 */
+.greeting-text h2,
+.compare-wrap h2,
+.service-icons-wrap h2,
+.system-header h2,
+.location-info h2,
+.svc-overview .section-head h2,
+.svc-detail-head h2,
+.chronic-text h2,
+.rehab-head h2,
+.vital-head h2,
+.tube-care-text h2,
+.medication-head h2,
+.counseling-head h2,
+.guide-section-head h2,
+.case-intro h2,
+.form-head h2 {
+  margin: 0 0 18px;
+  font-size: var(--type-section-title);
+  line-height: 1.35;
+  letter-spacing: -.035em;
+  font-weight: 700;
+  color: var(--color-text-main);
+}
+
+.greeting-body p,
+.compare-wrap > .section-sub,
+.system-header > .section-sub,
+.svc-overview .section-head > p,
+.svc-detail-head > p,
+.chronic-text > p,
+.rehab-head > p,
+.vital-head > p,
+.tube-care-text > p,
+.medication-head > p,
+.counseling-head > p,
+.guide-section-head > .section-sub,
+.case-intro > .section-sub,
+.form-head > .form-desc {
+  font-size: var(--type-body);
+  line-height: 1.7;
+  color: var(--color-text-muted);
+}
+
+:where(
+  .section-header,
+  .section-head,
+  .guide-section-head,
+  .case-intro,
+  .form-head,
+  .panel-head,
+  .location-head,
+  .system-head,
+  .services-head
+) > p,
+.section-sub {
+  max-width: var(--content-reading);
+  font-size: var(--type-body);
+  line-height: 1.7;
+  color: var(--color-text-muted);
+}
+
+main h3,
+.service-feat h3,
+.case-preview-body h3,
+.svc-card h3,
+.case-body h3,
+.process-card h3,
+.target-card h3,
+.doc-card h3 {
+  font-size: var(--type-card-title);
+  line-height: 1.4;
+  letter-spacing: -.02em;
+  font-weight: 700;
+  color: var(--color-text-main);
+}
+
+main p,
+.service-feat p,
+.case-preview-body p,
+.svc-card p,
+.case-section p,
+.process-card p,
+.target-card p,
+.doc-card p {
+  font-size: var(--type-body);
+  line-height: 1.7;
+}
+
+.form-error,
+.info-label,
+.info-sub,
+.case-meta,
+.tag {
+  font-size: var(--type-small);
+  line-height: 1.6;
+}
+
+/* 섹션 흐름 (이용안내는 .guide-block이 자체 리듬을 담당하므로 제외) */
+main > section:not(.hero),
+.about-panel,
+.case-main,
+.counseling-main {
+  padding-top: var(--space-section);
+  padding-bottom: var(--space-section);
+}
+
+.section-header,
+.section-head,
+.guide-section-head,
+.case-intro,
+.form-head {
+  margin-bottom: 52px;
+}
+
+/* 반복되는 카드 문법 */
+:where(
+  .service-feat,
+  .case-preview-card,
+  .svc-card,
+  .case-card,
+  .process-card,
+  .target-card,
+  .doc-card,
+  .benefit-item,
+  .system-card,
+  .consult-form,
+  .info-card,
+  .consult-process,
+  .consult-notice
+) {
+  border: 1px solid var(--color-border);
+  border-radius: var(--card-radius);
+  background: #fff;
+  box-shadow: none;
+}
+
+:where(
+  .service-feat,
+  .case-preview-card,
+  .svc-card,
+  .case-card,
+  .process-card,
+  .target-card,
+  .doc-card,
+  .benefit-item,
+  .system-card
+):hover {
+  transform: translateY(-3px);
+  border-color: var(--color-sky);
+  box-shadow: 0 12px 28px rgba(3, 4, 94, .08);
+}
+
+/* 탭은 페이지가 달라도 동일한 높이와 상태 표현 사용 */
+:where(.about-tab, .guide-tab) {
+  min-height: 56px;
+  padding: 0 24px;
+  font-size: var(--type-subnav);
+  line-height: 1.4;
+  font-weight: 700;
+}
+
+/* CTA */
+.cta-banner,
+.counseling-cta-banner {
+  padding-block: var(--space-section-medium);
+  background: var(--color-navy);
+}
+.cta-banner h2,
+.counseling-cta-text h2 {
+  font-size: var(--type-section-title);
+  line-height: 1.35;
+  letter-spacing: -.03em;
+}
+.btn,
+.btn-call-now,
+.mobile-nav-consult {
+  min-height: 54px;
+  padding: 14px 26px;
+  border-radius: 6px;
+  font-size: 1rem;
+  line-height: 1.3;
+  font-weight: 700;
+}
+
+/* 폼 */
+.form-group label,
+.radio-label,
+.checkbox-label { font-size: 1rem; line-height: 1.5; }
+.form-group input[type="text"],
+.form-group input[type="tel"],
+.form-group textarea {
+  min-height: 54px;
+  padding: 14px 16px;
+  border-radius: 6px;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+.consult-form { padding: 36px; }
+
+@media (max-width: 1024px) {
+  :root { --space-section: 106px; --gutter: 48px; }
+  .container,
+  .container-wide { width: min(calc(100% - var(--gutter)), var(--container-max)); }
+}
+
+@media (max-width: 768px) {
+  :root {
+    --text-title: clamp(28px, 8vw, 34px);
+    --text-subtitle: clamp(20px, 6vw, 24px);
+    --text-body: 16px;
+    --type-page-title: clamp(32px, 9vw, 36px);
+    --type-section-title: clamp(26px, 7vw, 30px);
+    --type-card-title: 22px;
+    --type-body: 1rem;
+    --gutter: 32px;
+    --icon-lg: 30px;
+    --icon-md: 24px;
+    --icon-sm: 20px;
+  }
+  .container,
+  .container-wide { width: min(calc(100% - var(--gutter)), var(--container-max)); }
+  .page-header {
+    min-height: 248px;
+    padding: 102px 0 42px;
+  }
+  .page-header .container { width: min(calc(100% - var(--gutter)), var(--container-max)); }
+  main > section:not(.hero),
+  .about-panel,
+  .case-main,
+  .counseling-main {
+    padding-top: var(--space-section-mobile);
+    padding-bottom: var(--space-section-mobile);
+  }
+  .section-header,
+  .section-head,
+  .guide-section-head,
+  .case-intro,
+  .form-head { margin-bottom: 36px; }
+  :where(.about-tab, .guide-tab) { min-height: 52px; padding: 12px 14px; font-size: .9375rem; }
+  .consult-form { padding: 24px 20px; }
+  .cta-banner, .counseling-cta-banner { padding-block: var(--space-section-small); }
+}
+
+@media (max-width: 430px) {
+  .btn, .btn-call-now, .mobile-nav-consult { width: 100%; }
+  .section-tag { font-size: .75rem; }
+}
+
+/* ============================================================
+   Service page alignment
+   센터소개 페이지의 읽기 밀도와 좌측 정렬 문법을 그대로 사용한다.
+   ============================================================ */
+body[data-page="service"] {
+  --service-title: var(--type-section-title);
+  --service-body: var(--type-body);
+  --service-card-title: var(--type-card-title);
+  --service-card-body: 16px;
+}
+
+body[data-page="service"] .svc-overview,
+body[data-page="service"] .svc-detail {
+  padding-block: var(--space-section);
+}
+
+body[data-page="service"] .svc-overview .section-head,
+body[data-page="service"] .svc-detail-head,
+body[data-page="service"] .counseling-head,
+body[data-page="service"] .chronic-text,
+body[data-page="service"] .rehab-head,
+body[data-page="service"] .vital-head,
+body[data-page="service"] .tube-care-text,
+body[data-page="service"] .medication-head {
+  width: 100%;
+  margin: 0 0 48px;
+  text-align: left;
+}
+
+body[data-page="service"] :is(
+  .svc-overview .section-head,
+  .svc-detail-head,
+  .counseling-head,
+  .chronic-text,
+  .rehab-head,
+  .vital-head,
+  .tube-care-text,
+  .medication-head
+) h2 {
+  margin-bottom: 14px;
+  font-size: var(--service-title);
+  line-height: 1.35;
+  font-weight: 700;
+  letter-spacing: -.025em;
+}
+
+body[data-page="service"] :is(
+  .svc-overview .section-head,
+  .svc-detail-head,
+  .counseling-head,
+  .chronic-text,
+  .rehab-head,
+  .vital-head,
+  .tube-care-text,
+  .medication-head
+) > p:not(.section-tag) {
+  max-width: 720px;
+  margin: 0;
+  font-size: var(--service-body);
+  line-height: 1.85;
+  color: var(--color-text-sub);
+}
+
+body[data-page="service"] .svc-overview .section-head > .section-tag {
+  font-size: var(--type-eyebrow);
+  line-height: 1.5;
+}
+
+body[data-page="service"] .svc-overview .section-sub {
+  margin-inline: 0;
+}
+
+body[data-page="service"] .svc-cards-grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--grid-gap);
+  align-items: stretch;
+}
+
+body[data-page="service"] .svc-card {
+  min-height: 320px;
+  padding: var(--card-padding);
+  gap: 14px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--card-radius);
+  background: #fff;
+}
+
+body[data-page="service"] .svc-card-icon {
+  width: 64px;
+  height: 64px;
+  border-radius: 14px;
+  margin-bottom: 2px;
+}
+
+body[data-page="service"] .svc-card-icon svg {
+  width: var(--icon-lg);
+  height: var(--icon-lg);
+}
+
+body[data-page="service"] .svc-card-link { margin-top: auto; }
+
+body[data-page="service"] .svc-card h3,
+body[data-page="service"] :is(
+  .chronic-step,
+  .vital-step,
+  .tube-card,
+  .medication-panel,
+  .referral-step,
+  .counseling-card,
+  .stage-item
+) h3,
+body[data-page="service"] .stage-item h4,
+body[data-page="service"] :is(.wound-stages, .rehab-checklist) h3 {
+  font-size: var(--type-card-title);
+  line-height: 1.4;
+  font-weight: 700;
+}
+
+body[data-page="service"] .svc-card p,
+body[data-page="service"] :is(
+  .chronic-step,
+  .vital-step,
+  .tube-card,
+  .medication-panel,
+  .referral-step,
+  .counseling-card,
+  .stage-item
+) p,
+body[data-page="service"] :is(.checklist li, .tube-care-list li, .medication-panel li) {
+  font-size: var(--service-card-body);
+  line-height: 1.75;
+}
+
+body[data-page="service"] .chronic-grid,
+body[data-page="service"] .rehab-wrap,
+body[data-page="service"] .vital-wrap {
+  width: 100%;
+  max-width: none;
+  text-align: left;
+}
+
+body[data-page="service"] .wound-stages {
+  width: 100%;
+  margin-inline: auto;
+}
+
+body[data-page="service"] .wound-stages > h3,
+body[data-page="service"] .wound-stages-sub {
+  width: 100%;
+  margin-left: 0;
+  margin-right: 0;
+  text-align: left;
+}
+
+body[data-page="service"] :is(
+  .chronic-step,
+  .stage-item,
+  .vital-step,
+  .tube-card,
+  .medication-panel,
+  .med-step,
+  .referral-step,
+  .counseling-card,
+  .counseling-highlight
+) {
+  border: 0;
+  border-radius: 12px;
+  background: var(--color-surface-soft);
+  box-shadow: none;
+}
+
+@media (max-width: 768px) {
+  body[data-page="service"] .svc-overview,
+  body[data-page="service"] .svc-detail { padding-block: var(--space-section-mobile); }
+
+  body[data-page="service"] .svc-overview .section-head,
+  body[data-page="service"] .svc-detail-head,
+  body[data-page="service"] .counseling-head,
+  body[data-page="service"] .chronic-text,
+  body[data-page="service"] .rehab-head,
+  body[data-page="service"] .vital-head,
+  body[data-page="service"] .tube-care-text,
+  body[data-page="service"] .medication-head { margin-bottom: 32px; }
+
+  body[data-page="service"] .svc-cards-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+  body[data-page="service"] .svc-card { min-height: 0; }
+}
+
+/* ============================================================
+   About-page visual grammar applied site-wide
+   - centered page masthead
+   - left-aligned content hierarchy
+   - generous reading width
+   - compact card typography
+   ============================================================ */
+
+/* 콘텐츠 제목은 센터소개 인사말과 같은 위계 */
+body:not([data-page="about"]) :is(
+  .section-header,
+  .section-head,
+  .guide-section-head,
+  .case-intro,
+  .form-head,
+  .svc-detail-head,
+  .counseling-head,
+  .chronic-text,
+  .rehab-head,
+  .vital-head,
+  .tube-care-text,
+  .medication-head
+) {
+  width: 100%;
+  max-width: none;
+  margin: 0 0 48px;
+  text-align: left;
+}
+
+body:not([data-page="about"]) :is(
+  .section-header,
+  .section-head,
+  .guide-section-head,
+  .case-intro,
+  .form-head,
+  .svc-detail-head,
+  .counseling-head,
+  .chronic-text,
+  .rehab-head,
+  .vital-head,
+  .tube-care-text,
+  .medication-head,
+  .board-intro
+) h2 {
+  max-width: none;
+  margin: 0 0 20px;
+  font-size: var(--type-section-title);
+  line-height: 1.2;
+  letter-spacing: -.035em;
+  font-weight: 800;
+}
+
+body:not([data-page="about"]) :is(
+  .section-header,
+  .section-head,
+  .guide-section-head,
+  .case-intro,
+  .form-head,
+  .svc-detail-head,
+  .counseling-head,
+  .chronic-text,
+  .rehab-head,
+  .vital-head,
+  .tube-care-text,
+  .medication-head
+) > :is(p, .section-sub, .form-desc) {
+  max-width: 800px;
+  margin: 0;
+  font-size: 1.125rem;
+  line-height: 1.85;
+  color: var(--color-text-muted);
+}
+
+/* 메인 페이지도 서브페이지와 같은 콘텐츠 시작선 사용 */
+body[data-page="index"] .section-header { text-align: left; }
+body[data-page="index"] .section-header br { display: none; }
+body[data-page="index"] .section-header p { margin-left: 0; margin-right: 0; }
+
+/* 서비스: 센터소개와 같은 제목/본문 크기로 복원 */
+body[data-page="service"] {
+  --service-title: var(--type-section-title);
+  --service-body: var(--type-body);
+  --service-card-title: var(--type-card-title);
+  --service-card-body: 16px;
+}
+body[data-page="service"] .svc-overview .section-head,
+body[data-page="service"] .svc-detail-head,
+body[data-page="service"] .counseling-head,
+body[data-page="service"] .chronic-text,
+body[data-page="service"] .rehab-head,
+body[data-page="service"] .vital-head,
+body[data-page="service"] .tube-care-text,
+body[data-page="service"] .medication-head {
+  width: 100%;
+  max-width: none;
+}
+body[data-page="service"] :is(.chronic-grid, .rehab-wrap, .vital-wrap, .wound-stages) {
+  width: 100%;
+  max-width: none;
+}
+
+/* 카드 내부는 센터소개 서비스 카드와 같은 낮은 밀도 */
+body :is(
+  .service-feat,
+  .case-preview-card,
+  .svc-card,
+  .process-step,
+  .target-card,
+  .grade-card,
+  .doc-card,
+  .case-card,
+  .chronic-step,
+  .stage-item,
+  .vital-step,
+  .tube-card,
+  .medication-panel,
+  .med-step,
+  .referral-step,
+  .counseling-card,
+  .info-card,
+  .consult-process
+) :is(h3, h4) {
+  font-size: var(--type-card-title);
+  line-height: 1.45;
+  letter-spacing: -.015em;
+}
+
+body :is(
+  .service-feat,
+  .case-preview-card,
+  .svc-card,
+  .process-step,
+  .target-card,
+  .grade-card,
+  .doc-card,
+  .case-card,
+  .chronic-step,
+  .stage-item,
+  .vital-step,
+  .tube-card,
+  .medication-panel,
+  .med-step,
+  .referral-step,
+  .counseling-card,
+  .info-card,
+  .consult-process
+) p {
+  font-size: var(--type-body);
+  line-height: 1.75;
+}
+
+/* 이용안내: 5열 압축 대신 센터소개 카드와 같은 3열 흐름 */
+body[data-page="guide"] .guide-panel .process-steps {
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 24px;
+}
+body[data-page="guide"] .guide-panel .process-step {
+  min-height: 230px;
+  align-items: flex-start;
+  text-align: left;
+  padding: 28px 24px;
+  border-radius: 8px;
+}
+body[data-page="guide"] .guide-panel#tab-process .process-arrow { display: none !important; }
+body[data-page="guide"] .guide-panel .process-circle { margin-bottom: 4px; }
+
+/* 상담: 왼쪽 안내(40%) / 오른쪽 기존 상담 폼(60%) — 순서만 CSS order로 재배치, 폼 DOM/기능은 불변
+   데스크톱 전용: 768px 이하에서는 counseling.css가 폼을 먼저 보여주도록 order를 되돌림
+   (DESIGN_SPEC.md: "모바일: 폼 상단 + 카드 하단 1열 전환") — 여기서 무조건 적용하면 그 반응형이 무력화됨 */
+@media (min-width: 769px) {
+  body[data-page="counseling"] .counseling-grid {
+    grid-template-columns: minmax(0, 4fr) minmax(0, 8fr);
+    gap: 32px;
+    align-items: start;
+  }
+  body[data-page="counseling"] .counseling-form-wrap { order: 2; }
+  body[data-page="counseling"] .counseling-info { order: 1; }
+}
+body[data-page="counseling"] .consult-form,
+body[data-page="counseling"] .info-card,
+body[data-page="counseling"] .consult-process,
+body[data-page="counseling"] .consult-notice { border-radius: 8px; }
+
+@media (max-width: 1024px) {
+  body[data-page="guide"] .guide-panel .process-steps { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  body[data-page="counseling"] .counseling-grid { grid-template-columns: 1fr; gap: 40px; }
+}
+
+@media (max-width: 768px) {
+  body:not([data-page="about"]) :is(
+    .section-header,
+    .section-head,
+    .guide-section-head,
+    .case-intro,
+    .form-head,
+    .svc-detail-head,
+    .counseling-head,
+    .chronic-text,
+    .rehab-head,
+    .vital-head,
+    .tube-care-text,
+    .medication-head
+  ) { margin-bottom: 34px; }
+
+  body:not([data-page="about"]) :is(
+    .section-header,
+    .section-head,
+    .guide-section-head,
+    .case-intro,
+    .form-head,
+    .svc-detail-head,
+    .counseling-head,
+    .chronic-text,
+    .rehab-head,
+    .vital-head,
+    .tube-care-text,
+    .medication-head
+  ) h2 { font-size: clamp(1.875rem, 8vw, 2.125rem); }
+
+  body[data-page="guide"] .guide-panel .process-steps { grid-template-columns: 1fr; }
+  body[data-page="case"] .case-card { grid-template-columns: 1fr; }
+  body[data-page="case"] .case-body { padding: 24px 20px; }
+}
+
+/* ============================================================
+   Guide tabs: process / target / FAQ
+   비용표·준비서류 탭과 같은 아이콘 + 정보 카드 문법
+   ============================================================ */
+
+body[data-page="guide"] .faq-q-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: none;
+}
+
+body[data-page="guide"] .guide-panel .process-steps {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 24px;
+}
+
+body[data-page="guide"] .guide-panel .process-step {
+  min-height: 250px;
+  display: grid;
+  grid-template-columns: 48px minmax(0, 1fr);
+  grid-template-rows: auto 1fr;
+  column-gap: 18px;
+  row-gap: 0;
+  align-items: start;
+  padding: 28px 24px;
+  text-align: left;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  background: #fff;
+  box-shadow: none;
+}
+
+body[data-page="guide"] .guide-panel .process-circle {
+  grid-column: 1;
+  grid-row: 1;
+  margin: 0;
+}
+
+body[data-page="guide"] .guide-panel .process-content {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  padding: 0;
+  text-align: left;
+}
+
+body[data-page="guide"] .process-kicker {
+  display: block;
+  margin-bottom: 6px;
+  font-size: .75rem;
+  line-height: 1.4;
+  letter-spacing: .1em;
+  font-weight: 800;
+  color: var(--color-blue);
+}
+
+body[data-page="guide"] .guide-panel .process-content h3 {
+  margin: 0 0 12px;
+  font-size: 1.0625rem;
+}
+
+body[data-page="guide"] .guide-panel .process-content p {
+  margin: 0;
+  font-size: .9375rem;
+  line-height: 1.75;
+  color: var(--color-text-sub);
+}
+
+body[data-page="guide"] .target-list {
+  max-width: none;
+  margin: 0 0 32px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+}
+
+body[data-page="guide"] .target-list li {
+  min-height: 144px;
+  display: grid;
+  grid-template-columns: 48px minmax(0, 1fr);
+  gap: 18px;
+  align-items: start;
+  padding: 24px;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  background: #fff;
+  box-shadow: none;
+}
+
+body[data-page="guide"] .target-list li > div:last-child {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+body[data-page="guide"] .target-list strong {
+  font-size: 1rem;
+  line-height: 1.5;
+  color: var(--color-text-main);
+}
+
+body[data-page="guide"] .target-list span {
+  font-size: 1rem;
+  line-height: 1.7;
+  color: var(--color-text-sub);
+}
+
+body[data-page="guide"] :is(.target-note, .docs-help, .cost-note) {
+  max-width: none;
+  margin-top: 0;
+  padding: 18px 20px;
+  border: 1px solid var(--color-sky);
+  border-radius: 8px;
+  background: var(--color-primary-soft);
+}
+
+body[data-page="guide"] .faq-list {
+  max-width: none;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+  overflow: visible;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+body[data-page="guide"] .faq-item {
+  align-self: start;
+  overflow: hidden;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  background: #fff;
+}
+
+body[data-page="guide"] .faq-question {
+  min-height: 104px;
+  padding: 20px 22px;
+  gap: 18px;
+  font-size: 1rem;
+  line-height: 1.5;
+  text-align: left;
+}
+
+body[data-page="guide"] .faq-question-main {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+body[data-page="guide"] .faq-question-text {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+body[data-page="guide"] .faq-question-text small {
+  font-size: .75rem;
+  line-height: 1.3;
+  letter-spacing: .1em;
+  font-weight: 800;
+  color: var(--color-blue);
+}
+
+body[data-page="guide"] .faq-answer {
+  padding: 20px 22px 22px 86px;
+  border-top: 1px solid var(--color-border);
+  background: var(--color-section-light);
+}
+
+body[data-page="guide"] .faq-answer p {
+  margin: 0;
+  font-size: .9375rem;
+  line-height: 1.8;
+}
+
+@media (max-width: 1024px) {
+  body[data-page="guide"] .guide-panel .process-steps { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 768px) {
+  body[data-page="guide"] .guide-panel .process-steps,
+  body[data-page="guide"] .target-list,
+  body[data-page="guide"] .faq-list { grid-template-columns: 1fr; }
+
+  body[data-page="guide"] .guide-panel .process-step,
+  body[data-page="guide"] .target-list li { min-height: 0; padding: 22px 20px; }
+
+  body[data-page="guide"] .faq-answer { padding: 18px 20px; }
+}
+
+/* ============================================================
+   Home redesign: video-ready visual + focused Korean content flow
+   ============================================================ */
+body[data-page="index"] .home-main {
+  padding-top: 92px;
+}
+
+body[data-page="index"] .home-hero-stage {
+  position: relative;
+  min-height: calc(100vh - 92px);
+  min-height: calc(100svh - 92px);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  isolation: isolate;
+  background: #f3f3f1;
+}
+
+body[data-page="index"] .home-hero-background {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  overflow: hidden;
+  background: #f3f3f1;
+}
+
+body[data-page="index"] .home-hero-background::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(90deg, rgba(24, 24, 24, .7) 0%, rgba(40, 40, 40, .44) 22%, rgba(255, 255, 255, .06) 48%, rgba(255, 255, 255, .14) 100%),
+    linear-gradient(0deg, rgba(20, 20, 20, .2) 0%, rgba(20, 20, 20, 0) 22%),
+    linear-gradient(180deg, rgba(255, 255, 255, .045), rgba(255, 255, 255, .045));
+}
+
+body[data-page="index"] .home-hero-background video {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  object-position: center;
+  /* 화면을 빈틈없이 채우는 데 필요한 최소 크기만 유지합니다. */
+  transform: scale(1);
+}
+
+body[data-page="index"] .home-hero,
+body[data-page="index"] .home-proof {
+  position: relative;
+  padding: 0;
+  background: transparent;
+}
+
+body[data-page="index"] .home-hero {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+}
+
+body[data-page="index"] .home-hero-intro {
+  width: min(100%, 510px);
+  min-height: 0;
+  display: flex;
+  align-items: center;
+  padding: 48px 0;
+  background: transparent;
+}
+
+body[data-page="index"] .home-hero-inner {
+  width: calc(100% - 64px);
+  min-height: 0;
+  display: flex;
+  align-items: center;
+}
+
+body[data-page="index"] .home-hero-copy {
+  width: 100%;
+  max-width: 500px;
+  text-shadow: 0 2px 18px rgba(0, 0, 0, .2);
+}
+
+body[data-page="index"] .home-hero-intro h1 {
+  max-width: none;
+  margin: 14px 0 0;
+  font-size: var(--type-display);
+  line-height: 1.12;
+  letter-spacing: -.045em;
+  color: #fff;
+}
+
+body[data-page="index"] .home-hero-message > p {
+  max-width: none;
+  margin: 26px 0 0;
+  font-size: 1.0625rem;
+  line-height: 1.55;
+  color: rgba(255, 255, 255, .9);
+}
+
+body[data-page="index"] .home-hero-messages {
+  display: grid;
+  width: 50%;
+  zoom: 1.4;
+}
+
+body[data-page="index"] .home-hero-message {
+  position: relative;
+  grid-area: 1 / 1;
+  width: 100%;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+body[data-page="index"] .home-hero-message.is-active,
+body[data-page="index"] .home-hero-message.is-entering,
+body[data-page="index"] .home-hero-message.is-leaving {
+  visibility: visible;
+}
+
+body[data-page="index"] .home-hero-message h1 {
+  opacity: 0;
+  transform: translateX(24px);
+  transition: opacity .9s cubic-bezier(.22, 1, .36, 1), transform .9s cubic-bezier(.22, 1, .36, 1);
+}
+
+body[data-page="index"] .home-hero-message > p {
+  opacity: 0;
+  transform: translateX(-24px);
+  transition: opacity .9s cubic-bezier(.22, 1, .36, 1), transform .9s cubic-bezier(.22, 1, .36, 1);
+}
+
+body[data-page="index"] .home-hero-message.is-active h1,
+body[data-page="index"] .home-hero-message.is-active > p {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+body[data-page="index"] .home-hero-message.is-active > p {
+  transition-delay: .08s;
+}
+
+body[data-page="index"] .home-hero-message.is-leaving h1 {
+  opacity: 0;
+  transform: translateX(24px);
+  transition-duration: .9s;
+  transition-timing-function: cubic-bezier(.64, 0, .78, 0);
+  transition-delay: 0s;
+}
+
+body[data-page="index"] .home-hero-message.is-leaving > p {
+  opacity: 0;
+  transform: translateX(-24px);
+  transition-duration: .9s;
+  transition-timing-function: cubic-bezier(.64, 0, .78, 0);
+  transition-delay: 0s;
+}
+
+body[data-page="index"] .home-hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 28px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body[data-page="index"] .home-hero-message h1,
+  body[data-page="index"] .home-hero-message > p {
+    transform: none !important;
+    transition-duration: .01ms !important;
+    transition-delay: 0s !important;
+  }
+}
+
+/* 메인 페이지 핵심 섹션 키워드의 크기와 위계를 통일 */
+body[data-page="index"] .home-hero-intro .section-tag,
+body[data-page="index"] .home-choice-copy > .section-tag,
+body[data-page="index"] .counseling-cta-text > .section-tag {
+  margin-bottom: 14px;
+  font-size: 1rem;
+  line-height: 1.5;
+  letter-spacing: .08em;
+  font-weight: 800;
+  color: var(--color-primary-dark);
+}
+
+body[data-page="index"] .home-hero-intro .section-tag,
+body[data-page="index"] .home-choice-copy > .section-tag {
+  font-size: 1.125rem;
+}
+
+body[data-page="index"] .home-hero-intro .section-tag {
+  position: static;
+  color: #fff !important;
+}
+
+body[data-page="index"] .home-hero-actions .btn-outline-navy {
+  color: #fff;
+  border-color: rgba(255, 255, 255, .82);
+  background: rgba(28, 28, 28, .28);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+body[data-page="index"] .home-hero-actions .btn-outline-navy:hover {
+  color: var(--color-primary-dark);
+  background: #fff;
+  border-color: #fff;
+}
+
+body[data-page="index"] .home-proof {
+  z-index: 3;
+  flex: 0 0 auto;
+  background: transparent;
+  border-top: 1px solid rgba(255, 255, 255, .14);
+  border-bottom: 0;
+  box-shadow: none;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, .28);
+}
+
+body[data-page="index"] .home-proof > .container {
+  width: min(calc(100% - 64px), 1760px);
+}
+
+body[data-page="index"] .home-proof-grid {
+  min-height: 72px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+}
+
+body[data-page="index"] .home-proof-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 8px;
+  border-right: 1px solid rgba(255, 255, 255, .12);
+  text-align: center;
+}
+
+body[data-page="index"] .home-proof-item:first-child {
+  border-left: 0;
+}
+
+body[data-page="index"] .home-proof-item:last-child {
+  border-right: 0;
+}
+
+body[data-page="index"] .home-proof-item > div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  width: 100%;
+}
+
+body[data-page="index"] .home-proof-item strong {
+  font-size: 24px !important;
+  font-weight: 700 !important;
+  line-height: 1.25 !important;
+  color: #fff;
+  white-space: nowrap;
+}
+
+body[data-page="index"] .home-proof-item span {
+  font-size: 18px !important;
+  line-height: 1.45 !important;
+  color: rgba(255, 255, 255, .72);
+}
+
+body[data-page="index"] .home-scroll-cue {
+  position: absolute;
+  left: 64px;
+  bottom: 28px;
+  z-index: 6;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border: 1px solid rgba(255, 255, 255, .5);
+  border-radius: 50%;
+  background: rgba(20, 20, 20, .2);
+  color: #fff;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, .14);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  transition: background .25s ease, border-color .25s ease;
+}
+
+body[data-page="index"] .home-scroll-cue:hover,
+body[data-page="index"] .home-scroll-cue:focus-visible {
+  border-color: rgba(255, 255, 255, .82);
+  background: rgba(20, 20, 20, .34);
+}
+
+body[data-page="index"] .home-scroll-cue svg {
+  animation: home-scroll-cue-bounce 3s ease-in-out infinite;
+}
+
+body[data-page="index"] .home-services {
+  scroll-margin-top: 92px;
+}
+
+@keyframes home-scroll-cue-bounce {
+  0%, 18%, 100% { transform: translateY(0); }
+  6% { transform: translateY(5px); }
+  11% { transform: translateY(1px); }
+  15% { transform: translateY(3px); }
+}
+
+@media (max-width: 900px) {
+  body[data-page="index"] .home-scroll-cue {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body[data-page="index"] .home-scroll-cue svg {
+    animation: none;
+  }
+}
+
+body[data-page="index"] .home-choice-copy h2 {
+  margin: 0;
+  font-size: var(--type-section-title);
+  line-height: 1.35;
+  letter-spacing: -.045em;
+  color: var(--color-text-main);
+}
+
+body[data-page="index"] .home-choice {
+  padding: var(--space-section) 0;
+  background: var(--color-bg);
+}
+
+body[data-page="index"] .home-choice-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, .9fr);
+  gap: clamp(48px, 8vw, 120px);
+  align-items: center;
+}
+
+body[data-page="index"] .home-choice-copy > p {
+  margin: 0 0 24px;
+  font-size: 1.0625rem;
+  line-height: 1.8;
+  color: var(--color-text-sub);
+}
+
+body[data-page="index"] .home-choice-copy ul {
+  display: grid;
+  gap: 0;
+  margin: 0 0 28px;
+  border-top: 1px solid rgba(0, 119, 182, .18);
+}
+
+body[data-page="index"] .home-choice-copy li {
+  position: relative;
+  padding: 16px 0 16px 28px;
+  border-bottom: 1px solid rgba(0, 119, 182, .18);
+  font-size: .975rem;
+  line-height: 1.6;
+  color: var(--color-text-main);
+}
+
+body[data-page="index"] .home-choice-copy li::before {
+  content: '';
+  position: absolute;
+  left: 2px;
+  top: 24px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--color-primary);
+}
+
+body[data-page="index"] .home-text-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 800;
+  color: var(--color-primary-dark);
+}
+
+body[data-page="index"] .home-choice-links {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--color-border);
+  border-radius: 16px;
+  background: #fff;
+  overflow: hidden;
+}
+
+body[data-page="index"] .home-choice-link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 22px 28px;
+  border-bottom: 1px solid var(--color-border);
+  color: inherit;
+  transition: background .2s ease;
+}
+
+body[data-page="index"] .home-choice-link:last-child {
+  border-bottom: 0;
+}
+
+body[data-page="index"] .home-choice-link:hover {
+  background: var(--color-bg);
+}
+
+body[data-page="index"] .home-choice-link svg {
+  flex-shrink: 0;
+  color: var(--color-primary);
+}
+
+body[data-page="index"] .home-choice-link strong {
+  display: block;
+  margin-bottom: 4px;
+  font-size: 1.0625rem;
+  color: var(--color-text-main);
+}
+
+body[data-page="index"] .home-choice-link em {
+  display: block;
+  font-style: normal;
+  font-size: .875rem;
+  line-height: 1.55;
+  color: var(--color-text-sub);
+}
+
+/* 서비스 하이라이트: VNS 스타일 큰 아이콘 그리드 */
+body[data-page="index"] .home-services {
+  padding: var(--space-section) 0;
+  background: #fff;
+  border-bottom: 1px solid var(--color-border);
+}
+
+body[data-page="index"] .home-services .section-head {
+  max-width: none;
+  margin: 0 0 44px;
+  text-align: left;
+}
+
+body[data-page="index"] .home-services .section-head > p {
+  margin-left: 0;
+}
+
+body[data-page="index"] .home-services-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--grid-gap);
+  align-items: stretch;
+}
+
+body[data-page="index"] .home-service-card {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  min-height: 280px;
+  padding: var(--card-padding);
+  border: 1px solid var(--color-border);
+  border-radius: var(--card-radius);
+  background: #fff;
+  color: inherit;
+  transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease;
+}
+
+body[data-page="index"] .home-service-card.home-service-card-guide {
+  background: var(--blue-gray);
+}
+
+body[data-page="index"] .home-service-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--color-sky);
+  box-shadow: 0 16px 32px rgba(3, 4, 94, .08);
+}
+
+body[data-page="index"] .home-service-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 64px;
+  height: 64px;
+  border-radius: 16px;
+  background: var(--color-primary-soft);
+  color: var(--color-primary-dark);
+}
+
+body[data-page="index"] .home-service-icon svg {
+  width: var(--icon-lg);
+  height: var(--icon-lg);
+}
+
+body[data-page="index"] .home-service-card h3 {
+  margin: 0;
+  font-size: var(--type-card-title);
+  line-height: 1.4;
+  letter-spacing: -.015em;
+  color: var(--color-text-main);
+}
+
+body[data-page="index"] .home-service-card p {
+  margin: 0;
+  font-size: .875rem;
+  line-height: 1.65;
+  color: var(--color-text-sub);
+}
+
+@media (max-width: 1024px) {
+  body[data-page="index"] .home-services-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 600px) {
+  body[data-page="index"] .home-services {
+    padding: var(--space-section-small) 0;
+  }
+  body[data-page="index"] .home-services-grid {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+  body[data-page="index"] .home-service-card {
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+    padding: 14px;
+    border-radius: 8px;
+  }
+  body[data-page="index"] .home-service-icon {
+    width: 44px;
+    height: 44px;
+    flex-shrink: 0;
+  }
+
+  body[data-page="index"] .home-service-icon svg {
+    width: 22px;
+    height: 22px;
+  }
+
+  body[data-page="index"] .home-service-card h3 {
+    flex: 0 0 auto;
+    white-space: nowrap;
+    font-size: 18px !important;
+    line-height: 1.45 !important;
+  }
+
+  body[data-page="index"] .home-service-card p {
+    min-width: 0;
+    flex: 1 1 auto;
+    font-size: 14px !important;
+    line-height: 1.5 !important;
+  }
+}
+
+/* 데스크톱: 전체 영상 배경 위 왼쪽 문구 배치 */
+@media (min-width: 901px) {
+  body[data-page="index"] .home-hero-inner {
+    width: calc(100% - 128px);
+    align-items: flex-end;
+  }
+
+  body[data-page="index"] .home-hero-intro {
+    width: 100%;
+    padding: 48px 0 clamp(64px, 7vh, 96px);
+  }
+
+  body[data-page="index"] .home-hero-copy {
+    max-width: none;
+  }
+
+  body[data-page="index"] .home-hero-intro h1 {
+    max-width: 1320px;
+    font-size: clamp(1.875rem, 2.35vw, var(--type-display));
+    white-space: nowrap;
+  }
+
+  body[data-page="index"] .home-hero-message > p {
+    max-width: 1240px;
+  }
+
+  body[data-page="index"] .home-hero-actions {
+    flex-direction: row;
+    align-items: center;
+  }
+}
+
+@media (max-width: 900px) {
+  body[data-page="index"] .home-hero-inner {
+    min-height: 0;
+  }
+
+  body[data-page="index"] .home-hero-intro {
+    width: min(100%, 510px);
+    min-height: 0;
+    padding: 48px 0;
+  }
+
+  body[data-page="index"] .home-hero-messages {
+    width: 100%;
+    zoom: 1;
+  }
+
+  body[data-page="index"] .home-choice-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 600px) {
+  body[data-page="index"] .home-main {
+    padding-top: 68px;
+  }
+
+  body[data-page="index"] .home-hero-stage {
+    min-height: calc(100vh - 68px);
+    min-height: calc(100svh - 68px);
+  }
+
+  body[data-page="index"] .home-hero {
+    min-height: 0;
+  }
+
+  body[data-page="index"] .home-hero-inner,
+  body[data-page="index"] .home-proof > .container {
+    width: calc(100% - 32px);
+  }
+
+  body[data-page="index"] .home-hero-background video {
+    object-position: 58% center;
+  }
+
+  body[data-page="index"] .home-hero-background::after {
+    background:
+      linear-gradient(90deg, rgba(26, 26, 26, .66), rgba(255, 255, 255, .12)),
+      linear-gradient(0deg, rgba(22, 22, 22, .24) 0%, rgba(22, 22, 22, 0) 30%),
+      linear-gradient(180deg, rgba(255, 255, 255, .05), rgba(255, 255, 255, .05));
+  }
+
+  body[data-page="index"] .home-hero-intro {
+    min-height: 0;
+    padding: 44px 0 36px;
+  }
+
+  body[data-page="index"] .home-hero-intro h1 {
+    font-size: clamp(2.15rem, 10vw, 2.75rem);
+  }
+
+  body[data-page="index"] .home-hero-message > p {
+    font-size: 1rem;
+    line-height: 1.65;
+  }
+
+  body[data-page="index"] .home-hero-copy .section-tag,
+  body[data-page="index"] .home-hero-message > p,
+  body[data-page="index"] .home-proof-item span {
+    overflow-wrap: anywhere;
+  }
+
+  body[data-page="index"] .home-hero-desktop-break {
+    display: none;
+  }
+
+  body[data-page="index"] .home-hero-actions {
+    flex-direction: column;
+  }
+
+  body[data-page="index"] .home-hero-actions .btn {
+    width: 100%;
+    min-width: 0;
+  }
+
+  body[data-page="index"] .home-proof-grid {
+    grid-template-columns: 1fr;
+  }
+
+  body[data-page="index"] .home-proof-item {
+    min-height: 56px;
+    padding: 9px 4px;
+    border-right: 0;
+    border-bottom: 1px solid rgba(255, 255, 255, .1);
+  }
+
+  body[data-page="index"] .home-proof-item:last-child {
+    border-bottom: 0;
+  }
+
+  body[data-page="index"] .home-hero-intro .section-tag,
+  body[data-page="index"] .home-choice-copy > .section-tag,
+  body[data-page="index"] .counseling-cta-text > .section-tag {
+    font-size: .9375rem;
+  }
+
+  body[data-page="index"] .home-hero-intro .section-tag,
+  body[data-page="index"] .home-choice-copy > .section-tag {
+    font-size: 1rem;
+  }
+
+  body[data-page="index"] .home-proof-item strong {
+    font-size: 22px !important;
+  }
+
+  body[data-page="index"] .home-proof-item span {
+    font-size: 16px !important;
+  }
+}
+
+/* 모든 페이지 하단 상담 CTA: 밝은 푸터와 연결되는 연한 색상 */
+body :is(.cta-banner, .counseling-cta-banner) {
+  background: #dff1f5 !important;
+  color: var(--color-text-main);
+  border-top: 1px solid #c9e3ea;
+  border-bottom: 1px solid #c9e3ea;
+}
+
+body :is(.cta-banner-text, .counseling-cta-text) h2 {
+  color: #17364a !important;
+}
+
+body :is(.cta-banner-text, .counseling-cta-text) p {
+  color: #536b7b !important;
+}
+
+body .counseling-cta-text .section-tag {
+  color: #277b92 !important;
+}
+
+body :is(.cta-banner, .counseling-cta-banner) .btn-yellow {
+  background: #1688aa;
+  border-color: #1688aa;
+  color: #fff;
+  box-shadow: none;
+}
+
+body :is(.cta-banner, .counseling-cta-banner) .btn-yellow:hover {
+  background: #0d718e;
+  border-color: #0d718e;
+  color: #fff;
+}
+
+body :is(.cta-banner, .counseling-cta-banner) :is(.btn-outline-navy, .btn-outline-white),
+body :is(.cta-banner, .counseling-cta-banner) .cta-banner-btns a[href^="tel:"] {
+  background: #fff !important;
+  border-color: #8fc7d6 !important;
+  color: #24556a !important;
+  box-shadow: none !important;
+}
+
+body :is(.cta-banner, .counseling-cta-banner) :is(.btn-outline-navy, .btn-outline-white):hover,
+body :is(.cta-banner, .counseling-cta-banner) .cta-banner-btns a[href^="tel:"]:hover {
+  background: #cce8ef !important;
+  border-color: #69b4c7 !important;
+  color: #173f52 !important;
+}
+
+/* FAQ: 즉시 열림/닫힘, 큰 문답 글자, 압축된 카드 여백 */
+body[data-page="guide"] #tab-faq .guide-section-head {
+  margin-bottom: 32px;
+}
+
+body[data-page="guide"] #tab-faq .faq-list {
+  grid-template-columns: 1fr;
+  align-items: start;
+  gap: 14px;
+  max-width: none;
+}
+
+body[data-page="guide"] #tab-faq .faq-column {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+body[data-page="guide"] #tab-faq .faq-item {
+  border-radius: var(--guide-card-radius);
+  box-shadow: none;
+}
+
+body[data-page="guide"] #tab-faq .faq-question {
+  min-height: 92px;
+  padding: var(--guide-row-padding-y) var(--guide-card-padding-x);
+  gap: 16px;
+  font-size: var(--guide-card-title-size);
+  line-height: 1.4;
+  transition: none !important;
+}
+
+body[data-page="guide"] #tab-faq .faq-question:hover {
+  background: #fff;
+}
+
+body[data-page="guide"] #tab-faq .faq-question-main {
+  gap: 14px;
+}
+
+body[data-page="guide"] #tab-faq .faq-question-text {
+  gap: 3px;
+  font-size: var(--guide-card-title-size);
+  line-height: 1.4;
+}
+
+body[data-page="guide"] #tab-faq .faq-question-text small {
+  font-size: .875rem;
+  line-height: 1.35;
+  letter-spacing: .06em;
+}
+
+body[data-page="guide"] #tab-faq .faq-icon {
+  transition: transform .24s ease, color .24s ease !important;
+}
+
+body[data-page="guide"] #tab-faq .faq-question[aria-expanded="true"] .faq-icon {
+  transform: rotate(180deg) !important;
+}
+
+body[data-page="guide"] #tab-faq .faq-answer {
+  display: block !important;
+  max-height: 0;
+  overflow: hidden;
+  padding: 0 var(--guide-card-padding-x);
+  border-top-color: transparent;
+  opacity: 0;
+  transition: max-height .3s ease, padding .3s ease, opacity .2s ease, border-color .2s ease !important;
+  animation: none !important;
+}
+
+body[data-page="guide"] #tab-faq .faq-answer.open {
+  max-height: 640px;
+  padding: 18px var(--guide-card-padding-x) var(--guide-row-padding-y);
+  border-top-color: var(--color-border);
+  opacity: 1;
+}
+
+body[data-page="guide"] #tab-faq .faq-answer p {
+  margin: 0;
+  font-size: var(--guide-body-size);
+  line-height: 1.55;
+}
+
+body[data-page="guide"] #tab-faq :is(.faq-item, .faq-question, .faq-question-main, .faq-question-text, .faq-q-icon, .faq-answer p) {
+  transition: none !important;
+  animation: none !important;
+}
+
+@media (max-width: 768px) {
+  body[data-page="guide"] #tab-faq .faq-list {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  body[data-page="guide"] #tab-faq .faq-question {
+    min-height: 80px;
+    padding: 14px 16px;
+  }
+
+  body[data-page="guide"] #tab-faq .faq-answer {
+    padding-inline: 16px;
+  }
+
+  body[data-page="guide"] #tab-faq .faq-answer.open {
+    padding: 14px 16px 16px;
+  }
+}
+
+/* 이용대상: 제목 위계와 카드 밀도를 이용절차 페이지 기준으로 통일 */
+body[data-page="guide"] #tab-target .guide-section-head {
+  margin-bottom: 32px;
+}
+
+body[data-page="guide"] #tab-target .guide-section-head .section-tag {
+  margin: 0 0 8px;
+  font-size: var(--type-eyebrow);
+  line-height: 1.5;
+  letter-spacing: .08em;
+}
+
+body[data-page="guide"] #tab-target .guide-section-head h2 {
+  margin: 0 0 14px;
+  font-size: clamp(2rem, 3vw, 2.5rem);
+  line-height: 1.2;
+  letter-spacing: -.04em;
+}
+
+body[data-page="guide"] #tab-target .guide-section-head .section-sub {
+  margin: 0;
+  max-width: 720px;
+  font-size: 1rem;
+  line-height: 1.7;
+}
+
+body[data-page="guide"] #tab-target .target-list {
+  margin: 0 0 24px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+body[data-page="guide"] #tab-target .target-list li {
+  min-height: 128px;
+  grid-template-columns: 44px minmax(0, 1fr);
+  align-items: center;
+  gap: 18px;
+  padding: 24px;
+  border-radius: 16px;
+  box-shadow: none;
+}
+
+body[data-page="guide"] #tab-target .target-list li > div:last-child {
+  gap: 6px;
+}
+
+body[data-page="guide"] #tab-target .target-list strong {
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+body[data-page="guide"] #tab-target .target-list span {
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+body[data-page="guide"] #tab-target .target-note {
+  margin: 0;
+  padding: 16px 20px;
+  border-radius: 12px;
+}
+
+@media (max-width: 768px) {
+  body[data-page="guide"] #tab-target .guide-section-head {
+    margin-bottom: 24px;
+  }
+
+  body[data-page="guide"] #tab-target .guide-section-head h2 {
+    font-size: clamp(1.75rem, 8vw, 2rem);
+  }
+
+  body[data-page="guide"] #tab-target .target-list {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  body[data-page="guide"] #tab-target .target-list li {
+    min-height: 112px;
+    padding: 20px;
+  }
+}
+
+/* 이용절차: 다섯 단계를 한눈에 읽는 단일 절차표 */
+body[data-page="guide"] #tab-process .process-steps {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0;
+  overflow: hidden;
+  border: 1px solid var(--color-border);
+  border-radius: 20px;
+  background: #fff;
+  box-shadow: var(--shadow-xs);
+  transition: none;
+}
+
+body[data-page="guide"] #tab-process .guide-section-head {
+  margin-bottom: 32px;
+}
+
+body[data-page="guide"] #tab-process .process-step {
+  min-height: 86px;
+  width: 100%;
+  display: grid;
+  grid-template-columns: 58px 92px 150px minmax(0, 1fr);
+  grid-template-rows: 1fr;
+  align-items: center;
+  column-gap: 0;
+  padding: 12px 28px;
+  border: 0;
+  border-bottom: 1px solid var(--color-border);
+  border-radius: 0;
+  background: #fff;
+  box-shadow: none;
+  transition: none;
+}
+
+body[data-page="guide"] #tab-process .process-step:last-child { border-bottom: 0; }
+
+body[data-page="guide"] #tab-process .process-circle {
+  grid-column: 1;
+  grid-row: 1;
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  min-height: 44px;
+  margin: 0 auto;
+  transition: none;
+}
+
+body[data-page="guide"] #tab-process .process-content {
+  grid-column: 2 / -1;
+  grid-row: 1;
+  width: 100%;
+  display: grid;
+  grid-template-columns: 92px 150px minmax(0, 1fr);
+  align-items: center;
+  padding: 0;
+  text-align: center;
+  transition: none;
+}
+
+body[data-page="guide"] #tab-process .process-kicker {
+  margin: 0;
+  font-size: .78rem;
+  line-height: 1.4;
+  letter-spacing: .08em;
+  font-weight: 800;
+  color: var(--color-blue);
+  text-align: center;
+}
+
+body[data-page="guide"] #tab-process .process-content h3 {
+  margin: 0 -72px 0 72px;
+  padding-right: 0;
+  font-size: 1rem;
+  line-height: 1.5;
+  text-align: center;
+  white-space: nowrap;
+}
+
+body[data-page="guide"] #tab-process .process-content p {
+  margin: 0;
+  font-size: 1rem;
+  line-height: 1.7;
+  color: var(--color-text-sub);
+  text-align: center;
+  transition: none;
+}
+
+body[data-page="guide"] #tab-process .process-step:hover {
+  transform: none !important;
+  border-color: var(--color-border) !important;
+  background: #fff !important;
+  box-shadow: none !important;
+}
+
+body[data-page="guide"] #tab-process :is(
+  .process-steps,
+  .process-step,
+  .process-circle,
+  .process-content,
+  .process-kicker,
+  h3,
+  p,
+  svg
+) {
+  transition: none !important;
+  animation: none !important;
+}
+
+body[data-page="guide"] #tab-process .process-step:hover :is(
+  .process-circle,
+  .process-content,
+  .process-kicker,
+  h3,
+  p,
+  svg
+) {
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+body[data-page="guide"] #tab-process .process-step:hover .process-circle {
+  background: var(--color-primary) !important;
+  color: #fff !important;
+}
+
+@media (max-width: 900px) {
+  body[data-page="guide"] #tab-process .process-step {
+    min-height: 0;
+    grid-template-columns: 44px minmax(0, 1fr);
+    gap: 16px;
+    padding: 22px 20px;
+  }
+
+  body[data-page="guide"] #tab-process .process-content {
+    grid-column: 2;
+    grid-template-columns: 1fr;
+    gap: 5px;
+  }
+
+  body[data-page="guide"] #tab-process .process-content h3 {
+    margin: 0;
+    padding-right: 0;
+  }
+}
+
+/* Guide exact spacing match: cost / document panels are the source of truth */
+body[data-page="guide"] .faq-q-icon {
+  width: var(--guide-icon-md);
+  height: var(--guide-icon-md);
+  min-width: var(--guide-icon-md);
+  min-height: var(--guide-icon-md);
+  border-radius: 14px;
+  background: var(--color-primary);
+  color: #fff;
+}
+
+body[data-page="guide"] .guide-panel .process-steps,
+body[data-page="guide"] .target-list,
+body[data-page="guide"] .faq-list {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px;
+}
+
+body[data-page="guide"] .guide-panel .process-step,
+body[data-page="guide"] .target-list li,
+body[data-page="guide"] .faq-item {
+  border: 1px solid var(--color-border);
+  border-radius: 20px;
+  background: #fff;
+  box-shadow: var(--shadow-xs);
+}
+
+body[data-page="guide"] .guide-panel .process-step {
+  min-height: 220px;
+  grid-template-columns: 44px minmax(0, 1fr);
+  column-gap: 14px;
+  padding: 28px 24px;
+}
+
+body[data-page="guide"] .target-list li {
+  min-height: 148px;
+  grid-template-columns: 44px minmax(0, 1fr);
+  gap: 14px;
+  padding: 28px 24px;
+}
+
+body[data-page="guide"] .target-list li > div:last-child { gap: 10px; }
+
+body[data-page="guide"] .faq-question {
+  min-height: 112px;
+  padding: 28px 24px;
+}
+
+body[data-page="guide"] .faq-question-main { gap: 14px; }
+
+body[data-page="guide"] .faq-answer {
+  padding: 20px 24px 24px 82px;
+  background: var(--color-surface-soft);
+}
+
+body[data-page="guide"] :is(.target-note, .docs-help, .cost-note) {
+  padding: 16px 20px;
+  border-radius: 10px;
+}
+
+@media (max-width: 768px) {
+  body[data-page="guide"] .guide-panel .process-steps,
+  body[data-page="guide"] .target-list,
+  body[data-page="guide"] .faq-list { grid-template-columns: 1fr; gap: 16px; }
+
+  body[data-page="guide"] .guide-panel .process-step,
+  body[data-page="guide"] .target-list li { padding: 24px 20px; }
+
+  body[data-page="guide"] .faq-question { padding: 22px 20px; }
+  body[data-page="guide"] .faq-answer { padding: 18px 20px; }
+}
+
+/* ============================================================
+   Unified 1200px page compositions
+   Functional DOM stays intact; this layer owns shared scale,
+   alignment, card geometry, icon sizing, and responsive columns.
+   ============================================================ */
+
+.site-header > .container,
+.site-footer > .container,
+.page-header > .container,
+main .container,
+main .container-wide {
+  width: min(calc(100% - var(--gutter)), var(--container-max));
+  max-width: none;
+  margin-inline: auto;
+  padding-inline: 0;
+}
+
+.site-header .header-inner { height: 92px; }
+.site-header .logo-image { height: 140px; width: auto; }
+@media (max-width: 768px) {
+  .site-header .header-inner { height: 108px; }
+  .site-header .logo-image { height: 100px; width: auto; }
+}
+.main-nav ul { justify-content: flex-end; gap: 6px; }
+.main-nav a { min-height: 44px; padding: 8px 10px; font-size: var(--text-body); }
+
+.page-header {
+  min-height: 360px;
+  padding: 168px 0 68px;
+  display: flex;
+  align-items: center;
+  text-align: center;
+}
+.page-header h1 {
+  margin: 0 0 14px;
+  font-size: var(--type-page-title);
+  line-height: 1.25;
+  font-weight: 800;
+}
+.page-header .page-header-desc,
+.page-header > .container > p:last-child {
+  max-width: 760px;
+  margin-inline: auto;
+  font-size: var(--type-body);
+  line-height: 1.7;
+}
+
+.about-tab-wrap,
+.guide-tab-wrap { top: 0; }
+
+/* Scroll-fade hints for the horizontally-scrollable tab bar (see main.js initScrollableTabs) */
+.about-tab-wrap,
+.guide-tab-wrap {
+  position: sticky;
+  top: 92px;
+}
+.about-tab-wrap.tab-scroll-right::after,
+.guide-tab-wrap.tab-scroll-right::after,
+.about-tab-wrap.tab-scroll-left::before,
+.guide-tab-wrap.tab-scroll-left::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 36px;
+  pointer-events: none;
+  z-index: 2;
+}
+.about-tab-wrap.tab-scroll-right::after,
+.guide-tab-wrap.tab-scroll-right::after {
+  right: 0;
+  background: linear-gradient(to right, transparent, rgba(255, 255, 255, .96));
+}
+.about-tab-wrap.tab-scroll-left::before,
+.guide-tab-wrap.tab-scroll-left::before {
+  left: 0;
+  background: linear-gradient(to left, transparent, rgba(255, 255, 255, .96));
+}
+@media (max-width: 768px) {
+  .about-tab-wrap,
+  .guide-tab-wrap { top: var(--mobile-header-height); }
+}
+.about-tabs,
+.guide-tabs { min-height: 56px; align-items: stretch; }
+
+.section-head,
+.section-header,
+.guide-section-head,
+.case-intro,
+.form-head { text-align: left; }
+
+:is(.section-head, .section-header, .guide-section-head, .case-intro, .form-head) h2,
+.greeting-text h2,
+.guide-detail-title,
+.board-intro h2 {
+  font-size: var(--type-section-title);
+  line-height: 1.35;
+  font-weight: 700;
+}
+
+/* Desktop heading roles: exactly 40 / 30 / 25 across every page. */
+@media (min-width: 769px) {
+  body main h1 {
+    font-size: var(--type-page-title);
+    line-height: 1.25;
+    font-weight: 800;
+  }
+
+  body main h2,
+  body[data-page="guide"] main .guide-section-title,
+  body :is(.cta-banner-text, .counseling-cta-text) h2 {
+    font-size: var(--type-section-title);
+    line-height: 1.35;
+    font-weight: 700;
+  }
+
+  body main h3,
+  body main h4,
+  body main h5,
+  body main h6,
+  body[data-page="guide"] main :is(.guide-benefit-col strong, .faq-question-text) {
+    font-size: var(--type-card-title);
+    line-height: 1.4;
+    font-weight: 700;
+  }
+}
+
+/* Center introduction */
+body[data-page="about"] .about-panel { padding-block: var(--space-section-medium); }
+body[data-page="about"] .about-panel h2 {
+  font-size: var(--type-section-title);
+  line-height: 1.35;
+  font-weight: 700;
+}
+body[data-page="about"] .greeting-grid {
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0;
+  align-items: start;
+}
+body[data-page="about"] .stats-band { margin-top: var(--space-section-medium); }
+body[data-page="about"] .stats-band .container-wide { width: min(calc(100% - var(--gutter)), var(--container-max)); }
+body[data-page="about"] .stats-bar { width: 100%; }
+body[data-page="about"] .stat-item { flex: 1 1 50%; }
+body[data-page="about"] :is(
+  .service-icon-item h3,
+  .system-step-body h3,
+  .sys-feat-item h3,
+  .location-transport h3
+) { font-size: var(--type-card-title); line-height: 1.4; font-weight: 700; }
+body[data-page="about"] .svc-icon-circle svg { width: var(--icon-lg); height: var(--icon-lg); }
+body[data-page="about"] .sys-feat-icon svg { width: var(--icon-md); height: var(--icon-md); }
+body[data-page="about"] #tab-system .sys-feat-item {
+  align-items: flex-start;
+  text-align: left;
+}
+body[data-page="about"] #tab-system .sys-feat-icon {
+  margin-right: 0;
+  margin-left: 0;
+}
+body[data-page="about"] #tab-system .sys-feat-item h3 {
+  width: 100%;
+  text-align: left;
+}
+body[data-page="about"] #tab-system .sys-feat-list {
+  width: 100%;
+  justify-items: start;
+  text-align: left;
+}
+body[data-page="about"] #tab-system .sys-feat-list li {
+  text-align: left;
+}
+body[data-page="about"] .loc-icon svg { width: 22px; height: 22px; }
+body[data-page="about"] .loc-icon-phone svg { width: 22px; height: 22px; }
+body[data-page="about"] .system-step-num {
+  font-size: 25px !important;
+  font-weight: 800 !important;
+  line-height: 1 !important;
+}
+body[data-page="about"] .location-list strong {
+  color: #243B4A !important;
+  font-weight: 700 !important;
+  line-height: 1.35 !important;
+}
+body[data-page="about"] .location-list span {
+  color: #111827 !important;
+  font-weight: 500 !important;
+  line-height: 1.45 !important;
+}
+body[data-page="about"] .location-list em {
+  color: #374151 !important;
+  font-weight: 500 !important;
+  line-height: 1.45 !important;
+}
+
+/* Page-specific selector strength without !important. */
+body[data-page="index"] .home-main .home-services h2,
+body[data-page="case"] .case-main .case-intro h2,
+body[data-page="board"] .board-main .board-intro h2,
+body[data-page="counseling"] .counseling-main .form-head h2 {
+  font-size: var(--type-section-title);
+  line-height: 1.35;
+  font-weight: 700;
+}
+
+body[data-page="index"] .home-main .home-service-card h3,
+body[data-page="case"] .case-main .case-row-content h3,
+body[data-page="board"] .board-main .board-card-title,
+body[data-page="counseling"] .counseling-main :is(.info-card, .consult-process) h3 {
+  font-size: var(--type-card-title);
+  line-height: 1.4;
+  font-weight: 700;
+}
+
+/* Service overview */
+body[data-page="service"] .svc-overview,
+body[data-page="service"] .svc-detail { padding-block: var(--space-section-medium); }
+body[data-page="service"] :is(.svc-overview, .svc-detail) h2 {
+  font-size: var(--type-section-title);
+  line-height: 1.35;
+  font-weight: 700;
+}
+body[data-page="service"] :is(.svc-overview, .svc-detail) :is(h3, h4) {
+  font-size: var(--type-card-title);
+  line-height: 1.4;
+  font-weight: 700;
+}
+body[data-page="service"] .svc-overview > .container-wide,
+body[data-page="service"] .svc-detail > .container { width: min(calc(100% - var(--gutter)), var(--container-max)); }
+body[data-page="service"] .svc-card { height: 100%; }
+body[data-page="service"] .svc-card h3 { font-size: var(--type-card-title); font-weight: 700; }
+body[data-page="service"] .svc-card p { font-size: var(--type-card-body); }
+body[data-page="service"] :is(.chronic-step-icon, .vital-step-icon) svg {
+  width: var(--icon-md);
+  height: var(--icon-md);
+}
+
+/* Guide */
+body[data-page="guide"] .guide-panel { padding: 0; }
+body[data-page="guide"] .guide-block,
+body[data-page="guide"] .guide-block.is-first { padding-block: var(--space-section-medium); }
+body[data-page="guide"] .guide-detail-head,
+body[data-page="guide"] .guide-process { width: 100%; max-width: none; }
+body[data-page="guide"] .guide-process::before { left: 39px; }
+body[data-page="guide"] .guide-process-step {
+  grid-template-columns: 80px minmax(0, 1fr);
+  gap: 32px;
+  padding-bottom: 48px;
+}
+body[data-page="guide"] .guide-process-body { padding-top: 14px; }
+body[data-page="guide"] .guide-process-body h3 {
+  font-size: var(--type-card-title);
+  line-height: 1.4;
+  font-weight: 700;
+}
+body[data-page="guide"] .guide-process-body p {
+  max-width: none;
+  font-size: var(--type-card-body);
+  line-height: 1.7;
+}
+body[data-page="guide"] :is(
+  .guide-feature-col h4,
+  .guide-apply-item h4,
+  .guide-doc-head h3,
+  .guide-faq-intro h3
+) { font-size: var(--type-card-title); line-height: 1.4; font-weight: 700; }
+body[data-page="guide"] :is(
+  .guide-feature-highlight-icon,
+  .guide-feature-col-icon,
+  .guide-doc-card-icon,
+  .guide-closing-icon
+) svg { width: var(--icon-lg); height: var(--icon-lg); }
+body[data-page="guide"] :is(.guide-row-icon, .guide-process-icon) svg {
+  width: var(--icon-md);
+  height: var(--icon-md);
+}
+
+/* Cases — 방문간호서비스(.svc-detail/.svc-detail.bg-light) 배경 분리와 동일한 방식으로,
+   사례 하나(=한 행)마다 흰색/옅은 하늘색 배경이 번갈아 화면 끝까지 이어지게 한다.
+   .case-row는 .container-wide 안에 있어 폭이 제한돼 있으므로, ::before를 뷰포트 전체
+   너비로 펼쳐 배경만 화면 끝까지 채우고 실제 콘텐츠 폭은 그대로 유지한다. */
+body[data-page="case"] .case-main { padding: var(--space-section) 0 0; background: var(--color-surface); }
+body[data-page="case"] .case-list { padding: 0; }
+body[data-page="case"] .case-row {
+  position: relative;
+  z-index: 0;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 56px;
+  align-items: center;
+  padding: var(--space-section-medium) 0;
+  border-bottom: 0;
+}
+body[data-page="case"] .case-row::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 100vw;
+  margin-left: -50vw;
+  z-index: -1;
+}
+body[data-page="case"] .case-row:nth-child(odd)::before {
+  background: var(--color-surface-soft);
+  box-shadow: var(--edge-shadow-top), var(--edge-shadow-bottom);
+}
+body[data-page="case"] .case-row:nth-child(even)::before {
+  background: var(--color-surface);
+}
+body[data-page="case"] .case-row-media { aspect-ratio: 3 / 4; border-radius: var(--card-radius); }
+body[data-page="case"] .case-row-content { gap: 14px; }
+body[data-page="case"] .case-row-content h3 {
+  font-size: var(--type-card-title);
+  line-height: 1.4;
+  font-weight: 700;
+}
+body[data-page="case"] .case-section p { font-size: var(--type-body); }
+
+/* Board list and detail */
+body[data-page="board"] .board-main {
+  padding-bottom: 0;
+}
+body[data-page="board"] .board-intro { padding: var(--space-section) 0 0; }
+body[data-page="board"] .board-section {
+  min-height: 2000px;
+  padding: 48px 0 var(--space-section);
+  background: var(--color-surface);
+}
+body[data-page="board"] .board-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--grid-gap);
+  align-items: stretch;
+}
+body[data-page="board"] .board-pagination {
+  position: absolute;
+  right: 0;
+  bottom: 48px;
+  left: 0;
+  margin-top: 0;
+}
+body[data-page="board"] .board-page-btn,
+body[data-page="board"] .board-page-nav,
+body[data-page="board"] .board-page-btn:hover,
+body[data-page="board"] .board-page-nav:hover,
+body[data-page="board"] .board-page-btn[aria-current="page"] {
+  background: #fff;
+  border: 0;
+  color: var(--color-text-sub);
+}
+body[data-page="board"] .board-page-btn[aria-current="page"] {
+  color: var(--color-text-main);
+}
+body[data-page="board"] .board-page-ellipsis {
+  min-width: 42px;
+  min-height: 42px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-text-muted);
+}
+body[data-page="board"] .board-card { height: 100%; }
+body[data-page="board"] .board-card-link { display: flex; height: 100%; flex-direction: column; border-radius: var(--card-radius); }
+body[data-page="board"] .board-card-image-wrap { aspect-ratio: 16 / 10; }
+body[data-page="board"] .board-card-body { flex: 1; min-height: 280px; padding: var(--card-padding); }
+body[data-page="board"] .board-skeleton {
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+  border-radius: var(--card-radius);
+}
+body[data-page="board"] .board-skeleton-image {
+  flex: 0 0 auto;
+  aspect-ratio: 16 / 10;
+}
+body[data-page="board"] .board-skeleton-body {
+  flex: 1;
+  min-height: 280px;
+  padding: var(--card-padding);
+  align-content: start;
+}
+body[data-page="board"] .board-card-title { font-size: var(--type-card-title); line-height: 1.4; }
+body[data-page="board"] .board-card-excerpt { font-size: 16px; }
+body[data-page="board"] .board-detail-section { padding: var(--space-section-medium) 0 var(--space-section); }
+body[data-page="board"] .board-detail-card { padding: 40px; border-radius: var(--card-radius); }
+body[data-page="board"] .board-detail-title { font-size: var(--type-section-title); line-height: 1.35; }
+body[data-page="board"] .board-detail-image { width: 100%; max-width: none; max-height: 640px; }
+body[data-page="board"] .board-detail-content {
+  width: 100%;
+  max-width: 900px;
+  margin: 0;
+  font-size: var(--type-body);
+  text-align: left;
+}
+body[data-page="board"] .board-related-title { font-size: var(--type-card-title); }
+
+/* Counseling */
+body[data-page="counseling"] .counseling-main { padding-block: var(--space-section); }
+body[data-page="counseling"] .counseling-grid {
+  grid-template-columns: minmax(0, 4fr) minmax(0, 8fr);
+  gap: 32px;
+  align-items: start;
+}
+body[data-page="counseling"] .counseling-info,
+body[data-page="counseling"] .counseling-form-wrap { min-width: 0; }
+body[data-page="counseling"] .consult-form { gap: 20px; padding: 36px; border-radius: var(--card-radius); }
+body[data-page="counseling"] .form-head h2 { font-size: var(--type-section-title); }
+body[data-page="counseling"] .form-group input[type="text"],
+body[data-page="counseling"] .form-group input[type="tel"],
+body[data-page="counseling"] .form-group textarea {
+  width: 100%;
+  min-height: 54px;
+  padding: 14px 16px;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  font-size: 16px;
+}
+body[data-page="counseling"] .radio-label,
+body[data-page="counseling"] .checkbox-label { min-height: 48px; }
+body[data-page="counseling"] #submitBtn { width: 100%; min-height: 56px; margin-top: 0; }
+body[data-page="counseling"] .info-icon svg { width: var(--icon-sm); height: var(--icon-sm); }
+
+/* Shared controls */
+.btn,
+.btn-call-now { min-height: 54px; padding: 14px 26px; border-radius: 8px; }
+.link-more,
+.board-card-footer { min-height: 25px; }
+.link-more svg,
+.btn svg,
+.btn-call-now svg { width: var(--icon-sm); height: var(--icon-sm); }
+/* 전화(선 아이콘)는 카카오(면 아이콘)보다 시각적으로 작아 보여 살짝 키워 균형을 맞춤 */
+.cta-banner-btns a[href^="tel:"] svg { width: calc(var(--icon-sm) + 3px); height: calc(var(--icon-sm) + 3px); }
+
+@media (max-width: 1024px) {
+  body[data-page="about"] .greeting-grid { grid-template-columns: 1fr; gap: 0; }
+  body[data-page="service"] .svc-cards-grid,
+  body[data-page="index"] .home-services-grid,
+  body[data-page="board"] .board-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  body[data-page="board"] .board-section { min-height: 3200px; }
+  body[data-page="counseling"] .counseling-grid { grid-template-columns: 1fr; gap: 40px; }
+}
+
+@media (max-width: 768px) {
+  :root {
+    --guide-title-size: 32px;
+    --guide-section-title-size: 25px;
+    --guide-card-title-size: 22px;
+    --guide-body-size: 16px;
+  }
+  .site-header > .container,
+  .site-footer > .container,
+  .page-header > .container,
+  main .container,
+  main .container-wide { width: min(calc(100% - var(--gutter)), var(--container-max)); }
+  .page-header { min-height: 248px; padding: 102px 0 42px; }
+  body[data-page="about"] .about-panel,
+  body[data-page="service"] .svc-overview,
+  body[data-page="service"] .svc-detail,
+  body[data-page="case"] .case-main,
+  body[data-page="counseling"] .counseling-main { padding-block: var(--space-section-mobile); }
+  body[data-page="case"] .case-main { padding-bottom: 0; }
+  body[data-page="case"] .case-row { grid-template-columns: 1fr; gap: 28px; padding: 40px 0; }
+  body[data-page="case"] .case-row:nth-child(even) :is(.case-row-media, .case-row-content) { order: initial; }
+  body[data-page="guide"] .guide-process-step { grid-template-columns: 64px minmax(0, 1fr); gap: 20px; }
+  body[data-page="guide"] .guide-process-num { width: 64px; height: 64px; }
+  body[data-page="guide"] .guide-process::before { left: 31px; }
+  body[data-page="board"] .board-intro { padding-top: var(--space-section-mobile); }
+  body[data-page="board"] .board-detail-card,
+  body[data-page="counseling"] .consult-form { padding: 24px 20px; }
+}
+
+@media (max-width: 600px) {
+  body[data-page="service"] .svc-cards-grid,
+  body[data-page="index"] .home-services-grid,
+  body[data-page="board"] .board-grid { grid-template-columns: 1fr; }
+  body[data-page="board"] .board-section { min-height: 5200px; }
+  body[data-page="service"] .svc-card,
+  body[data-page="index"] .home-service-card { min-height: 0; }
+  body[data-page="board"] .board-card-body { min-height: 250px; }
+  body[data-page="board"] .board-skeleton-body { min-height: 250px; }
+  body[data-page="board"] .board-page-ellipsis { min-width: 38px; min-height: 38px; }
+  body[data-page="counseling"] .form-row,
+  body[data-page="counseling"] .checkbox-group { grid-template-columns: 1fr; }
+}
+
+/* ============================================================
+   전 페이지 텍스트 크기 최종 통합 — 단 하나의 기준
+   이 파일이 모든 페이지에서 가장 마지막에 로드되므로, 아래 규칙이
+   페이지별 CSS(about/service/guide/counseling/case/board 등)에 남아있는
+   개별 font-size 지정을 전부 덮어써 예외 없이 3단으로 고정한다.
+
+   40px — h1 제목, 통계·강조 숫자(.stat-num)
+   30px — h2~h6 부제목 / 상세 내용 제목
+   25px — 그 외 모든 문장·단어(본문, 버튼, 폼, 배지, 내비게이션, 푸터 등)
+
+   두께는 BAYADA 참고 방향대로 "제목·라벨=볼드, 본문=슬림"으로 대비를 준다.
+   전부 볼드였던 이전 버전은 화면이 뭉쳐 보이는 원인이었음 — 크기는 유지하되
+   무게감만 재배분해 정보 밀도는 그대로, 시각적으로는 가볍게 만든다.
+   ============================================================ */
+body,
+body * {
+  font-size: var(--text-body) !important;
+  font-weight: 400 !important;
+  line-height: 1.6 !important;
+}
+
+/* 25px 본문 톤 안에서 라벨·강조·행동유도 요소만 볼드로 눈에 띄게 */
+strong, b,
+.section-tag,
+.btn, .btn-call-now, .mobile-nav-consult, .btn-header-consult,
+.main-nav li.active > a,
+.tag, .info-label,
+.form-group label, .radio-label, .checkbox-label,
+.stat-num,
+.logo-text strong {
+  font-weight: 700 !important;
+}
+
+/* 내비게이션 기본 상태는 중간 굵기 — 볼드는 활성 메뉴에만(위 규칙) */
+.main-nav a {
+  font-weight: 500 !important;
+}
+
+h1, h1 *,
+.stat-num, .stat-num * {
+  font-size: var(--text-title) !important;
+  font-weight: 800 !important;
+  line-height: 1.25 !important;
+}
+
+h2, h2 *,
+h3, h3 *,
+h4, h4 *,
+h5, h5 *,
+h6, h6 * {
+  font-size: var(--text-subtitle) !important;
+  font-weight: 700 !important;
+  line-height: 1.35 !important;
+}
+
+/* 커진(25px, bold) 내비게이션 글자를 담기 위해 헤더 안쪽 폭만 더 넓게 확보.
+   1400px 이하는 햄버거 메뉴로 전환되므로(style.css), 이 구간은 항상 전체 GNB가 보이는
+   구간이다. */
+@media (min-width: 1401px) {
+  .site-header > .container {
+    width: min(calc(100% - var(--gutter)), 1760px);
+  }
+}
+
+/* ============================================================
+   네모 박스(카드형 컴포넌트) 전용 타이포 — 전역 3단(40/30/25)과 별개로
+   박스 안쪽만 키워드 23px / 내용 22px로 더 촘촘하게. 자간·줄간격을 좁혀
+   내용이 꽉 차 보이게 하고, 박스 패딩(--card-padding)은 살짝 키워
+   비율에 맞는 여백을 준다(좌측 정렬 유지, 중앙 쏠림 없음).
+   ============================================================ */
+:is(
+  .service-feat, .case-preview-card, .svc-card, .case-card, .process-card,
+  .target-card, .doc-card, .benefit-item, .system-card, .consult-form,
+  .info-card, .consult-process, .consult-notice,
+  .chronic-step, .stage-item, .vital-step, .tube-card, .bedridden-item, .medication-panel,
+  .med-step, .referral-step, .counseling-card, .counseling-highlight,
+  .process-step, .faq-item, .target-list li,
+  .home-service-card, .board-card-body, .board-detail-card, .grade-card
+) :is(p, li, span, div) {
+  font-size: 22px !important;
+  letter-spacing: -.01em !important;
+  line-height: 1.5 !important;
+}
+
+:is(
+  .service-feat, .case-preview-card, .svc-card, .case-card, .process-card,
+  .target-card, .doc-card, .benefit-item, .system-card, .consult-form,
+  .info-card, .consult-process, .consult-notice,
+  .chronic-step, .stage-item, .vital-step, .tube-card, .bedridden-item, .medication-panel,
+  .med-step, .referral-step, .counseling-card, .counseling-highlight,
+  .process-step, .faq-item, .target-list li,
+  .home-service-card, .board-card-body, .board-detail-card, .grade-card
+) :is(h3, h4, strong, b) {
+  font-size: 23px !important;
+  letter-spacing: -.02em !important;
+  line-height: 1.3 !important;
+}
+
+:root { --card-padding: 32px; }
+
+/* ============================================================
+   푸터 전용 — 완전 재설계된 마크업(footer-main/footer-desc/footer-col-*)
+   기준. 전역 3단(40/30/25, body *) 규칙이 여기까지 덮지 않도록 15px
+   하나로 고정하고, 굵기는 라벨류만 볼드로 구분한다.
+   ============================================================ */
+.site-footer,
+.site-footer * {
+  font-weight: 400 !important;
+  line-height: 1.6 !important;
+}
+
+.site-footer .footer-desc,
+.site-footer .footer-col-title,
+.site-footer .footer-info .footer-col-list li span,
+.site-footer .footer-nav-list a,
+.site-footer .footer-bottom p {
+  font-size: 15px !important;
+}
+
+.site-footer .footer-col-title {
+  font-weight: 700 !important;
+}
+
+.site-footer .footer-nav-list a {
+  font-weight: 600 !important;
+}
+
+/* 센터소개 서비스 비교표 — 큰 본문 크기는 유지하되 행 밀도와 정렬을 간결하게 */
+body[data-page="about"] .compare-table :is(th, td) {
+  line-height: 1.3 !important;
+  text-align: center;
+  vertical-align: middle;
+}
+body[data-page="about"] .compare-table thead th {
+  padding-block: 11px;
+  line-height: 1.25 !important;
+}
+/* 컨테이너 폭은 사이트 표준(var(--container-max))을 그대로 따름 —
+   내용(바로가기 3x2 그리드 등)을 채워서 균형을 맞추는 쪽으로 해결함 */
+
+/* ============================================================
+   이용안내 > 이용대상 — 핵심 기준과 일반 이용 사유를 분리한 단일 섹션
+   ============================================================ */
+body[data-page="guide"] #tab-target .guide-target-overview {
+  padding-block: var(--space-section-medium);
+  background: var(--color-surface);
+}
+
+body[data-page="guide"] #tab-target .guide-target-overview .guide-detail-head {
+  margin-bottom: 40px;
+}
+
+body[data-page="guide"] #tab-target .guide-target-core {
+  display: grid;
+  grid-template-columns: 56px minmax(0, 1fr);
+  align-items: center;
+  gap: 24px;
+  padding: 28px 32px;
+  border: 1px solid rgba(45, 95, 113, .28);
+  border-radius: var(--card-radius);
+  background: var(--color-primary-soft);
+}
+
+body[data-page="guide"] #tab-target :is(.guide-target-core-icon, .guide-target-group-icon) {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  background: #fff;
+  color: var(--color-primary-dark);
+}
+
+body[data-page="guide"] #tab-target .guide-target-core-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+}
+
+body[data-page="guide"] #tab-target .guide-target-core-icon svg {
+  width: 28px !important;
+  height: 28px !important;
+}
+
+body[data-page="guide"] #tab-target .guide-target-core-label {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--color-primary-dark);
+  font-size: 17px !important;
+  font-weight: 700 !important;
+  line-height: 1.3 !important;
+  letter-spacing: .02em !important;
+}
+
+body[data-page="guide"] #tab-target .guide-target-core h3 {
+  margin: 0 0 8px;
+  color: var(--color-text-main);
+  font-size: 25px !important;
+  font-weight: 700 !important;
+  line-height: 1.35 !important;
+  letter-spacing: -.02em !important;
+}
+
+body[data-page="guide"] #tab-target .guide-target-core p {
+  margin: 0;
+  color: var(--color-text-sub);
+  font-size: 21px !important;
+  font-weight: 400 !important;
+  line-height: 1.55 !important;
+  letter-spacing: -.01em !important;
+}
+
+body[data-page="guide"] #tab-target .guide-target-general {
+  margin-top: 56px;
+}
+
+body[data-page="guide"] #tab-target .guide-target-general-title {
+  margin: 0 0 24px;
+  color: var(--color-text-main);
+  font-size: 30px !important;
+  font-weight: 700 !important;
+  line-height: 1.35 !important;
+  letter-spacing: -.02em !important;
+}
+
+body[data-page="guide"] #tab-target .guide-target-group-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--grid-gap);
+  align-items: stretch;
+}
+
+body[data-page="guide"] #tab-target .guide-target-group {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  padding: 30px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--card-radius);
+  background: #fff;
+}
+
+body[data-page="guide"] #tab-target .guide-target-support {
+  display: grid;
+  grid-column: 1 / -1;
+  grid-template-columns: 56px minmax(0, 1fr);
+  align-items: center;
+  gap: 24px;
+  padding: 28px 32px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--card-radius);
+  background: #fff;
+}
+
+body[data-page="guide"] #tab-target .guide-target-support-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: var(--color-primary-soft);
+  color: var(--color-primary-dark);
+}
+
+body[data-page="guide"] #tab-target .guide-target-support-icon svg {
+  width: 28px !important;
+  height: 28px !important;
+}
+
+body[data-page="guide"] #tab-target .guide-target-support-label {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--color-primary-dark);
+  font-size: 17px !important;
+  font-weight: 700 !important;
+  line-height: 1.3 !important;
+  letter-spacing: .02em !important;
+}
+
+body[data-page="guide"] #tab-target .guide-target-support h3 {
+  margin: 0 0 8px;
+  color: var(--color-text-main);
+  font-size: 25px !important;
+  font-weight: 700 !important;
+  line-height: 1.35 !important;
+  letter-spacing: -.02em !important;
+}
+
+body[data-page="guide"] #tab-target .guide-target-support p {
+  margin: 0;
+  color: var(--color-text-sub);
+  font-size: 21px !important;
+  font-weight: 400 !important;
+  line-height: 1.55 !important;
+  letter-spacing: -.01em !important;
+}
+
+body[data-page="guide"] #tab-target .guide-target-group-head {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 16px;
+}
+
+body[data-page="guide"] #tab-target .guide-target-group-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  background: var(--color-primary-soft);
+}
+
+body[data-page="guide"] #tab-target .guide-target-group-icon svg {
+  width: 26px !important;
+  height: 26px !important;
+}
+
+body[data-page="guide"] #tab-target .guide-target-group-head h3 {
+  margin: 0;
+  color: var(--color-text-main);
+  font-size: 25px !important;
+  font-weight: 700 !important;
+  line-height: 1.35 !important;
+  letter-spacing: -.02em !important;
+}
+
+body[data-page="guide"] #tab-target .guide-target-group-summary {
+  margin: 0;
+  color: var(--color-text-main);
+  font-size: 22px !important;
+  font-weight: 700 !important;
+  line-height: 1.45 !important;
+  letter-spacing: -.015em !important;
+}
+
+body[data-page="guide"] #tab-target .guide-target-group-items {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  justify-content: flex-start;
+  margin-top: 22px;
+  border-top: 1px solid var(--color-border);
+}
+
+body[data-page="guide"] #tab-target .guide-target-group-item {
+  padding: 18px 0;
+}
+
+body[data-page="guide"] #tab-target .guide-target-group-item + .guide-target-group-item {
+  border-top: 1px solid var(--color-border);
+}
+
+body[data-page="guide"] #tab-target .guide-target-group-item h4 {
+  margin: 0 0 6px;
+  color: var(--color-text-main);
+  font-size: 21px !important;
+  font-weight: 700 !important;
+  line-height: 1.45 !important;
+  letter-spacing: -.015em !important;
+}
+
+body[data-page="guide"] #tab-target :is(.guide-target-group-item p, .guide-target-group-description) {
+  margin: 0;
+  color: var(--color-text-sub);
+  font-size: 20px !important;
+  font-weight: 400 !important;
+  line-height: 1.55 !important;
+  letter-spacing: -.01em !important;
+}
+
+body[data-page="guide"] #tab-target .guide-target-group-description {
+  margin-top: 22px;
+  padding-top: 18px;
+  border-top: 1px solid var(--color-border);
+}
+
+@media (max-width: 768px) {
+  body[data-page="guide"] #tab-target .guide-target-overview {
+    padding-block: var(--space-section-mobile);
+  }
+
+  body[data-page="guide"] #tab-target .guide-target-overview .guide-detail-head {
+    margin-bottom: 32px;
+  }
+
+  body[data-page="guide"] #tab-target .guide-target-core {
+    grid-template-columns: 1fr;
+    gap: 18px;
+    padding: 24px 20px;
+  }
+
+  body[data-page="guide"] #tab-target .guide-target-general {
+    margin-top: 44px;
+  }
+
+  body[data-page="guide"] #tab-target .guide-target-group-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  body[data-page="guide"] #tab-target .guide-target-group {
+    padding: 24px 20px;
+  }
+
+  body[data-page="guide"] #tab-target .guide-target-support {
+    grid-column: auto;
+    grid-template-columns: 1fr;
+    gap: 18px;
+    padding: 24px 20px;
+  }
+}
+
+/* ============================================================
+   이용안내 전체 탭 색상 통일 — 이용대상 탭의 색상 체계 기준
+   흰색 기본면 / 연한 포인트 강조면 / 진한 포인트 선·문자
+   ============================================================ */
+body[data-page="guide"] :is(
+  .guide-main,
+  .guide-panel,
+  .guide-block,
+  .guide-block.bg-tint
+) {
+  background: var(--color-surface) !important;
+}
+
+body[data-page="guide"] :is(
+  #tab-process .guide-process-num,
+  #tab-grade .guide-apply-num,
+  #tab-faq .faq-q-icon
+) {
+  background: var(--color-primary-soft) !important;
+  border: 1px solid rgba(45, 95, 113, .22) !important;
+  color: var(--color-primary-dark) !important;
+}
+
+body[data-page="guide"] #tab-process .guide-process::before {
+  background: var(--color-border) !important;
+}
+
+body[data-page="guide"] #tab-process :is(
+  .guide-process-kicker,
+  .guide-process-num
+) {
+  color: var(--color-primary-dark) !important;
+}
+
+body[data-page="guide"] #tab-grade :is(
+  .guide-grade-row.g1,
+  .guide-grade-row.g2,
+  .guide-grade-row.g3,
+  .guide-grade-row.g4,
+  .guide-grade-row.g5
+) .guide-grade-num {
+  color: var(--color-primary-dark) !important;
+}
+
+body[data-page="guide"] #tab-grade .guide-grade-num small {
+  display: inline !important;
+  margin: 0 0 0 4px !important;
+  color: inherit !important;
+}
+
+body[data-page="guide"] #tab-grade .guide-grade-row {
+  grid-template-columns: 144px minmax(0, 1fr) 240px;
+  column-gap: 32px;
+}
+
+body[data-page="guide"] #tab-grade .guide-apply-flow {
+  display: grid;
+  grid-template-columns: minmax(0, 360px) minmax(64px, 1fr) minmax(0, 360px) minmax(64px, 1fr) minmax(0, 360px);
+  align-items: stretch;
+  width: 100%;
+  margin: 0;
+  gap: 0;
+}
+
+body[data-page="guide"] #tab-grade .guide-apply-item {
+  padding: 4px 0 0;
+}
+
+body[data-page="guide"] #tab-grade .guide-apply-arrow {
+  position: relative;
+  display: block;
+  align-self: stretch;
+  justify-self: stretch;
+  width: 100%;
+  height: auto;
+  padding: 0;
+}
+
+body[data-page="guide"] #tab-grade .guide-apply-arrow svg {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  display: block;
+  width: 22px !important;
+  height: 22px !important;
+  margin: 0;
+  transform: translate(-50%, -50%);
+}
+
+@media (max-width: 860px) {
+  body[data-page="guide"] #tab-grade .guide-grade-row {
+    grid-template-columns: 64px minmax(0, 1fr);
+    column-gap: 20px;
+  }
+
+  body[data-page="guide"] #tab-grade .guide-apply-flow {
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+  }
+
+  body[data-page="guide"] #tab-grade .guide-apply-arrow {
+    display: none;
+  }
+}
+
+body[data-page="guide"] #tab-grade .guide-grade-score {
+  background: transparent !important;
+  border-color: rgba(45, 95, 113, .22) !important;
+  color: var(--color-primary-dark) !important;
+}
+
+body[data-page="guide"] #tab-grade .guide-apply-arrow {
+  color: var(--color-primary-dark) !important;
+}
+
+body[data-page="guide"] #tab-cost .guide-pricing-headline,
+body[data-page="guide"] #tab-cost .guide-price-table,
+body[data-page="guide"] #tab-faq .faq-list {
+  background: #fff !important;
+  border-color: var(--color-border) !important;
+}
+
+body[data-page="guide"] #tab-cost .guide-cost-module + .guide-cost-module {
+  margin-top: 56px;
+  padding-top: 56px;
+  border-top: 1px solid var(--color-border);
+}
+
+body[data-page="guide"] #tab-cost .guide-cost-module > .guide-section-title {
+  margin-bottom: 24px;
+}
+
+body[data-page="guide"] #tab-cost .guide-cost-module .guide-cost-table-intro {
+  margin: -12px 0 24px;
+}
+
+body[data-page="guide"] #tab-cost .guide-pricing-headline {
+  border-radius: var(--card-radius);
+}
+
+body[data-page="guide"] #tab-cost .guide-pricing-headline-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 30px;
+  text-align: center;
+}
+
+body[data-page="guide"] #tab-cost .guide-pricing-headline-item > span:not(.num) {
+  font-size: 20px !important;
+  font-weight: 700 !important;
+  line-height: 1.4 !important;
+}
+
+body[data-page="guide"] #tab-cost .guide-pricing-headline-item > .num {
+  font-size: 30px !important;
+  font-weight: 800 !important;
+  line-height: 1.3 !important;
+  letter-spacing: -.02em !important;
+}
+
+body[data-page="guide"] #tab-cost .guide-pricing-headline-item > p {
+  width: 100%;
+  text-align: center;
+  font-size: 21px !important;
+  line-height: 1.55 !important;
+}
+
+body[data-page="guide"] #tab-cost .guide-pricing-headline-item {
+  background: #fff !important;
+}
+
+body[data-page="guide"] #tab-cost .guide-pricing-headline-item.is-highlight,
+body[data-page="guide"] #tab-faq .guide-faq-intro,
+body[data-page="guide"] #tab-faq .faq-answer,
+body[data-page="guide"] #tab-faq .faq-question:hover {
+  background: var(--color-primary-soft) !important;
+}
+
+body[data-page="guide"] #tab-cost .guide-price-table {
+  border: 1px solid var(--color-border);
+  border-radius: var(--card-radius);
+  border-collapse: separate;
+  border-spacing: 0;
+  overflow: hidden;
+}
+
+body[data-page="guide"] #tab-cost .guide-price-table thead th {
+  background: var(--color-primary-soft) !important;
+  color: var(--color-primary-dark) !important;
+}
+
+body[data-page="guide"] #tab-cost .guide-price-table :is(th, td) {
+  font-size: var(--text-body) !important;
+  line-height: 1.55 !important;
+}
+
+/* 이용요금 상세 표 — 장기요양등급 행형 표와 동일한 시각 구조 */
+body[data-page="guide"] #tab-cost .guide-price-table {
+  table-layout: fixed;
+  background: transparent !important;
+  border: 0;
+  border-radius: 0;
+  overflow: visible;
+}
+
+body[data-page="guide"] #tab-cost .guide-price-table thead th {
+  padding: 0 0 18px;
+  background: transparent !important;
+  border-bottom: 1px solid var(--color-border);
+  color: var(--color-text-main) !important;
+  font-weight: 700 !important;
+  letter-spacing: -.01em !important;
+  text-transform: none;
+}
+
+body[data-page="guide"] #tab-cost .guide-price-table :is(thead th:first-child, tbody th) {
+  width: 24%;
+  padding-left: 0;
+  padding-right: 0;
+  text-align: left;
+}
+
+body[data-page="guide"] #tab-cost .guide-price-table :is(thead th:nth-child(2), tbody td:nth-child(2)) {
+  width: 38%;
+  padding-right: 16px;
+  padding-left: 32px;
+  text-align: center;
+}
+
+body[data-page="guide"] #tab-cost .guide-price-table :is(thead th:last-child, tbody td:last-child) {
+  width: 38%;
+  padding-right: 0;
+  padding-left: 16px;
+  text-align: center;
+}
+
+body[data-page="guide"] #tab-cost .guide-price-table tbody :is(th, td) {
+  padding-top: var(--guide-row-padding-y);
+  padding-bottom: var(--guide-row-padding-y);
+  background: transparent !important;
+  border-bottom: 1px solid var(--color-border);
+}
+
+body[data-page="guide"] #tab-cost .guide-price-table tbody th {
+  padding-left: 0;
+  color: var(--color-primary-dark) !important;
+  font-weight: 700 !important;
+}
+
+body[data-page="guide"] #tab-cost .guide-price-table tbody tr:last-child :is(th, td) {
+  border-bottom: 0;
+}
+
+body[data-page="guide"] #tab-cost .guide-benefit-col {
+  padding: 28px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--card-radius);
+  background: #fff !important;
+}
+
+body[data-page="guide"] #tab-cost .guide-benefit-col strong {
+  font-size: 23px !important;
+  line-height: 1.35 !important;
+}
+
+body[data-page="guide"] #tab-cost .guide-benefit-col p {
+  font-size: 22px !important;
+  line-height: 1.5 !important;
+}
+
+@media (max-width: 768px) {
+  body[data-page="guide"] #tab-cost .guide-cost-module + .guide-cost-module {
+    margin-top: 40px;
+    padding-top: 40px;
+  }
+
+  body[data-page="guide"] #tab-cost .guide-pricing-headline-item,
+  body[data-page="guide"] #tab-cost .guide-benefit-col {
+    padding: 24px 20px;
+  }
+
+  body[data-page="guide"] #tab-cost .guide-price-table :is(th, td) {
+    padding-right: 8px;
+    padding-left: 8px;
+    font-size: var(--text-body) !important;
+  }
+
+  body[data-page="guide"] #tab-cost .guide-price-table :is(thead th:first-child, tbody th) {
+    width: 34%;
+    padding-left: 0;
+  }
+
+  body[data-page="guide"] #tab-cost .guide-price-table :is(thead th:last-child, tbody td:last-child) {
+    width: 33%;
+    padding-right: 0;
+    text-align: center;
+  }
+}
+
+body[data-page="guide"] #tab-prepare .guide-doc-card {
+  background: #fff !important;
+  border-color: var(--color-border) !important;
+  border-radius: var(--card-radius);
+}
+
+body[data-page="guide"] #tab-faq .guide-faq-intro {
+  padding: 28px;
+  border: 1px solid rgba(45, 95, 113, .22);
+  border-radius: var(--card-radius);
+}
+
+body[data-page="guide"] #tab-faq .faq-item,
+body[data-page="guide"] #tab-faq .faq-question {
+  background: #fff !important;
+}
+
+body[data-page="guide"] #tab-faq .faq-question[aria-expanded="true"] {
+  color: var(--color-primary-dark) !important;
+}
+
+/* ============================================================
+   FAQ isolated component
+   ============================================================ */
+body[data-page="guide"] #tab-faq .guide-faq-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0;
+  overflow: hidden;
+  border: 1px solid var(--color-border);
+  border-radius: var(--card-radius);
+  background: #fff;
+}
+
+body[data-page="guide"] #tab-faq .guide-faq-callout {
+  position: static;
+  display: grid;
+  grid-template-columns: 220px minmax(0, 1fr);
+  padding: 0;
+  border: 0;
+  border-bottom: 1px solid var(--color-border);
+  border-radius: 0;
+  background: #fff;
+}
+
+body[data-page="guide"] #tab-faq .guide-faq-callout h3 {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  padding: 24px 28px;
+  background: var(--color-primary-soft);
+  color: var(--color-primary-dark);
+  font-size: 23px !important;
+  font-weight: 700 !important;
+  line-height: 1.35 !important;
+  text-align: center;
+}
+
+body[data-page="guide"] #tab-faq .guide-faq-callout p {
+  display: flex;
+  align-items: center;
+  margin: 0;
+  padding: 24px 28px;
+  color: var(--color-text-sub);
+  font-size: 22px !important;
+  font-weight: 400 !important;
+  line-height: 1.55 !important;
+}
+
+body[data-page="guide"] #tab-faq .guide-faq-accordion {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0;
+}
+
+body[data-page="guide"] #tab-faq .guide-faq-entry {
+  overflow: hidden;
+  border: 0;
+  border-bottom: 1px solid var(--color-border);
+  border-radius: 0;
+  background: #fff;
+}
+
+body[data-page="guide"] #tab-faq .guide-faq-entry:last-child {
+  border-bottom: 0;
+}
+
+body[data-page="guide"] #tab-faq .guide-faq-trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 92px;
+  padding: 24px 28px 24px 52px;
+  border: 0;
+  background: #fff;
+  color: var(--color-text-main);
+  font-family: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: background-color .22s ease;
+}
+
+body[data-page="guide"] #tab-faq .guide-faq-trigger:hover,
+body[data-page="guide"] #tab-faq .guide-faq-trigger[aria-expanded="true"] {
+  background: #f5f6f6;
+}
+
+body[data-page="guide"] #tab-faq .guide-faq-trigger-main {
+  display: grid;
+  flex: 1 1 auto;
+  grid-template-columns: 72px 52px minmax(0, 1fr);
+  align-items: center;
+  gap: 20px;
+  min-width: 0;
+}
+
+body[data-page="guide"] #tab-faq .guide-faq-index {
+  color: var(--color-primary-dark);
+  font-size: 17px !important;
+  font-weight: 700 !important;
+  line-height: 1.3 !important;
+  letter-spacing: .06em !important;
+}
+
+body[data-page="guide"] #tab-faq .guide-faq-topic-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 52px;
+  height: 52px;
+  border: 1px solid rgba(45, 95, 113, .18);
+  border-radius: 50%;
+  background: transparent;
+  color: var(--color-primary-dark);
+}
+
+body[data-page="guide"] #tab-faq .guide-faq-topic-icon svg {
+  width: 28px !important;
+  height: 28px !important;
+}
+
+body[data-page="guide"] #tab-faq .guide-faq-question-copy {
+  min-width: 0;
+  padding-left: 24px;
+  font-size: 23px !important;
+  font-weight: 700 !important;
+  line-height: 1.4 !important;
+  letter-spacing: -.02em !important;
+}
+
+body[data-page="guide"] #tab-faq .guide-faq-chevron {
+  flex: 0 0 auto;
+  width: 22px !important;
+  height: 22px !important;
+  margin-right: 32px;
+  color: var(--color-text-muted);
+  transition: transform .24s ease, color .24s ease;
+}
+
+body[data-page="guide"] #tab-faq .guide-faq-trigger[aria-expanded="true"] .guide-faq-chevron {
+  color: var(--color-primary-dark);
+  transform: rotate(180deg);
+}
+
+body[data-page="guide"] #tab-faq .guide-faq-answer-panel {
+  display: grid;
+  grid-template-rows: 0fr;
+  overflow: hidden;
+  padding: 0 28px 0 240px;
+  border-top: 1px solid transparent;
+  background: #f5f6f6;
+  opacity: 0;
+  transform: translateY(-4px);
+  transition: grid-template-rows .34s cubic-bezier(.22, 1, .36, 1), padding .34s cubic-bezier(.22, 1, .36, 1), opacity .24s ease, transform .34s cubic-bezier(.22, 1, .36, 1), border-color .24s ease;
+}
+
+body[data-page="guide"] #tab-faq .guide-faq-answer-panel.is-open {
+  grid-template-rows: 1fr;
+  padding: 20px 28px 24px 240px;
+  border-top-color: rgba(45, 95, 113, .18);
+  opacity: 1;
+  transform: translateY(0);
+}
+
+body[data-page="guide"] #tab-faq .guide-faq-answer-panel p {
+  overflow: hidden;
+  min-height: 0;
+  margin: 0;
+  color: var(--color-text-sub);
+  font-size: 22px !important;
+  font-weight: 400 !important;
+  line-height: 1.55 !important;
+}
+
+@media (max-width: 1024px) {
+  body[data-page="guide"] #tab-faq .guide-faq-callout {
+    grid-template-columns: 190px minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  body[data-page="guide"] #tab-faq .guide-faq-callout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  body[data-page="guide"] #tab-faq .guide-faq-callout h3,
+  body[data-page="guide"] #tab-faq .guide-faq-callout p {
+    padding: 20px;
+  }
+
+  body[data-page="guide"] #tab-faq .guide-faq-accordion {
+    gap: 0;
+  }
+
+  body[data-page="guide"] #tab-faq .guide-faq-trigger {
+    min-height: 80px;
+    padding: 16px 20px;
+  }
+
+  body[data-page="guide"] #tab-faq .guide-faq-topic-icon {
+    width: 42px;
+    height: 42px;
+  }
+
+  body[data-page="guide"] #tab-faq .guide-faq-topic-icon svg {
+    width: 24px !important;
+    height: 24px !important;
+  }
+
+  body[data-page="guide"] #tab-faq .guide-faq-trigger-main {
+    grid-template-columns: 52px 42px minmax(0, 1fr);
+    gap: 12px;
+  }
+
+  body[data-page="guide"] #tab-faq .guide-faq-question-copy {
+    padding-left: 8px;
+    font-size: 22px !important;
+  }
+
+  body[data-page="guide"] #tab-faq .guide-faq-chevron {
+    margin-right: 0;
+  }
+
+  body[data-page="guide"] #tab-faq .guide-faq-answer-panel {
+    padding-right: 20px;
+    padding-left: 20px;
+  }
+
+  body[data-page="guide"] #tab-faq .guide-faq-answer-panel.is-open {
+    padding: 18px 20px 20px;
+  }
+}
+
+body[data-page="case"] .case-main {
+  padding-top: 0;
+}
+
+body[data-page="case"] .case-main .case-inline-disclaimer {
+  position: relative;
+  left: 50%;
+  grid-column: 1 / -1;
+  justify-self: start;
+  width: min(calc(100vw - var(--gutter)), 1760px);
+  max-width: none;
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: 16px !important;
+  font-weight: 400 !important;
+  line-height: 1.55 !important;
+  letter-spacing: -.01em !important;
+  text-align: left;
+  transform: translateX(-50%);
+}
+
+/* ============================================================
+   Subpage image heroes: shared full-screen introduction
+   Detailed page content remains unchanged below this section.
+   ============================================================ */
+body[data-page="about"] .page-image-hero {
+  background-image: url("../images/png/01About%20Us.png") !important;
+}
+
+body[data-page="service"] .page-image-hero {
+  background-image: url("../images/png/02Services.png?v=20260824") !important;
+}
+
+body[data-page="guide"] .page-image-hero {
+  background-image: url("../images/png/03Service%20Guide.png") !important;
+}
+
+body[data-page="case"] .page-image-hero {
+  background-image: url("../images/png/04Nursing%20Cases.png") !important;
+}
+
+body[data-page="board"] .page-image-hero {
+  background-image: url("../images/png/05News.png") !important;
+}
+
+body[data-page="counseling"] .page-image-hero {
+  background-image: url("../images/png/06Consultation.png") !important;
+}
+
+body .page-header.page-image-hero {
+  position: relative;
+  min-height: 100vh !important;
+  min-height: 100svh !important;
+  padding: calc(92px + clamp(40px, 7vh, 84px)) 0 clamp(120px, 15vh, 170px) !important;
+  display: flex;
+  align-items: flex-end;
+  overflow: hidden;
+  isolation: isolate;
+  text-align: left !important;
+  color: #fff !important;
+  background-color: #f1f1ef !important;
+  background-repeat: no-repeat !important;
+  background-position: center !important;
+  background-size: cover !important;
+  border-bottom: 0;
+  box-shadow: none;
+}
+
+body .page-header.page-image-hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, .035) 28%, rgba(30, 30, 30, .14) 58%, rgba(18, 18, 18, .74) 100%),
+    linear-gradient(90deg, rgba(24, 24, 24, .24) 0%, rgba(255, 255, 255, .04) 48%, rgba(255, 255, 255, .1) 100%),
+    linear-gradient(180deg, rgba(255, 255, 255, .04), rgba(255, 255, 255, .04));
+}
+
+body .page-header.page-image-hero > .container {
+  position: relative;
+  z-index: 1;
+  width: min(calc(100% - 64px), 1760px) !important;
+  min-height: 300px;
+  margin-inline: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  text-align: left;
+  text-shadow: 0 2px 18px rgba(0, 0, 0, .34);
+}
+
+body .page-header.page-image-hero .section-tag {
+  margin: 0 0 10px !important;
+  font-size: 18px !important;
+  line-height: 1.4 !important;
+  letter-spacing: .12em;
+  color: rgba(255, 255, 255, .82) !important;
+}
+
+body .page-header.page-image-hero .page-header-content {
+  zoom: 1.4 !important;
+}
+
+body .page-header.page-image-hero h1 {
+  margin: 0 0 12px !important;
+  max-width: 900px;
+  font-size: var(--type-display) !important;
+  line-height: 1.14 !important;
+  letter-spacing: -.045em;
+  color: #fff !important;
+}
+
+body .page-header.page-image-hero .page-header-desc,
+body .page-header.page-image-hero > .container > p:last-child {
+  max-width: 1000px;
+  margin: 0;
+  font-size: 1.375rem !important;
+  line-height: 1.65 !important;
+  color: rgba(255, 255, 255, .88) !important;
+}
+
+body .page-header.page-image-hero .page-header-desc strong {
+  display: block;
+  font-size: 1.375rem !important;
+  line-height: 1.5 !important;
+  font-weight: 800;
+  color: #fff;
+}
+
+body .page-header.page-image-hero .page-header-desc span {
+  display: block;
+  margin-top: 6px;
+  font-size: 1.375rem !important;
+  line-height: 1.65 !important;
+  color: rgba(255, 255, 255, .82);
+}
+
+body .page-header.page-image-hero.hero-sequence-prepared .page-header-content {
+  opacity: 0;
+  will-change: opacity;
+}
+
+body .page-header.page-image-hero.hero-sequence-active .page-header-content {
+  animation: subpage-hero-content-in 800ms ease-out forwards;
+}
+
+body .page-header.page-image-hero.hero-sequence-complete .page-header-content {
+  opacity: 1;
+  animation: none;
+  will-change: auto;
+}
+
+@keyframes subpage-hero-content-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@media (max-width: 768px) {
+  body .page-header.page-image-hero {
+    min-height: 100vh !important;
+    min-height: 100svh !important;
+    padding: calc(68px + 36px) 0 84px !important;
+  }
+
+  body .page-header.page-image-hero > .container {
+    width: calc(100% - 32px) !important;
+    min-height: 480px;
+  }
+
+  body .page-header.page-image-hero h1 {
+    margin-bottom: 10px;
+    font-size: clamp(42px, 11vw, 54px) !important;
+  }
+
+  body .page-header.page-image-hero .section-tag {
+    font-size: 20px !important;
+  }
+
+  body .page-header.page-image-hero .page-header-desc,
+  body .page-header.page-image-hero > .container > p:last-child {
+    font-size: 1.5rem !important;
+    line-height: 1.6 !important;
+  }
+
+  body .page-header.page-image-hero .page-header-desc strong {
+    font-size: 1.5rem !important;
+    line-height: 1.5 !important;
+  }
+
+  body .page-header.page-image-hero .page-header-desc span {
+    margin-top: 5px;
+    font-size: 1.5rem !important;
+    line-height: 1.6 !important;
+  }
+
+  body .page-header.page-image-hero .page-header-desc-break {
+    display: none;
+  }
+}
+
+@media (max-width: 768px) and (max-height: 680px) {
+  body .page-header.page-image-hero {
+    align-items: flex-start;
+  }
+
+  body .page-header.page-image-hero > .container {
+    min-height: 0;
+  }
+}
+
+/* ── Unified subpage content reveal ─────────────────────── */
+body:is(
+  [data-page="index"],
+  [data-page="about"],
+  [data-page="service"],
+  [data-page="guide"],
+  [data-page="case"],
+  [data-page="board"],
+  [data-page="counseling"]
+) main :is(.reveal, [data-reveal-group] > *) {
+  opacity: 0;
+  transform: translate3d(0, 24px, 0);
+  transition:
+    opacity .82s cubic-bezier(.22, 1, .36, 1) var(--reveal-delay, 0ms),
+    transform .82s cubic-bezier(.22, 1, .36, 1) var(--reveal-delay, 0ms),
+    border-color .25s ease,
+    box-shadow .25s ease,
+    background-color .25s ease;
+  will-change: opacity, transform;
+}
+
+body:is(
+  [data-page="index"],
+  [data-page="about"],
+  [data-page="service"],
+  [data-page="guide"],
+  [data-page="case"],
+  [data-page="board"],
+  [data-page="counseling"]
+) main :is(.reveal, [data-reveal-group] > *).visible {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+  will-change: auto;
+}
+
+/* ============================================================
+   이용안내 추가 콘텐츠 — 기존 행형·아이콘형 디자인 체계 유지
+   ============================================================ */
+body[data-page="guide"] #tab-nursing .guide-nursing-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin-top: 28px;
+  border-top: 1px solid var(--color-border);
+}
+
+body[data-page="guide"] #tab-nursing .guide-nursing-item {
+  display: grid;
+  grid-template-columns: 64px minmax(0, 1fr);
+  gap: 22px;
+  align-items: start;
+  min-height: 168px;
+  padding: 30px 32px;
+  border-bottom: 1px solid var(--color-border);
+  background: #fff;
+}
+
+body[data-page="guide"] #tab-nursing .guide-nursing-item:nth-child(odd) {
+  border-right: 1px solid var(--color-border);
+}
+
+body[data-page="guide"] #tab-nursing .guide-nursing-item:nth-child(odd):last-child {
+  grid-column: 1 / -1;
+  min-height: 0;
+  border-right: 0;
+}
+
+body[data-page="guide"] #tab-nursing .guide-nursing-num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 64px;
+  height: 64px;
+  border: 1px solid rgba(45, 95, 113, .22);
+  border-radius: 50%;
+  background: var(--color-primary-soft);
+  color: var(--color-primary-dark);
+  font-size: 18px;
+  font-weight: 800;
+}
+
+body[data-page="guide"] #tab-nursing .guide-nursing-item h4,
+body[data-page="guide"] #tab-directive :is(.guide-directive-step, .guide-directive-faq-item) h4 {
+  margin: 0 0 9px;
+  color: var(--color-text-main);
+  font-size: 23px;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+body[data-page="guide"] #tab-nursing .guide-nursing-item p,
+body[data-page="guide"] #tab-directive :is(.guide-directive-step, .guide-directive-faq-item) p {
+  margin: 0;
+  color: var(--color-text-sub);
+  font-size: 21px;
+  line-height: 1.6;
+}
+
+body[data-page="guide"] #tab-directive .guide-directive-flow {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 72px minmax(0, 1fr) 72px minmax(0, 1fr);
+  align-items: stretch;
+  margin-top: 28px;
+}
+
+body[data-page="guide"] #tab-directive .guide-directive-step {
+  padding: 30px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--card-radius);
+  background: #fff;
+}
+
+body[data-page="guide"] #tab-directive .guide-apply-num {
+  background: var(--color-primary-soft) !important;
+  border: 1px solid rgba(45, 95, 113, .22) !important;
+  color: var(--color-primary-dark) !important;
+}
+
+body[data-page="guide"] #tab-directive .guide-directive-arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-primary-dark);
+}
+
+body[data-page="guide"] #tab-directive .guide-directive-faq {
+  margin-top: 28px;
+  border-top: 1px solid var(--color-border);
+}
+
+body[data-page="guide"] #tab-directive .guide-directive-faq-item {
+  display: grid;
+  grid-template-columns: 96px minmax(0, 1fr);
+  gap: 32px;
+  padding: 28px 0;
+  border-bottom: 1px solid var(--color-border);
+}
+
+body[data-page="guide"] #tab-directive .guide-directive-faq-item > span {
+  color: var(--color-primary-dark);
+  font-size: 17px;
+  font-weight: 800;
+  letter-spacing: .06em;
+}
+
+body[data-page="guide"] #tab-grade .guide-grade-row.g-cognitive .guide-grade-num {
+  color: var(--color-primary-dark) !important;
+  font-size: 1.4rem;
+  letter-spacing: -.04em;
+  white-space: nowrap;
+}
+
+body[data-page="guide"] #tab-grade .guide-grade-row.g-cognitive .guide-grade-num span {
+  display: inline;
+}
+
+body[data-page="guide"] #tab-grade .guide-grade-support {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 32px;
+  margin-top: 12px;
+}
+
+body[data-page="guide"] #tab-grade .guide-grade-support p {
+  flex: 1 1 auto;
+  max-width: 920px;
+  margin: 0;
+  color: var(--color-text-sub);
+  font-size: var(--type-body);
+  line-height: 1.7;
+}
+
+body[data-page="guide"] #tab-grade .guide-grade-directive-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex: 0 0 auto;
+  margin: 0 0 0 auto;
+  color: var(--color-primary-dark);
+  font-size: 17px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+body[data-page="guide"] #tab-grade .guide-grade-directive-link:hover {
+  gap: 12px;
+}
+
+body[data-page="guide"] #tab-grade .guide-grade-scale {
+  margin-top: 56px;
+}
+
+body[data-page="guide"] #tab-cost .guide-price-table-wrap {
+  width: 100%;
+  overflow-x: auto;
+}
+
+body[data-page="guide"] #tab-cost .guide-price-table.is-visit-fee {
+  min-width: 760px;
+}
+
+body[data-page="guide"] #tab-cost .guide-price-table.is-visit-fee :is(th, td) {
+  width: 20% !important;
+  padding-right: 18px !important;
+  padding-left: 18px !important;
+  text-align: center !important;
+  white-space: nowrap;
+}
+
+body[data-page="guide"] #tab-cost .guide-price-table.is-visit-fee :is(thead th:first-child, tbody th) {
+  padding-left: 0 !important;
+  text-align: left !important;
+}
+
+body[data-page="guide"] #tab-cost .guide-price-table.is-visit-fee :is(thead th:last-child, tbody td:last-child) {
+  padding-right: 0 !important;
+}
+
+body[data-page="guide"] #tab-cost .guide-cost-notes {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 2px;
+  margin: 6px 0 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--color-text-sub);
+  font-size: 16px;
+  line-height: 22px;
+  list-style: none;
+  text-align: right;
+  white-space: normal;
+}
+
+body[data-page="guide"] #tab-cost .guide-cost-notes li + li::before {
+  content: none;
+}
+
+body[data-page="guide"] #tab-cost .guide-cost-source {
+  margin: 4px 0 0;
+  font-size: 14px;
+  line-height: 22px;
+  color: var(--color-text-muted);
+  text-align: right;
+}
+
+@media (max-width: 860px) {
+  body[data-page="guide"] #tab-nursing .guide-nursing-list,
+  body[data-page="guide"] #tab-directive .guide-directive-flow {
+    grid-template-columns: 1fr;
+  }
+
+  body[data-page="guide"] #tab-nursing .guide-nursing-item,
+  body[data-page="guide"] #tab-nursing .guide-nursing-item:nth-child(odd) {
+    grid-column: auto;
+    border-right: 0;
+  }
+
+  body[data-page="guide"] #tab-directive .guide-directive-arrow {
+    display: none;
+  }
+
+  body[data-page="guide"] #tab-directive .guide-directive-flow {
+    gap: 20px;
+  }
+
+  body[data-page="guide"] #tab-grade .guide-grade-row.g-cognitive .guide-grade-num {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    line-height: 1.2;
+    white-space: normal;
+  }
+
+  body[data-page="guide"] #tab-grade .guide-grade-row.g-cognitive .guide-grade-num span,
+  body[data-page="guide"] #tab-grade .guide-grade-row.g-cognitive .guide-grade-num small {
+    display: block !important;
+    margin: 0 !important;
+    font-size: inherit !important;
+    line-height: inherit !important;
+  }
+
+  body[data-page="guide"] #tab-grade .guide-grade-support {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  body[data-page="guide"] #tab-grade .guide-grade-directive-link {
+    margin-left: 0;
+  }
+
+  body[data-page="guide"] #tab-grade .guide-grade-scale {
+    margin-top: 36px;
+  }
+
+}
+
+@media (max-width: 560px) {
+  body[data-page="guide"] #tab-nursing .guide-nursing-item {
+    grid-template-columns: 52px minmax(0, 1fr);
+    gap: 16px;
+    min-height: 0;
+    padding: 24px 18px;
+  }
+
+  body[data-page="guide"] #tab-nursing .guide-nursing-num {
+    width: 52px;
+    height: 52px;
+    font-size: 16px;
+  }
+
+  body[data-page="guide"] #tab-directive .guide-directive-step {
+    padding: 24px 20px;
+  }
+
+  body[data-page="guide"] #tab-directive .guide-directive-faq-item {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  body[data-page="guide"] #tab-grade .guide-grade-directive-link {
+    font-size: 16px;
+  }
+
+  body[data-page="guide"] #tab-cost .guide-cost-notes {
+    flex-wrap: wrap;
+    padding: 0;
+    font-size: 15px;
+    white-space: normal;
+  }
+}
+
+body[data-page="counseling"] .counseling-info {
+  --reveal-delay: 0ms;
+}
+
+body[data-page="counseling"] .counseling-form-wrap {
+  --reveal-delay: 65ms;
+}
+
+/* 센터소개 > 제공서비스 비교표 — 왼쪽 정렬, 세로 구분선, 방문간호 열 강조 */
+body[data-page="about"] .compare-table-wrap {
+  width: 100%;
+  overflow-x: auto;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+body[data-page="about"] .compare-table {
+  min-width: 760px;
+  table-layout: fixed;
+  border: 0;
+  border-collapse: collapse;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+body[data-page="about"] .compare-col-label { width: 24%; }
+body[data-page="about"] :is(.compare-col-care, .compare-col-nursing) { width: 38%; }
+
+body[data-page="about"] .compare-table thead th {
+  padding: 18px;
+  border-bottom: 1px solid #d7e3e8 !important;
+  background: transparent !important;
+  color: var(--color-text-main);
+  font-weight: 800;
+  letter-spacing: -.01em;
+  text-align: left;
+  vertical-align: middle;
+}
+
+body[data-page="about"] .compare-table thead th.compare-th-highlight {
+  background: #cfe8f1 !important;
+  color: #03045e !important;
+}
+
+body[data-page="about"] .compare-table thead th strong {
+  font-weight: 800;
+}
+
+body[data-page="about"] .compare-table thead th:first-child {
+  text-align: left;
+}
+
+body[data-page="about"] .compare-table tbody :is(th, td) {
+  padding: var(--guide-row-padding-y, 20px) 18px;
+  border-bottom: 1px solid #d7e3e8 !important;
+  background: transparent !important;
+  color: var(--color-text-sub);
+  font-size: var(--text-body);
+  line-height: 1.55 !important;
+  text-align: left;
+  transition: background-color .25s ease;
+}
+
+body[data-page="about"] .compare-table tr > :is(th, td) + :is(th, td) {
+  border-left: 1px solid #d7e3e8 !important;
+}
+
+body[data-page="about"] .compare-table tbody th {
+  padding-left: 16px;
+  text-align: left;
+  color: var(--color-primary-dark);
+  font-weight: 700;
+}
+
+body[data-page="about"] .compare-table tbody td.highlight {
+  background: #cfe8f1 !important;
+  color: #03045e !important;
+  font-weight: 700;
+}
+
+body[data-page="about"] .compare-table tbody tr:last-child :is(th, td) {
+  border-bottom: 0;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  body[data-page="about"] .compare-table tbody tr:hover :is(th, td) {
+    background: #fff !important;
+  }
+
+  body[data-page="about"] .compare-table tbody tr:hover td.highlight {
+    background: #c3e1ec !important;
+  }
+}
+
+@media (max-width: 560px) {
+  body[data-page="about"] .compare-table :is(th, td) {
+    padding-right: 12px;
+    padding-left: 12px;
+  }
+
+  body[data-page="about"] .compare-table thead th:first-child {
+    padding-left: 12px;
+  }
+
+  body[data-page="about"] .compare-table tbody th {
+    padding-left: 12px;
+  }
+}
+
+/* 센터소개 > 7가지 서비스 — 방문간호서비스 페이지의 실제 카드와 통일 */
+body[data-page="about"] .service-icons-wrap .service-catalog-sub {
+  margin: -24px 0 36px;
+  color: var(--color-text-sub);
+}
+
+body[data-page="about"] .service-icons-wrap .svc-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--grid-gap);
+  align-items: stretch;
+}
+
+body[data-page="about"] .service-icons-wrap .svc-card {
+  display: flex;
+  flex-direction: column;
+  min-height: 320px;
+  height: 100%;
+  padding: var(--card-padding);
+  gap: 14px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--card-radius);
+  background: #fff;
+  box-shadow: var(--shadow-xs);
+  color: inherit;
+  text-decoration: none;
+  transition: border-color .25s ease, box-shadow .25s ease, transform .35s ease;
+}
+
+body[data-page="about"] .service-icons-wrap .svc-card:hover {
+  border-color: rgba(214, 166, 42, .36);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-3px);
+  text-decoration: none;
+}
+
+body[data-page="about"] .service-icons-wrap .svc-card-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 64px;
+  height: 64px;
+  margin-bottom: 2px;
+  border-radius: 14px;
+  background: var(--color-primary-soft);
+  color: var(--color-primary-dark);
+}
+
+body[data-page="about"] .service-icons-wrap .svc-card-icon svg {
+  width: var(--icon-lg);
+  height: var(--icon-lg);
+}
+
+body[data-page="about"] .service-icons-wrap .svc-card h3 {
+  color: var(--color-text-main);
+  font-weight: 700;
+}
+
+body[data-page="about"] .service-icons-wrap .svc-card p {
+  flex: 1;
+  color: var(--color-text-sub);
+}
+
+body[data-page="about"] .service-icons-wrap .svc-card-link {
+  margin-top: auto;
+  color: var(--color-primary-dark);
+  font-weight: 600;
+}
+
+@media (max-width: 1024px) {
+  body[data-page="about"] .service-icons-wrap .svc-cards-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+  }
+}
+
+@media (max-width: 768px) {
+  body[data-page="about"] .service-icons-wrap .svc-card {
+    min-height: 0;
+  }
+}
+
+@media (max-width: 600px) {
+  body[data-page="about"] .service-icons-wrap .svc-cards-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Mobile layout contract: keep the existing DOM, but give every page the same
+   viewport-safe sizing and let component rules own their internal typography. */
+@media (max-width: 768px) {
+  :root {
+    --mobile-gutter: 16px;
+    --mobile-header-height: 80px;
+  }
+
+  body {
+    max-width: 100%;
+    overflow-x: hidden;
+    touch-action: pan-y;
+  }
+
+  .site-header > .container,
+  .site-footer > .container,
+  .page-header > .container,
+  main .container,
+  main .container-wide {
+    width: calc(100% - (var(--mobile-gutter) * 2));
+    max-width: none;
+  }
+
+  .site-header .header-inner {
+    height: var(--mobile-header-height);
+    min-height: var(--mobile-header-height);
+  }
+
+  .site-header .logo-image {
+    width: auto;
+    height: 72px;
+    max-height: 72px;
+  }
+
+  .main-nav,
+  .header-cta {
+    display: none !important;
+  }
+
+  .hamburger {
+    display: flex !important;
+    width: 44px;
+    height: 44px;
+    margin-left: auto;
+  }
+
+  .mobile-nav {
+    width: min(320px, calc(100vw - 24px));
+    max-width: 100vw;
+    padding: calc(var(--mobile-header-height) + 12px) 16px 24px;
+  }
+
+  .about-tab-wrap,
+  .guide-tab-wrap {
+    top: var(--mobile-header-height);
+  }
+
+  .about-tabs,
+  .guide-tabs {
+    max-width: 100%;
+  }
+
+  body[data-page="guide"] .guide-tabs {
+    display: flex;
+    overflow-x: auto;
+    overflow-y: hidden;
+    flex-wrap: nowrap;
+  }
+
+  body[data-page="guide"] .guide-tab {
+    width: auto;
+    flex: 0 0 auto;
+    min-height: 52px;
+    padding: 10px 12px;
+    white-space: nowrap;
+  }
+
+  .home-hero-messages {
+    width: 100%;
+    zoom: 1;
+  }
+
+  body[data-page="counseling"] .counseling-main > .container > .consult-notice,
+  .bedridden-item-cta .btn,
+  body[data-page="guide"] #tab-grade .grade-card p,
+  .guide-case-row p,
+  .guide-case-text-link {
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
+
+  .compare-table-wrap {
+    max-width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .compare-table { min-width: 680px; }
+
+  body[data-page="board"] .board-grid,
+  body[data-page="service"] .svc-cards-grid,
+  body[data-page="about"] .service-icons-grid {
+    grid-template-columns: 1fr;
+  }
+
+  body[data-page="counseling"] .info-text {
+    grid-template-columns: minmax(72px, 88px) minmax(0, 1fr);
+    gap: 4px 12px;
+  }
+
+  .bedridden-item-cta .btn {
+    width: 100%;
+    font-size: 1rem !important;
+  }
+
+  .case-row[id] {
+    scroll-margin-top: calc(var(--mobile-header-height) + 16px);
+  }
+}
+
+@media (max-width: 430px) {
+  .mobile-nav-consult,
+  .btn,
+  .btn-call-now {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .consult-form {
+    padding-inline: 16px;
+  }
+}
+
+/* Mobile information cards use the same reading scale as page text. */
+@media (max-width: 768px) {
+  body[data-page] :is(
+    .service-feat, .case-preview-card, .svc-card, .case-card, .process-card,
+    .target-card, .doc-card, .benefit-item, .system-card, .consult-form,
+    .info-card, .consult-process, .consult-notice, .chronic-step, .stage-item,
+    .vital-step, .tube-card, .bedridden-item, .medication-panel, .med-step,
+    .referral-step, .counseling-card, .counseling-highlight, .process-step,
+    .faq-item, .target-list li, .home-service-card, .board-card-body,
+    .board-detail-card, .grade-card
+  ) :is(p, li, span) {
+    font-size: 16px !important;
+    line-height: 1.6 !important;
+    letter-spacing: 0 !important;
+  }
+
+  body[data-page] :is(
+    .service-feat, .case-preview-card, .svc-card, .case-card, .process-card,
+    .target-card, .doc-card, .benefit-item, .system-card, .consult-form,
+    .info-card, .consult-process, .consult-notice, .chronic-step, .stage-item,
+    .vital-step, .tube-card, .bedridden-item, .medication-panel, .med-step,
+    .referral-step, .counseling-card, .counseling-highlight, .process-step,
+    .faq-item, .target-list li, .home-service-card, .board-card-body,
+    .board-detail-card, .grade-card
+  ) :is(h3, h4, strong, b) {
+    font-size: 20px !important;
+    line-height: 1.4 !important;
+    letter-spacing: 0 !important;
+  }
+
+  body[data-page="guide"] #tab-target :is(
+    .guide-target-core p,
+    .guide-target-group-item p,
+    .guide-target-group-description,
+    .guide-target-group-item span
+  ) {
+    font-size: 16px !important;
+    line-height: 1.6 !important;
+    letter-spacing: 0 !important;
+  }
+
+  body[data-page="guide"] #tab-target :is(
+    .guide-target-core h3,
+    .guide-target-group-item h4
+  ) {
+    font-size: 20px !important;
+    line-height: 1.4 !important;
+    letter-spacing: 0 !important;
+  }
+}
+
+@media (max-width: 768px) {
+  body[data-page="guide"] #tab-target .guide-detail-head h2,
+  body[data-page="guide"] #tab-target .guide-target-general-title {
+    font-size: 22px !important;
+    line-height: 1.4 !important;
+    letter-spacing: 0 !important;
+  }
+
+  body[data-page="guide"] #tab-target .guide-target-core,
+  body[data-page="guide"] #tab-target .guide-target-group,
+  body[data-page="guide"] #tab-target .guide-target-support {
+    padding: 20px 16px;
+    gap: 14px;
+  }
+
+  body[data-page="guide"] #tab-target .guide-target-core h3,
+  body[data-page="guide"] #tab-target .guide-target-support h3,
+  body[data-page="guide"] #tab-target .guide-target-group-head h3,
+  body[data-page="guide"] #tab-target .guide-target-group-summary,
+  body[data-page="guide"] #tab-target .guide-target-group-item h4 {
+    font-size: 18px !important;
+    line-height: 1.45 !important;
+    letter-spacing: 0 !important;
+  }
+
+  body[data-page="guide"] #tab-target :is(
+    .guide-target-core p,
+    .guide-target-support p,
+    .guide-target-group-item p,
+    .guide-target-group-description
+  ) {
+    font-size: 16px !important;
+    line-height: 1.6 !important;
+    letter-spacing: 0 !important;
+  }
+
+  body[data-page="guide"] #tab-target .guide-target-group-head {
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+
+  body[data-page="guide"] #tab-target .guide-target-group-icon,
+  body[data-page="guide"] #tab-target .guide-target-core-icon,
+  body[data-page="guide"] #tab-target .guide-target-support-icon {
+    width: 44px;
+    height: 44px;
+  }
+
+  body[data-page="guide"] #tab-target .guide-target-group-icon svg,
+  body[data-page="guide"] #tab-target .guide-target-core-icon svg,
+  body[data-page="guide"] #tab-target .guide-target-support-icon svg {
+    width: 22px !important;
+    height: 22px !important;
+  }
+
+  body[data-page="guide"] #tab-target .guide-target-group-item {
+    padding: 14px 0;
+  }
+}
+
+/* Keep the complete FAQ composition at the mobile reading scale. */
+@media (max-width: 768px) {
+  body[data-page="guide"] #tab-faq .guide-faq-callout h3,
+  body[data-page="guide"] #tab-faq .guide-faq-question-copy {
+    font-size: 18px !important;
+    line-height: 1.45 !important;
+    letter-spacing: 0 !important;
+  }
+
+  body[data-page="guide"] #tab-faq .guide-faq-callout p,
+  body[data-page="guide"] #tab-faq .guide-faq-answer-panel p {
+    font-size: 16px !important;
+    line-height: 1.6 !important;
+    letter-spacing: 0 !important;
+  }
+
+  body[data-page="guide"] #tab-faq .guide-faq-index {
+    font-size: 14px !important;
+    line-height: 1.4 !important;
+  }
+
+  body[data-page="guide"] #tab-faq .guide-faq-trigger {
+    min-height: 68px;
+    padding: 14px 16px;
+    gap: 10px;
+  }
+
+  body[data-page="guide"] #tab-faq .guide-faq-trigger-main {
+    grid-template-columns: 36px 36px minmax(0, 1fr);
+    gap: 8px;
+  }
+
+  body[data-page="guide"] #tab-faq .guide-faq-topic-icon {
+    width: 36px;
+    height: 36px;
+  }
+
+  body[data-page="guide"] #tab-faq .guide-faq-topic-icon svg {
+    width: 20px !important;
+    height: 20px !important;
+  }
+
+  body[data-page="guide"] #tab-faq .guide-faq-chevron {
+    width: 18px !important;
+    height: 18px !important;
+  }
+
+  body[data-page="guide"] #tab-faq .guide-faq-answer-panel.is-open {
+    padding: 14px 16px 16px;
+  }
+}
+
+/* The about and guide hero images should end with their content on mobile. */
+@media (max-width: 768px) {
+  body:is([data-page="about"], [data-page="guide"]) .page-header.page-image-hero {
+    min-height: 100svh !important;
+    height: auto;
+    padding: calc(68px + 36px) 0 84px !important;
+  }
+
+  body:is([data-page="about"], [data-page="guide"]) .page-header.page-image-hero > .container {
+    min-height: 480px;
+  }
+}
+
+@media (max-width: 768px) {
+  body[data-page="guide"] .cta-banner-inner {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 24px;
+  }
+
+  body[data-page="guide"] .cta-banner-text,
+  body[data-page="guide"] .cta-banner-btns {
+    width: 100%;
+  }
+
+  body[data-page="guide"] .cta-banner-btns {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+    margin-top: 0;
+  }
+
+  body[data-page="guide"] .cta-banner-btns .btn {
+    width: 100%;
+    min-width: 0;
+    white-space: normal;
+  }
+
+  body[data-page="guide"] .cta-banner-text h2 {
+    font-size: 20px !important;
+    line-height: 1.4 !important;
+  }
+
+  body[data-page="guide"] .cta-banner-text p {
+    font-size: 16px !important;
+    line-height: 1.6 !important;
+  }
+}
+
+@media (max-width: 768px) {
+  body[data-page="counseling"] .consult-form {
+    padding: 20px 16px;
+    gap: 16px;
+  }
+
+  body[data-page="counseling"] .consult-form .form-group > label,
+  body[data-page="counseling"] .consult-form :is(.radio-label, .checkbox-label) {
+    font-size: 16px !important;
+    line-height: 1.5 !important;
+  }
+
+  body[data-page="counseling"] .consult-form .form-group input[type="text"],
+  body[data-page="counseling"] .consult-form .form-group input[type="tel"],
+  body[data-page="counseling"] .consult-form .form-group textarea {
+    min-height: 48px;
+    padding: 10px 12px;
+    font-size: 16px !important;
+    line-height: 1.5 !important;
+  }
+
+  body[data-page="counseling"] .consult-form :is(.radio-label, .checkbox-label) {
+    padding: 8px 12px;
+  }
+
+  body[data-page="counseling"] .consult-form #submitBtn {
+    min-height: 52px;
+    padding: 12px 18px;
+    font-size: 16px !important;
+  }
+}
+
+@media (max-width: 768px) {
+  body[data-page="counseling"] .privacy-agree,
+  body[data-page="counseling"] .privacy-agree .checkbox-label > span:not(.check-mark),
+  body[data-page="counseling"] .privacy-agree .required {
+    font-size: 16px !important;
+    line-height: 1.5 !important;
+  }
+
+  body[data-page="counseling"] .privacy-agree .privacy-detail-btn {
+    font-size: 14px !important;
+    line-height: 1.5 !important;
+  }
+
+  body[data-page="counseling"] .consult-form .privacy-agree .required {
+    font-size: 16px !important;
+    line-height: 1.5 !important;
+  }
+}
+
+@media (max-width: 768px) {
+  body[data-page="about"] #tab-greeting .stats-band {
+    padding: 24px 0;
+    margin-top: 28px;
+  }
+
+  body[data-page="about"] #tab-greeting .stat-num {
+    font-size: 24px !important;
+    line-height: 1.3 !important;
+  }
+
+  body[data-page="about"] #tab-greeting .stat-num span {
+    font-size: 14px !important;
+    line-height: 1.3 !important;
+    margin-left: 2px;
+  }
+
+  body[data-page="about"] #tab-greeting .stat-label {
+    font-size: 13px !important;
+    line-height: 1.5 !important;
+  }
+
+  body[data-page="about"] #tab-services .compare-table-wrap {
+    overflow-x: visible;
+  }
+
+  body[data-page="about"] #tab-services .compare-table {
+    min-width: 0;
+    table-layout: fixed;
+  }
+
+  body[data-page="about"] #tab-services .compare-table th,
+  body[data-page="about"] #tab-services .compare-table td {
+    padding: 7px 5px;
+    font-size: 13px !important;
+    line-height: 1.45 !important;
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
+
+  body[data-page="about"] #tab-services .compare-table tbody th {
+    white-space: normal;
+  }
+
+  body[data-page="about"] #tab-system .system-features {
+    grid-template-columns: 1fr;
+    gap: 16px;
+    max-width: 100%;
+  }
+
+  body[data-page="about"] #tab-system .sys-feat-item {
+    width: 100%;
+    height: auto;
+    min-height: 0;
+    aspect-ratio: auto;
+    padding: 16px;
+    justify-content: flex-start;
+  }
+
+  body[data-page="about"] #tab-system .sys-feat-icon {
+    width: 40px;
+    height: 40px;
+    margin-bottom: 8px;
+  }
+
+  body[data-page="about"] #tab-system .sys-feat-icon svg {
+    width: 20px !important;
+    height: 20px !important;
+  }
+
+  body[data-page="about"] #tab-system .sys-feat-item h3 {
+    font-size: 18px !important;
+    line-height: 1.45 !important;
+  }
+
+  body[data-page="about"] #tab-system .sys-feat-list li,
+  body[data-page="about"] #tab-system .sys-feat-item p {
+    font-size: 16px !important;
+    line-height: 1.6 !important;
+    white-space: normal;
+  }
+
+  body[data-page="about"] #tab-system .sys-feat-list {
+    gap: 4px;
+    margin-top: 10px;
+  }
+
+  body[data-page="about"] .cta-banner-inner {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 24px;
+  }
+
+  body[data-page="about"] .cta-banner-text,
+  body[data-page="about"] .cta-banner-btns {
+    width: 100%;
+  }
+
+  body[data-page="about"] .cta-banner-btns {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+    margin-top: 0;
+  }
+
+  body[data-page="about"] .cta-banner-btns .btn {
+    width: 100%;
+    min-width: 0;
+    white-space: normal;
+  }
+
+  body[data-page="about"] .cta-banner-text h2 {
+    font-size: 20px !important;
+    line-height: 1.4 !important;
+  }
+
+  body[data-page="about"] .cta-banner-text p {
+    font-size: 16px !important;
+    line-height: 1.6 !important;
+  }
+}
+
+@media (max-width: 600px) {
+  body[data-page="index"] .home-service-card h3 {
+    font-size: 18px !important;
+    line-height: 1.45 !important;
+    white-space: nowrap;
+  }
+
+  body[data-page="index"] .home-services .home-service-card h3 {
+    font-size: 18px !important;
+    line-height: 1.45 !important;
+    white-space: nowrap;
+  }
+
+  body[data-page="index"] .home-services .home-service-card p {
+    font-size: 14px !important;
+    line-height: 1.5 !important;
+  }
+}
+
+@media (max-width: 768px) {
+  body[data-page="case"] .case-row {
+    gap: 20px;
+    padding: 24px 0;
+  }
+
+  body[data-page="case"] .case-row-content {
+    gap: 12px;
+  }
+
+  body[data-page="case"] .case-row-content h3 {
+    font-size: 20px !important;
+    line-height: 1.45 !important;
+    letter-spacing: 0 !important;
+  }
+
+  body[data-page="case"] .case-section h4,
+  body[data-page="case"] .case-index,
+  body[data-page="case"] .case-meta span {
+    font-size: 16px !important;
+    line-height: 1.5 !important;
+  }
+
+  body[data-page="case"] .case-section p,
+  body[data-page="case"] .case-process-list li,
+  body[data-page="case"] .case-takeaway {
+    font-size: 16px !important;
+    line-height: 1.6 !important;
+  }
+
+  body[data-page="case"] .case-content {
+    gap: 12px;
+    margin-top: 0;
+  }
+
+  body[data-page="case"] .case-process-list {
+    gap: 5px;
+  }
+
+  body[data-page="case"] .case-process-list li {
+    padding-left: 16px;
+  }
+
+  body[data-page="case"] .case-takeaway {
+    padding: 12px 14px;
+  }
+
+  body[data-page="case"] .case-closing-flow li {
+    min-height: 0;
+    padding: 16px 14px;
+    gap: 10px;
+  }
+
+  body[data-page="case"] .case-closing-flow li > span {
+    width: 36px;
+    height: 36px;
+  }
+
+  body[data-page="case"] .case-closing-flow p,
+  body[data-page="case"] .case-closing-flow strong {
+    font-size: 16px !important;
+    line-height: 1.6 !important;
+  }
+}
+
+@media (max-width: 768px) {
+  body[data-page="service"] .cta-banner-inner {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 24px;
+  }
+
+  body[data-page="service"] .cta-banner-text,
+  body[data-page="service"] .cta-banner-btns {
+    width: 100%;
+  }
+
+  body[data-page="service"] .cta-banner-btns {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+    margin-top: 0;
+  }
+
+  body[data-page="service"] .cta-banner-btns .btn {
+    width: 100%;
+    min-width: 0;
+    white-space: normal;
+  }
+
+  body[data-page="service"] .cta-banner-text h2 {
+    font-size: 20px !important;
+    line-height: 1.4 !important;
+  }
+
+  body[data-page="service"] .cta-banner-text p {
+    font-size: 16px !important;
+    line-height: 1.6 !important;
+  }
+}
