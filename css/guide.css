@@ -992,6 +992,12 @@
   line-height: 1.7;
   color: var(--color-text-sub);
 }
+/* 상단 안내 영역 3단 구조(부제목1줄+제목1줄+본문3줄) 통일을 위해,
+   본문 길이가 크게 다른 탭만 폭을 개별 보정해 정확히 3줄로 맞춤 */
+#tab-target .guide-detail-intro { max-width: min(880px, 100%); }
+#tab-grade .guide-detail-intro { max-width: min(1000px, 100%); }
+#tab-prepare .guide-detail-intro { max-width: min(380px, 100%); }
+#tab-faq .guide-detail-intro { max-width: min(580px, 100%); }
 .guide-section-eyebrow {
   display: block;
   margin-bottom: 10px;

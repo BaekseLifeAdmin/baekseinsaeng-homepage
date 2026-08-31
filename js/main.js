@@ -95,7 +95,7 @@ const FOOTER_HTML = `
       </div>
     </div>
     <div class="footer-bottom">
-      <p>©2026 주식회사CORNEX</p>
+      <p>© 2026 주식회사 코넥스. All Rights Reserved</p>
       <p>본 사이트 정보는 건강관리 목적이며, 실제 진단·치료를 대체하지 않습니다.</p>
     </div>
   </div>

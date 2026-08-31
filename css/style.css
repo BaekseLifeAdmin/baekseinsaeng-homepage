@@ -623,9 +623,10 @@ section { background: var(--color-surface); }
    ============================================================ */
 .site-footer {
   padding: 56px 0 0;
-  background: #edf7fa;
-  color: #43566a;
+  background: #666a73;
+  color: #dbe3e9;
   border-top: 1px solid #d6e8ee;
+  box-shadow: 0 -10px 30px rgba(15, 23, 42, .06), inset 0 24px 32px -20px rgba(0, 0, 0, .3);
 }
 
 /* 그리드 3등분 대신, 각 블록이 내용 크기만큼만 차지하고 전체 폭에 고르게
@@ -679,7 +680,7 @@ section { background: var(--color-surface); }
   font-size: 15px;
   font-weight: 400;
   line-height: 1.7;
-  color: #53687b;
+  color: #dbe3e9;
 }
 
 .footer-col-title {
@@ -687,7 +688,7 @@ section { background: var(--color-surface); }
   font-size: 15px;
   font-weight: 700;
   letter-spacing: .02em;
-  color: #1c3548;
+  color: #eef2f5;
 }
 
 .footer-col-list {
@@ -709,15 +710,15 @@ section { background: var(--color-surface); }
   padding: 8px;
   box-sizing: content-box;
   border-radius: 50%;
-  background: #dbeef2;
-  color: #1682a3;
+  background: #dbe3e9;
+  color: #4b5563;
 }
 
 .footer-info .footer-col-list li span {
   font-size: 15px;
   font-weight: 400;
   line-height: 1.6;
-  color: #4b6274;
+  color: #dbe3e9;
 }
 
 /* 5개 링크를 위 3 / 아래 2, 두 줄로 배치(센터 정보 열과 시각적 균형을 맞춤) */
@@ -733,7 +734,7 @@ section { background: var(--color-surface); }
   width: fit-content;
   font-size: 15px;
   font-weight: 600;
-  color: #425b6e;
+  color: #dbe3e9;
   transition: color .2s ease;
 }
 
@@ -754,12 +755,12 @@ section { background: var(--color-surface); }
 .footer-bottom p {
   font-size: 15px;
   font-weight: 400;
-  color: #718493;
+  color: #dbe3e9;
 }
 
 .footer-bottom p.footer-credit {
   font-size: 12px;
-  color: #a3b2bd;
+  color: #b7c2ca;
 }
 
 @media (max-width: 900px) {
