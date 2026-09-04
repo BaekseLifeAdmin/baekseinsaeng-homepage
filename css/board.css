@@ -40,14 +40,26 @@
 }
 
 /* ── Board table ──────────────────────────────────────────── */
-.board-table-wrap {
-  overflow-x: hidden;
-}
-
 .board-table {
   width: 100%;
   min-width: 460px;
   border-collapse: collapse;
+}
+
+.board-table tbody tr {
+  opacity: 0;
+  transition: opacity 0.5s cubic-bezier(.22, 1, .36, 1);
+}
+
+.board-table tbody tr.is-visible {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .board-table tbody tr {
+    transition: none;
+    opacity: 1;
+  }
 }
 
 .board-table thead th {

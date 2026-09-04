@@ -23,7 +23,7 @@ async function initializeBoardDetail() {
     if (backLink) {
       const pageValue = getListPageFromQuery(window.location.search);
       const safePage = Number.isInteger(pageValue) && pageValue > 0 ? pageValue : 1;
-      backLink.setAttribute('href', `board.html?page=${safePage}`);
+      backLink.setAttribute('href', `board.html?page=${safePage}&from=board`);
     }
 
     detailContent.innerHTML = `
@@ -49,10 +49,10 @@ async function initializeBoardDetail() {
     if (relatedPostsEl) {
       relatedPostsEl.innerHTML = `
         <div class="board-related-item">
-          ${previousPost ? `<span class="board-related-label">이전 글</span><p class="board-related-title">${escapeText(previousPost.title || '제목 없음')}</p><a class="board-related-link" href="board-detail.html?id=${encodeURIComponent(previousPost.id)}&page=${getListPageFromQuery(window.location.search)}">이전 글 보기 →</a>` : `<span class="board-related-label">이전 글</span><p class="board-related-empty">이전 글이 없습니다.</p>`}
+          ${previousPost ? `<span class="board-related-label">이전 글</span><p class="board-related-title">${escapeText(previousPost.title || '제목 없음')}</p><a class="board-related-link" href="board-detail.html?id=${encodeURIComponent(previousPost.id)}&page=${getListPageFromQuery(window.location.search)}&from=board">이전 글 보기 →</a>` : `<span class="board-related-label">이전 글</span><p class="board-related-empty">이전 글이 없습니다.</p>`}
         </div>
         <div class="board-related-item is-next">
-          ${nextPost ? `<span class="board-related-label">다음 글</span><p class="board-related-title">${escapeText(nextPost.title || '제목 없음')}</p><a class="board-related-link" href="board-detail.html?id=${encodeURIComponent(nextPost.id)}&page=${getListPageFromQuery(window.location.search)}">다음 글 보기 →</a>` : `<span class="board-related-label">다음 글</span><p class="board-related-empty">다음 글이 없습니다.</p>`}
+          ${nextPost ? `<span class="board-related-label">다음 글</span><p class="board-related-title">${escapeText(nextPost.title || '제목 없음')}</p><a class="board-related-link" href="board-detail.html?id=${encodeURIComponent(nextPost.id)}&page=${getListPageFromQuery(window.location.search)}&from=board">다음 글 보기 →</a>` : `<span class="board-related-label">다음 글</span><p class="board-related-empty">다음 글이 없습니다.</p>`}
         </div>
       `;
     }
@@ -68,11 +68,11 @@ function renderBoardNotFound(detailContent, backLink, isError = false) {
     <div class="board-state" role="alert">
       <strong>${isError ? '게시글을 불러오지 못했습니다.' : '게시글을 찾을 수 없습니다.'}</strong>
       <p>${isError ? '잠시 후 다시 시도해 주세요.' : '삭제되었거나 비공개로 전환된 게시글입니다.'}</p>
-      <a class="btn btn-outline-navy" href="board.html?page=1">목록으로 이동</a>
+      <a class="btn btn-outline-navy" href="board.html?page=1&from=board">목록으로 이동</a>
     </div>
   `;
   if (backLink) {
-    backLink.setAttribute('href', 'board.html?page=1');
+    backLink.setAttribute('href', 'board.html?page=1&from=board');
   }
 }
 

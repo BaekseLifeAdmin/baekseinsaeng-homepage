@@ -1737,8 +1737,6 @@ body[data-page="index"] .home-service-card p {
 body :is(.cta-banner, .counseling-cta-banner) {
   background: #dff1f5 !important;
   color: var(--color-text-main);
-  border-top: 1px solid #c9e3ea;
-  border-bottom: 1px solid #c9e3ea;
 }
 
 body :is(.cta-banner-text, .counseling-cta-text) h2 {

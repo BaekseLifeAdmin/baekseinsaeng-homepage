@@ -1,9 +1,13 @@
 .board-detail-main {
-  padding-bottom: 24px;
+  padding-bottom: 0;
 }
 
 .board-detail-section {
   padding: 72px 0 80px;
+  min-height: 100vh;
+  min-height: 100svh;
+  display: flex;
+  align-items: center;
 }
 
 .board-detail-meta {

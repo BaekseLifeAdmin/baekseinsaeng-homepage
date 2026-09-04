@@ -126,10 +126,11 @@ function renderBoardPosts(listEl, posts, currentPage, total) {
     const globalIndex = (currentPage - 1) * POSTS_PER_PAGE + index;
     const rowNumber = Math.max(1, safeTotal - globalIndex);
     const safeNumber = String(rowNumber).padStart(2, '0');
-    const detailUrl = `board-detail.html?id=${encodeURIComponent(post.id)}&page=${currentPage}`;
+    const detailUrl = `board-detail.html?id=${encodeURIComponent(post.id)}&page=${currentPage}&from=board`;
+    const rowDelay = Math.min(index * 45, 280);
 
     return `
-      <tr>
+      <tr style="transition-delay: ${rowDelay}ms">
         <td>${safeNumber}</td>
         <td><a class="board-title-link" href="${detailUrl}">${safeTitle}</a></td>
         <td>${safeDate}</td>
@@ -138,11 +139,18 @@ function renderBoardPosts(listEl, posts, currentPage, total) {
   }).join('');
 
   const fillerCount = Math.max(0, POSTS_PER_PAGE - posts.length);
-  const fillerRows = Array.from({ length: fillerCount }, () => (
-    '<tr class="board-row-filler" aria-hidden="true"><td colspan="3">&nbsp;</td></tr>'
-  )).join('');
+  const fillerRows = Array.from({ length: fillerCount }, (_, index) => {
+    const rowDelay = Math.min((posts.length + index) * 45, 280);
+    return `<tr class="board-row-filler" style="transition-delay: ${rowDelay}ms" aria-hidden="true"><td colspan="3">&nbsp;</td></tr>`;
+  }).join('');
 
   listEl.innerHTML = postRows + fillerRows;
+
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      listEl.querySelectorAll('tr').forEach((row) => row.classList.add('is-visible'));
+    });
+  });
 }
 
 function renderPagination(paginationEl, currentPage, totalPages) {

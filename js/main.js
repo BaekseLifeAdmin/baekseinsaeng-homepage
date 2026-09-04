@@ -329,13 +329,41 @@ function initHomeHeroRotation() {
 /* ── Subpage Hero Sequence & Auto Scroll ─────────────────── */
 function initSubpageHeroSequence() {
   const hero = document.querySelector('.page-image-hero');
-  if (!hero) return;
-  if (window.location.hash) return;
-  if (window.scrollY > 0) window.scrollTo(0, 0);
+  if (!hero) {
+    document.documentElement.classList.remove('skip-hero-intro');
+    return;
+  }
+  if (window.location.hash) {
+    document.documentElement.classList.remove('skip-hero-intro');
+    return;
+  }
 
   const animatedContent = hero.querySelector('.page-header-content');
   const target = hero.nextElementSibling;
-  if (!animatedContent || !target) return;
+  if (!animatedContent || !target) {
+    document.documentElement.classList.remove('skip-hero-intro');
+    return;
+  }
+
+  const skipAnimation = document.body.dataset.page === 'board'
+    && new URLSearchParams(window.location.search).get('from') === 'board';
+
+  if (skipAnimation) {
+    const header = document.getElementById('siteHeader');
+    const headerHeight = header ? header.getBoundingClientRect().height : 0;
+    const destinationY = Math.max(0, target.getBoundingClientRect().top + window.scrollY - headerHeight);
+    const previousBehavior = document.documentElement.style.scrollBehavior;
+    document.documentElement.style.scrollBehavior = 'auto';
+    window.scrollTo(0, destinationY);
+    document.documentElement.scrollTop = destinationY;
+    document.documentElement.style.scrollBehavior = previousBehavior;
+    document.documentElement.classList.remove('skip-hero-intro');
+    return;
+  }
+
+  document.documentElement.classList.remove('skip-hero-intro');
+
+  if (window.scrollY > 0) window.scrollTo(0, 0);
 
   hero.classList.add('hero-sequence-prepared');
   document.documentElement.classList.add('auto-scroll-active');
