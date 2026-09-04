@@ -50,7 +50,7 @@
       overview: '겉으로 보이지 않는 이상징후, 꾸준한 관찰이 먼저 발견합니다. 이상 발견 시 신속히 병원 진료로 연결합니다.'
     },
     {
-      key: 'bedridden', anchor: 'bedridden-care', icon: 'bedridden', title: '와상환자 관리',
+      key: 'bedridden', anchor: 'bedridden-care', icon: 'bedridden', title: '와상 어르신 관리',
       home: '침상 생활 중 발생할 수 있는 건강 문제를 세심히 관찰합니다',
       about: '와상 상태의 어르신에게 필요한 건강 관찰과 일상 간호를 지원합니다.',
       overview: '욕창, 근력 저하, 호흡기 합병증까지. 장기간 누워 계신 어르신의 전체 건강을 정기 방문으로 살핍니다.'
@@ -75,7 +75,7 @@
     Object.freeze({ ...SERVICE_BY_KEY.tube, title: '튜브관리' }),
     Object.freeze({ ...SERVICE_BY_KEY.rehabilitation, title: '재활간호' }),
     Object.freeze({ ...SERVICE_BY_KEY.chronic, title: '만성질환관리' }),
-    Object.freeze({ ...SERVICE_BY_KEY.bedridden, title: '와상환자관리' }),
+    Object.freeze({ ...SERVICE_BY_KEY.bedridden, title: '와상 어르신 관리' }),
     Object.freeze({ ...SERVICE_BY_KEY.counseling, title: '보호자 상담' })
   ]);
   const EXPECTED_KEYS = Object.freeze([

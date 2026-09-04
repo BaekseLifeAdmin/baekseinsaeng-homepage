@@ -547,13 +547,15 @@ body[data-page="case"] section.cta-banner {
 
 .case-quick-link > span {
   position: absolute;
-  left: calc(100% + 14px);
+  left: calc(100% + 22px);
   top: 50%;
   min-width: max-content;
   padding: 8px 12px;
   border-radius: 8px;
   color: #fff;
-  background: var(--color-text-main);
+  background: rgba(17, 24, 39, .68);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
   font-size: 16px !important;
   line-height: 1.3 !important;
   font-weight: 700 !important;
@@ -582,6 +584,59 @@ body[data-page="case"] section.cta-banner {
   color: #fff;
   border-color: var(--color-primary);
   background: var(--color-primary);
+}
+
+.case-quick-link.is-active > span {
+  opacity: 1;
+  visibility: visible;
+  transform: translate(0, -50%);
+}
+
+/* 왼쪽 아래 사례 네비게이션 안내 문구 */
+.case-nav-hint {
+  position: fixed;
+  left: 24px;
+  bottom: 48px;
+  z-index: 900;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  max-width: min(380px, calc(100vw - 48px));
+  padding: 0;
+  border: none;
+  background: none;
+  box-shadow: none;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translateY(10px);
+  transition: opacity .25s ease, visibility .25s ease, transform .25s ease;
+}
+
+.case-nav-hint.is-visible {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.case-nav-hint strong {
+  flex: none;
+  color: rgba(107, 114, 128, .75);
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.3;
+  white-space: nowrap;
+}
+
+.case-nav-hint p {
+  flex: none;
+  margin: 0;
+  padding-left: 8px;
+  border-left: 1px solid rgba(107, 114, 128, .25);
+  color: rgba(107, 114, 128, .6);
+  font-size: 10px;
+  line-height: 1.3;
 }
 
 .case-row[id] { scroll-margin-top: 92px; }
@@ -645,4 +700,5 @@ body[data-page="case"] section.cta-banner {
 
 @media (max-width: 1180px), (max-height: 620px) {
   .case-quick-nav { display: none; }
+  .case-nav-hint { display: none; }
 }

@@ -22,7 +22,7 @@ const HEADER_HTML = `
           <li><a href="service.html" data-page="service">방문간호서비스</a></li>
           <li><a href="guide.html" data-page="guide">이용안내</a></li>
           <li><a href="case.html" data-page="case">간호사례</a></li>
-          <li><a href="board.html" data-page="board">게시판</a></li>
+          <li><a href="board.html" data-page="board">방문간호 이야기</a></li>
           <li><a href="counseling.html" data-page="counseling">보호자상담</a></li>
         </ul>
       </nav>
@@ -39,7 +39,7 @@ const HEADER_HTML = `
     <li><a href="service.html">방문간호서비스</a></li>
     <li><a href="guide.html">이용안내</a></li>
     <li><a href="case.html">간호사례</a></li>
-    <li><a href="board.html">게시판</a></li>
+    <li><a href="board.html">방문간호 이야기</a></li>
     <li><a href="counseling.html">보호자상담</a></li>
   </ul>
   <div class="mobile-nav-contact">
@@ -59,7 +59,7 @@ const FOOTER_HTML = `
           <img src="images/png/Logo.png" alt="백세인생 방문간호센터 로고" class="footer-logo-baekse">
           <img src="images/png/CORNEX Logo.png" alt="CORNEX 로고" class="footer-logo-cornex">
         </div>
-        <p class="footer-desc">임상 경험을 갖춘 전문 간호사가 직접 가정을 방문하여 지속적인 건강관리와 방문간호 서비스를 제공합니다. 환자와 보호자가 가정에서도 안심할 수 있도록 함께하겠습니다.</p>
+        <p class="footer-desc">임상 경험을 갖춘 전문 간호사가 직접 가정을 방문하여 지속적인 건강관리와 방문간호 서비스를 제공합니다. 어르신과 보호자가 가정에서도 안심할 수 있도록 함께하겠습니다.</p>
       </div>
       <div class="footer-col footer-info">
         <h4 class="footer-col-title">센터 정보</h4>
@@ -338,6 +338,7 @@ function initSubpageHeroSequence() {
   if (!animatedContent || !target) return;
 
   hero.classList.add('hero-sequence-prepared');
+  document.documentElement.classList.add('auto-scroll-active');
 
   const textSequenceDuration = 800;
   const scrollDuration = 3600;
@@ -359,6 +360,7 @@ function initSubpageHeroSequence() {
     cancelled = true;
     window.cancelAnimationFrame(scrollFrame);
     document.documentElement.style.scrollBehavior = previousScrollBehavior;
+    document.documentElement.classList.remove('auto-scroll-active');
     removeInteractionListeners();
   };
 
@@ -396,6 +398,7 @@ function initSubpageHeroSequence() {
       window.scrollTo(0, destinationY);
       document.documentElement.scrollTop = destinationY;
       document.documentElement.style.scrollBehavior = previousScrollBehavior;
+      document.documentElement.classList.remove('auto-scroll-active');
       removeInteractionListeners();
     };
 

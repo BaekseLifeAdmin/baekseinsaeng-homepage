@@ -27,24 +27,32 @@ async function initializeBoardDetail() {
     }
 
     detailContent.innerHTML = `
-      <article class="board-detail-card">
+      <article>
         <div class="board-detail-meta">
           <span>${escapeText(formatBoardDate(post.date))}</span>
-          <span class="tag tag-teal">게시판</span>
         </div>
         <h1 class="board-detail-title">${escapeText(post.title || '제목 없음')}</h1>
+        <hr class="board-detail-divider">
         ${renderDetailImage(post.imageUrl, post.title)}
         <div class="board-detail-content">${escapeText(post.content || '내용이 없습니다.')}</div>
       </article>
     `;
 
+    const detailImage = detailContent.querySelector('.board-detail-image');
+    if (detailImage) {
+      detailImage.addEventListener('error', () => {
+        const media = detailImage.closest('.board-detail-media');
+        if (media) media.remove();
+      }, { once: true });
+    }
+
     if (relatedPostsEl) {
       relatedPostsEl.innerHTML = `
-        <div class="board-related-card">
-          ${previousPost ? `<span class="board-related-label">이전 글</span><h2 class="board-related-title">${escapeText(previousPost.title || '제목 없음')}</h2><a class="board-related-link" href="board-detail.html?id=${encodeURIComponent(previousPost.id)}&page=${getListPageFromQuery(window.location.search)}">이전 글 보기 →</a>` : '<span class="board-related-label">이전 글</span><p>이전 글이 없습니다.</p>'}
+        <div class="board-related-item">
+          ${previousPost ? `<span class="board-related-label">이전 글</span><p class="board-related-title">${escapeText(previousPost.title || '제목 없음')}</p><a class="board-related-link" href="board-detail.html?id=${encodeURIComponent(previousPost.id)}&page=${getListPageFromQuery(window.location.search)}">이전 글 보기 →</a>` : `<span class="board-related-label">이전 글</span><p class="board-related-empty">이전 글이 없습니다.</p>`}
         </div>
-        <div class="board-related-card">
-          ${nextPost ? `<span class="board-related-label">다음 글</span><h2 class="board-related-title">${escapeText(nextPost.title || '제목 없음')}</h2><a class="board-related-link" href="board-detail.html?id=${encodeURIComponent(nextPost.id)}&page=${getListPageFromQuery(window.location.search)}">다음 글 보기 →</a>` : '<span class="board-related-label">다음 글</span><p>다음 글이 없습니다.</p>'}
+        <div class="board-related-item is-next">
+          ${nextPost ? `<span class="board-related-label">다음 글</span><p class="board-related-title">${escapeText(nextPost.title || '제목 없음')}</p><a class="board-related-link" href="board-detail.html?id=${encodeURIComponent(nextPost.id)}&page=${getListPageFromQuery(window.location.search)}">다음 글 보기 →</a>` : `<span class="board-related-label">다음 글</span><p class="board-related-empty">다음 글이 없습니다.</p>`}
         </div>
       `;
     }
@@ -60,7 +68,7 @@ function renderBoardNotFound(detailContent, backLink, isError = false) {
     <div class="board-state" role="alert">
       <strong>${isError ? '게시글을 불러오지 못했습니다.' : '게시글을 찾을 수 없습니다.'}</strong>
       <p>${isError ? '잠시 후 다시 시도해 주세요.' : '삭제되었거나 비공개로 전환된 게시글입니다.'}</p>
-      <a class="btn btn-outline-navy" href="board.html?page=1">게시판으로 이동</a>
+      <a class="btn btn-outline-navy" href="board.html?page=1">목록으로 이동</a>
     </div>
   `;
   if (backLink) {
@@ -69,15 +77,16 @@ function renderBoardNotFound(detailContent, backLink, isError = false) {
 }
 
 function renderDetailImage(imageUrl, altText) {
-  const safeAlt = escapeText(altText || '게시글 이미지');
   if (!isSafeImageUrl(imageUrl)) {
-    return '<div class="board-detail-image-wrap"><div class="board-detail-fallback">표시할 이미지가 없습니다.</div></div>';
+    return '';
   }
+  const safeAlt = escapeText(altText || '게시글 이미지');
   const safeUrl = escapeText(imageUrl);
 
   return `
-    <div class="board-detail-image-wrap">
+    <div class="board-detail-media">
       <img class="board-detail-image" src="${safeUrl}" alt="${safeAlt}">
+      <hr class="board-detail-divider">
     </div>
   `;
 }

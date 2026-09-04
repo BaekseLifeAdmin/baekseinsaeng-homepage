@@ -111,15 +111,16 @@ medication
 - 서비스 체크박스 항목을 변경하면 외부 접수 데이터의 `services` 값도 달라짐
 - 전화번호, 운영시간, 주소가 `main.js`, `about.html`, 다른 CTA에도 중복되어 있으므로 함께 검색하여 수정해야 함
 
-### `board.html` — 게시판 목록
+### `board.html` — 방문간호 이야기 목록
 
-- HTML에는 목록 내용을 직접 저장하지 않고 목록 컨테이너만 있음
-- `#boardList`, `#boardPagination`, `#boardSummary`를 `js/board.js`가 채움
+- 화면에 표시되는 게시판 명칭은 "방문간호 이야기"(내부 파일/클래스명은 기존 `board` 그대로 유지)
+- HTML에는 목록 내용을 직접 저장하지 않고 표(`<table class="board-table">`)와 `<tbody id="boardList">`만 있음
+- `#boardList`(제목/번호/작성일 행), `#boardPagination`, `#boardSummary`를 `js/board.js`가 채움
 - 한 페이지당 게시글 수는 `js/board.js`의 `POSTS_PER_PAGE = 9`
 - 페이지 주소 형식: `board.html?page=2`
 - 게시글 등록/수정 화면은 이 프로젝트에 없으며 외부 데이터/API에서 관리
 
-### `board-detail.html` — 게시판 상세
+### `board-detail.html` — 방문간호 이야기 상세
 
 - 게시글 ID를 URL에서 받아 외부 API로 상세 내용을 요청
 - 주소 형식: `board-detail.html?id=게시글ID&page=목록페이지`

@@ -2396,7 +2396,7 @@ body[data-page="counseling"] .counseling-main .form-head h2 {
 
 body[data-page="index"] .home-main .home-service-card h3,
 body[data-page="case"] .case-main .case-row-content h3,
-body[data-page="board"] .board-main .board-card-title,
+body[data-page="board"] .board-main .board-title-link,
 body[data-page="counseling"] .counseling-main :is(.info-card, .consult-process) h3 {
   font-size: var(--type-card-title);
   line-height: 1.4;
@@ -2513,21 +2513,11 @@ body[data-page="board"] .board-main {
 }
 body[data-page="board"] .board-intro { padding: var(--space-section) 0 0; }
 body[data-page="board"] .board-section {
-  min-height: 2000px;
   padding: 48px 0 var(--space-section);
   background: var(--color-surface);
 }
-body[data-page="board"] .board-grid {
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: var(--grid-gap);
-  align-items: stretch;
-}
 body[data-page="board"] .board-pagination {
-  position: absolute;
-  right: 0;
-  bottom: 48px;
-  left: 0;
-  margin-top: 0;
+  margin-top: 40px;
 }
 body[data-page="board"] .board-page-btn,
 body[data-page="board"] .board-page-nav,
@@ -2549,32 +2539,9 @@ body[data-page="board"] .board-page-ellipsis {
   justify-content: center;
   color: var(--color-text-muted);
 }
-body[data-page="board"] .board-card { height: 100%; }
-body[data-page="board"] .board-card-link { display: flex; height: 100%; flex-direction: column; border-radius: var(--card-radius); }
-body[data-page="board"] .board-card-image-wrap { aspect-ratio: 16 / 10; }
-body[data-page="board"] .board-card-body { flex: 1; min-height: 280px; padding: var(--card-padding); }
-body[data-page="board"] .board-skeleton {
-  display: flex;
-  height: 100%;
-  flex-direction: column;
-  border-radius: var(--card-radius);
-}
-body[data-page="board"] .board-skeleton-image {
-  flex: 0 0 auto;
-  aspect-ratio: 16 / 10;
-}
-body[data-page="board"] .board-skeleton-body {
-  flex: 1;
-  min-height: 280px;
-  padding: var(--card-padding);
-  align-content: start;
-}
-body[data-page="board"] .board-card-title { font-size: var(--type-card-title); line-height: 1.4; }
-body[data-page="board"] .board-card-excerpt { font-size: 16px; }
 body[data-page="board"] .board-detail-section { padding: var(--space-section-medium) 0 var(--space-section); }
-body[data-page="board"] .board-detail-card { padding: 40px; border-radius: var(--card-radius); }
 body[data-page="board"] .board-detail-title { font-size: var(--type-section-title); line-height: 1.35; }
-body[data-page="board"] .board-detail-image { width: 100%; max-width: none; max-height: 640px; }
+body[data-page="board"] .board-detail-image { width: 100%; max-width: none; }
 body[data-page="board"] .board-detail-content {
   width: 100%;
   max-width: 900px;
@@ -2624,9 +2591,7 @@ body[data-page="counseling"] .info-icon svg { width: var(--icon-sm); height: var
 @media (max-width: 1024px) {
   body[data-page="about"] .greeting-grid { grid-template-columns: 1fr; gap: 0; }
   body[data-page="service"] .svc-cards-grid,
-  body[data-page="index"] .home-services-grid,
-  body[data-page="board"] .board-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  body[data-page="board"] .board-section { min-height: 3200px; }
+  body[data-page="index"] .home-services-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   body[data-page="counseling"] .counseling-grid { grid-template-columns: 1fr; gap: 40px; }
 }
 
@@ -2655,19 +2620,14 @@ body[data-page="counseling"] .info-icon svg { width: var(--icon-sm); height: var
   body[data-page="guide"] .guide-process-num { width: 64px; height: 64px; }
   body[data-page="guide"] .guide-process::before { left: 31px; }
   body[data-page="board"] .board-intro { padding-top: var(--space-section-mobile); }
-  body[data-page="board"] .board-detail-card,
   body[data-page="counseling"] .consult-form { padding: 24px 20px; }
 }
 
 @media (max-width: 600px) {
   body[data-page="service"] .svc-cards-grid,
-  body[data-page="index"] .home-services-grid,
-  body[data-page="board"] .board-grid { grid-template-columns: 1fr; }
-  body[data-page="board"] .board-section { min-height: 5200px; }
+  body[data-page="index"] .home-services-grid { grid-template-columns: 1fr; }
   body[data-page="service"] .svc-card,
   body[data-page="index"] .home-service-card { min-height: 0; }
-  body[data-page="board"] .board-card-body { min-height: 250px; }
-  body[data-page="board"] .board-skeleton-body { min-height: 250px; }
   body[data-page="board"] .board-page-ellipsis { min-width: 38px; min-height: 38px; }
   body[data-page="counseling"] .form-row,
   body[data-page="counseling"] .checkbox-group { grid-template-columns: 1fr; }
@@ -2702,6 +2662,8 @@ strong, b,
 .tag, .info-label,
 .form-group label, .radio-label, .checkbox-label,
 .stat-num,
+.board-title-link, .board-table thead th,
+.board-related-label, .board-related-title,
 .logo-text strong {
   font-weight: 700 !important;
 }
@@ -2750,7 +2712,7 @@ h6, h6 * {
   .chronic-step, .stage-item, .vital-step, .tube-card, .bedridden-item, .medication-panel,
   .med-step, .referral-step, .counseling-card, .counseling-highlight,
   .process-step, .faq-item, .target-list li,
-  .home-service-card, .board-card-body, .board-detail-card, .grade-card
+  .home-service-card, .board-card-body, .grade-card
 ) :is(p, li, span, div) {
   font-size: 22px !important;
   letter-spacing: -.01em !important;
@@ -2764,7 +2726,7 @@ h6, h6 * {
   .chronic-step, .stage-item, .vital-step, .tube-card, .bedridden-item, .medication-panel,
   .med-step, .referral-step, .counseling-card, .counseling-highlight,
   .process-step, .faq-item, .target-list li,
-  .home-service-card, .board-card-body, .board-detail-card, .grade-card
+  .home-service-card, .board-card-body, .grade-card
 ) :is(h3, h4, strong, b) {
   font-size: 23px !important;
   letter-spacing: -.02em !important;
@@ -2823,7 +2785,11 @@ body[data-page="guide"] #tab-target .guide-target-overview {
 
 body[data-page="guide"] #tab-target .guide-target-overview .guide-detail-head {
   margin-bottom: 0;
-  padding-bottom: var(--space-section-medium);
+  padding-bottom: 32px;
+}
+
+body[data-page="guide"] #tab-target .guide-detail-intro {
+  max-width: min(880px, 100%);
 }
 
 /* 다른 탭의 .guide-block + .guide-block 구분선은 화면 폭 전체(엣지투엣지)로 이어지므로,
@@ -4059,12 +4025,14 @@ body[data-page="guide"] #tab-grade .guide-grade-support {
 }
 
 body[data-page="guide"] #tab-grade .guide-grade-support p {
-  flex: 1 1 auto;
-  max-width: 920px;
+  flex: 1 1 1120px;
+  min-width: 0;
+  max-width: 1120px;
   margin: 0;
   color: var(--color-text-sub);
   font-size: var(--type-body);
   line-height: 1.7;
+  white-space: nowrap;
 }
 
 body[data-page="guide"] #tab-grade .guide-grade-directive-link {
@@ -4184,7 +4152,14 @@ body[data-page="guide"] #tab-cost .guide-cost-source {
   body[data-page="guide"] #tab-grade .guide-grade-support {
     flex-direction: column;
     align-items: flex-start;
+    width: 100%;
+    margin-left: 0;
+    transform: none;
     gap: 10px;
+  }
+
+  body[data-page="guide"] #tab-grade .guide-grade-support p {
+    white-space: normal;
   }
 
   body[data-page="guide"] #tab-grade .guide-grade-directive-link {
@@ -4538,7 +4513,6 @@ body[data-page="about"] .service-icons-wrap .svc-card-link {
 
   .compare-table { min-width: 680px; }
 
-  body[data-page="board"] .board-grid,
   body[data-page="service"] .svc-cards-grid,
   body[data-page="about"] .service-icons-grid {
     grid-template-columns: 1fr;
@@ -4581,7 +4555,7 @@ body[data-page="about"] .service-icons-wrap .svc-card-link {
     .vital-step, .tube-card, .bedridden-item, .medication-panel, .med-step,
     .referral-step, .counseling-card, .counseling-highlight, .process-step,
     .faq-item, .target-list li, .home-service-card, .board-card-body,
-    .board-detail-card, .grade-card
+    .grade-card
   ) :is(p, li, span) {
     font-size: 16px !important;
     line-height: 1.6 !important;
@@ -4595,7 +4569,7 @@ body[data-page="about"] .service-icons-wrap .svc-card-link {
     .vital-step, .tube-card, .bedridden-item, .medication-panel, .med-step,
     .referral-step, .counseling-card, .counseling-highlight, .process-step,
     .faq-item, .target-list li, .home-service-card, .board-card-body,
-    .board-detail-card, .grade-card
+    .grade-card
   ) :is(h3, h4, strong, b) {
     font-size: 20px !important;
     line-height: 1.4 !important;
@@ -4953,10 +4927,20 @@ body[data-page="about"] .service-icons-wrap .svc-card-link {
     line-height: 1.4 !important;
   }
 
-  body[data-page="about"] .cta-banner-text p {
+body[data-page="about"] .cta-banner-text p {
     font-size: 16px !important;
     line-height: 1.6 !important;
   }
+}
+
+/* 센터소개 간호인력 안내: 기존 인원 표기 대신 읽기 쉬운 문장형 안내를 사용 */
+body[data-page="about"] #tab-greeting .stat-staff-copy {
+  display: block;
+  margin: 0 auto;
+  color: var(--color-text-sub);
+  font-size: 25px !important;
+  font-weight: 700 !important;
+  line-height: 1.6 !important;
 }
 
 @media (max-width: 600px) {
@@ -5076,6 +5060,13 @@ body[data-page="about"] .service-icons-wrap .svc-card-link {
 
   body[data-page="service"] .cta-banner-text p {
     font-size: 16px !important;
+    line-height: 1.6 !important;
+  }
+}
+
+@media (max-width: 768px) {
+  body[data-page="about"] #tab-greeting .stat-staff-copy {
+    font-size: 17px !important;
     line-height: 1.6 !important;
   }
 }

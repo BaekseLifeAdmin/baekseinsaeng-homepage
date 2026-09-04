@@ -2,6 +2,10 @@ document.addEventListener('DOMContentLoaded', () => {
   const nav = document.getElementById('svcQuickNav');
   if (!nav) return;
 
+  const navHint = document.getElementById('svcNavHint');
+  const detailSections = document.querySelectorAll('.svc-detail');
+  const closingSection = detailSections[detailSections.length - 1];
+
   const links = Array.from(nav.querySelectorAll('.svc-quick-link'));
   const sections = links
     .map(link => document.querySelector(link.getAttribute('href')))
@@ -30,6 +34,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const visible = overviewBottom <= window.innerHeight * .72 && ctaTop > window.innerHeight * .35;
 
     nav.classList.toggle('is-visible', visible);
+
+    if (navHint) {
+      const closingTop = closingSection ? closingSection.getBoundingClientRect().top : Infinity;
+      const hintVisible = visible && closingTop > window.innerHeight * .8;
+      navHint.classList.toggle('is-visible', hintVisible);
+    }
 
     if (lockedId) {
       setActive(lockedId);

@@ -23,7 +23,7 @@ async function loadBoardPage(pageNumber, listEl, paginationEl, summaryEl) {
   try {
     const page = Number.isInteger(pageNumber) && pageNumber > 0 ? pageNumber : 1;
     const response = await getBoardPosts(page, POSTS_PER_PAGE);
-    const posts = Array.isArray(response.posts) ? response.posts : [];
+    const posts = sortPostsByDate(Array.isArray(response.posts) ? response.posts : []);
     const totalPages = Math.max(1, Number(response.totalPages) || 1);
     const resolvedPage = Math.min(Math.max(Number(response.page) || page, 1), totalPages);
 
@@ -35,7 +35,7 @@ async function loadBoardPage(pageNumber, listEl, paginationEl, summaryEl) {
     };
 
     updateHistoryPage(boardState.currentPage);
-    renderBoardPosts(listEl, boardState.posts, boardState.currentPage);
+    renderBoardPosts(listEl, boardState.posts, boardState.currentPage, boardState.total);
     renderPagination(paginationEl, boardState.currentPage, boardState.totalPages);
     updateBoardSummary(summaryEl, boardState.total);
   } catch (error) {
@@ -55,16 +55,10 @@ function updateBoardSummary(summaryEl, totalPosts) {
 function renderLoadingState(listEl, summaryEl) {
   if (!listEl) return;
 
-  listEl.innerHTML = '';
   const skeletons = Array.from({ length: POSTS_PER_PAGE }, (_, index) => `
-    <div class="board-skeleton" role="status" aria-label="게시글 로딩 중 ${index + 1}">
-      <div class="board-skeleton-image"></div>
-      <div class="board-skeleton-body">
-        <div class="board-skeleton-line short"></div>
-        <div class="board-skeleton-line long"></div>
-        <div class="board-skeleton-line medium"></div>
-      </div>
-    </div>
+    <tr class="board-skeleton-row" role="status" aria-label="게시글 로딩 중 ${index + 1}">
+      <td colspan="3"><div class="board-skeleton-line"></div></td>
+    </tr>
   `).join('');
   listEl.innerHTML = skeletons;
   if (summaryEl) {
@@ -75,10 +69,12 @@ function renderLoadingState(listEl, summaryEl) {
 function renderEmptyState(listEl, summaryEl, paginationEl) {
   if (!listEl) return;
   listEl.innerHTML = `
-    <div class="board-state" role="status">
-      <strong>등록된 게시글이 없습니다.</strong>
-      <p>새로운 소식이 등록되면 이곳에서 확인하실 수 있습니다.</p>
-    </div>
+    <tr class="board-table-message" role="status">
+      <td colspan="3">
+        <strong>등록된 게시글이 없습니다.</strong>
+        <p>새로운 소식이 등록되면 이곳에서 확인하실 수 있습니다.</p>
+      </td>
+    </tr>
   `;
   if (summaryEl) {
     summaryEl.textContent = '등록된 게시글이 없습니다.';
@@ -91,11 +87,13 @@ function renderEmptyState(listEl, summaryEl, paginationEl) {
 function renderErrorState(listEl, summaryEl, paginationEl) {
   if (!listEl) return;
   listEl.innerHTML = `
-    <div class="board-state" role="alert">
-      <strong>게시글을 불러오지 못했습니다.</strong>
-      <p>잠시 후 다시 시도해 주세요.</p>
-      <button class="btn btn-outline-navy" id="boardRetryBtn" type="button">다시 시도</button>
-    </div>
+    <tr class="board-table-message" role="alert">
+      <td colspan="3">
+        <strong>게시글을 불러오지 못했습니다.</strong>
+        <p>잠시 후 다시 시도해 주세요.</p>
+        <button class="btn btn-outline-navy" id="boardRetryBtn" type="button">다시 시도</button>
+      </td>
+    </tr>
   `;
   if (summaryEl) {
     summaryEl.textContent = '게시글을 불러오지 못했습니다.';
@@ -110,7 +108,7 @@ function renderErrorState(listEl, summaryEl, paginationEl) {
   }
 }
 
-function renderBoardPosts(listEl, posts, currentPage) {
+function renderBoardPosts(listEl, posts, currentPage, total) {
   if (!listEl) return;
 
   if (!posts.length) {
@@ -118,47 +116,33 @@ function renderBoardPosts(listEl, posts, currentPage) {
     return;
   }
 
-  listEl.innerHTML = posts.map((post) => {
-    const excerpt = createPostExcerpt(post.content);
+  const safeTotal = Number.isFinite(Number(total)) && Number(total) > 0
+    ? Math.floor(Number(total))
+    : posts.length;
+
+  const postRows = posts.map((post, index) => {
     const safeTitle = escapeText(post.title || '제목 없음');
-    const safeExcerpt = escapeText(excerpt);
     const safeDate = escapeText(formatBoardDate(post.date));
-    const imageMarkup = buildImageMarkup(post.imageUrl, safeTitle);
+    const globalIndex = (currentPage - 1) * POSTS_PER_PAGE + index;
+    const rowNumber = Math.max(1, safeTotal - globalIndex);
+    const safeNumber = String(rowNumber).padStart(2, '0');
     const detailUrl = `board-detail.html?id=${encodeURIComponent(post.id)}&page=${currentPage}`;
 
     return `
-      <article class="board-card" role="listitem">
-        <a class="board-card-link" href="${detailUrl}" aria-label="${safeTitle} 상세 보기">
-          <div class="board-card-image-wrap">
-            ${imageMarkup}
-          </div>
-          <div class="board-card-body">
-            <div class="board-card-meta">
-              <span>${safeDate}</span>
-            </div>
-            <h2 class="board-card-title">${safeTitle}</h2>
-            <p class="board-card-excerpt">${safeExcerpt}</p>
-            <div class="board-card-footer">
-              <span>자세히 보기</span>
-              <span class="board-card-arrow" aria-hidden="true">→</span>
-            </div>
-          </div>
-        </a>
-      </article>
+      <tr>
+        <td>${safeNumber}</td>
+        <td><a class="board-title-link" href="${detailUrl}">${safeTitle}</a></td>
+        <td>${safeDate}</td>
+      </tr>
     `;
   }).join('');
 
-  listEl.querySelectorAll('.board-card-image').forEach((img) => {
-    img.addEventListener('error', () => {
-      if (img.dataset.fallbackApplied === 'true') return;
-      img.dataset.fallbackApplied = 'true';
-      img.remove();
-      const wrapper = img.closest('.board-card-image-wrap');
-      if (wrapper) {
-        wrapper.innerHTML = '<div class="board-card-image board-card-fallback" aria-label="이미지 없음"></div>';
-      }
-    });
-  });
+  const fillerCount = Math.max(0, POSTS_PER_PAGE - posts.length);
+  const fillerRows = Array.from({ length: fillerCount }, () => (
+    '<tr class="board-row-filler" aria-hidden="true"><td colspan="3">&nbsp;</td></tr>'
+  )).join('');
+
+  listEl.innerHTML = postRows + fillerRows;
 }
 
 function renderPagination(paginationEl, currentPage, totalPages) {
@@ -245,26 +229,6 @@ function escapeText(value) {
     .replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;')
     .replace(/'/g, '&#39;');
-}
-
-function buildImageMarkup(imageUrl, altText) {
-  const safeAlt = escapeText(altText || '게시글 이미지');
-  const safeUrl = isSafeImageUrl(imageUrl) ? escapeText(imageUrl) : '';
-  if (!safeUrl) {
-    return '<div class="board-card-image board-card-fallback" aria-label="이미지 없음"></div>';
-  }
-
-  return `
-    <img class="board-card-image" src="${safeUrl}" alt="${safeAlt}" loading="lazy">
-  `;
-}
-
-function isSafeImageUrl(value) {
-  if (typeof value !== 'string') return false;
-  const trimmed = value.trim();
-  if (!trimmed) return false;
-  if (/^(javascript|data|vbscript):/i.test(trimmed)) return false;
-  return true;
 }
 
 if (document.getElementById('boardList')) {

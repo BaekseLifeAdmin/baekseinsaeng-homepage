@@ -20,6 +20,9 @@ document.addEventListener('DOMContentLoaded', () => {
   const nav = document.getElementById('caseQuickNav');
   if (!nav) return;
 
+  const navHint = document.getElementById('caseNavHint');
+  const closingSection = document.querySelector('.case-closing');
+
   const links = Array.from(nav.querySelectorAll('.case-quick-link'));
   const sections = links
     .map(link => document.querySelector(link.getAttribute('href')))
@@ -47,6 +50,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const visible = listTop <= window.innerHeight * .72 && ctaTop > window.innerHeight * .35;
 
     nav.classList.toggle('is-visible', visible);
+
+    if (navHint) {
+      const closingTop = closingSection ? closingSection.getBoundingClientRect().top : Infinity;
+      const hintVisible = visible && closingTop > window.innerHeight * .8;
+      navHint.classList.toggle('is-visible', hintVisible);
+    }
 
     if (lockedId) {
       setActive(lockedId);
