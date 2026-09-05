@@ -8,6 +8,14 @@ body[data-page="service"] br.m-break-vital {
   display: none;
 }
 
+body[data-page="service"] br.m-break-bedridden {
+  display: none;
+}
+
+body[data-page="guide"] br.m-break-target-core {
+  display: none;
+}
+
 :root {
   /* 전 페이지 3단 텍스트 크기 — 이 세 값만 사용한다 */
   --text-title: 40px;    /* 제목 및 중요 내용 키워드 */
@@ -5699,6 +5707,7 @@ body[data-page="service"] .bedridden-grid .bedridden-item-cta {
     display: block !important;
     width: 32px;
     height: 32px;
+    flex-shrink: 0;
     margin-bottom: 4px;
     background: transparent !important;
   }
@@ -5710,10 +5719,13 @@ body[data-page="service"] .bedridden-grid .bedridden-item-cta {
   }
 
   body[data-page="service"] .bedridden-item:nth-child(1) h3,
-  body[data-page="service"] .bedridden-item:nth-child(5) h3,
-  body[data-page="service"] .bedridden-item:nth-child(6) h3 {
+  body[data-page="service"] .bedridden-item:nth-child(5) h3 {
     max-width: 50px;
     word-wrap: break-word;
+  }
+
+  body[data-page="service"] br.m-break-bedridden {
+    display: inline;
   }
 
   body[data-page="service"] .bedridden-item-cta {
@@ -5763,6 +5775,10 @@ body[data-page="service"] .bedridden-grid .bedridden-item-cta {
   body[data-page="guide"] #tab-target .guide-target-group-item h4 {
     font-size: 15px !important;
     line-height: 1.35 !important;
+  }
+
+  body[data-page="guide"] br.m-break-target-core {
+    display: inline;
   }
 
   body[data-page="guide"] #tab-target :is(
@@ -6059,6 +6075,17 @@ body[data-page="service"] .bedridden-grid .bedridden-item-cta {
     width: 27% !important;
     padding-left: 4px !important;
     text-align: left !important;
+  }
+
+  /* 표 아래 "2026년 고시 기준" 안내 문구: 출처 문구와 동일한 크기로 축소 */
+  body[data-page="guide"] #tab-cost .guide-cost-notes {
+    font-size: 11px !important;
+    line-height: 1.4 !important;
+  }
+
+  body[data-page="guide"] #tab-cost .guide-cost-source {
+    font-size: 11px !important;
+    line-height: 1.4 !important;
   }
 }
 
