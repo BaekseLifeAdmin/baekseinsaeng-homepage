@@ -3,6 +3,11 @@
    역할이 같은 요소는 모든 페이지에서 같은 크기와 간격을 사용한다.
    ============================================================ */
 
+/* 모바일 전용 줄바꿈 — 데스크탑에서는 항상 숨김 (아래 각 미디어쿼리에서 mobile 시 표시) */
+body[data-page="service"] br.m-break-vital {
+  display: none;
+}
+
 :root {
   /* 전 페이지 3단 텍스트 크기 — 이 세 값만 사용한다 */
   --text-title: 40px;    /* 제목 및 중요 내용 키워드 */
@@ -104,6 +109,14 @@ body {
 /* 공통 헤더 — 확대된 내비게이션 텍스트를 담기 위해 높이 확장 */
 .site-header .header-inner { height: 92px; }
 .main-nav a { font-size: var(--text-body); line-height: 1.3; padding: 8px 10px; }
+
+/* 확대된 내비게이션 텍스트는 폭이 좁은 데스크톱/태블릿(약 1120px 이하)에서
+   헤더 밖으로 밀려나 가로 스크롤을 유발하므로, 이 구간에서는 모바일과 동일한
+   햄버거 메뉴로 전환한다 (768px 이하 규칙과 별개로 추가). */
+@media (min-width: 769px) and (max-width: 1120px) {
+  .main-nav, .header-cta { display: none !important; }
+  .hamburger { display: flex !important; margin-left: auto; }
+}
 
 /* 모든 서브페이지의 시작 영역 */
 .page-header {
@@ -380,17 +393,28 @@ main > section:not(.hero),
 
 @media (max-width: 768px) {
   :root {
-    --text-title: clamp(28px, 8vw, 34px);
-    --text-subtitle: clamp(20px, 6vw, 24px);
-    --text-body: 16px;
-    --type-page-title: clamp(32px, 9vw, 36px);
-    --type-section-title: clamp(26px, 7vw, 30px);
-    --type-card-title: 22px;
-    --type-body: 1rem;
+    /* Mobile typography — unified 3-tier system.
+       LEVEL 1 28px·1.25 / LEVEL 2 18px·1.4 / LEVEL 3 15px·1.6 */
+    --text-title: 28px;
+    --text-subtitle: 18px;
+    --text-body: 15px;
+    --type-page-title: 28px;
+    --type-section-title: 18px;
+    --type-card-title: 18px;
+    --type-body: 15px;
     --gutter: 32px;
     --icon-lg: 30px;
     --icon-md: 24px;
     --icon-sm: 20px;
+    /* Section rhythm is tighter on mobile — desktop's 88px top+bottom
+       (176px per section) is what makes pages feel needlessly long. */
+    --space-section-mobile: 56px;
+    --space-section-medium: 56px;
+    --space-section: 64px;
+    /* Mobile cards are compact by default — never inherit the desktop
+       32px card padding or the desktop 24px grid gap. */
+    --card-padding: 16px;
+    --grid-gap: 12px;
   }
   .container,
   .container-wide { width: min(calc(100% - var(--gutter)), var(--container-max)); }
@@ -406,11 +430,6 @@ main > section:not(.hero),
     padding-top: var(--space-section-mobile);
     padding-bottom: var(--space-section-mobile);
   }
-  .section-header,
-  .section-head,
-  .guide-section-head,
-  .case-intro,
-  .form-head { margin-bottom: 36px; }
   :where(.about-tab, .guide-tab) { min-height: 52px; padding: 12px 14px; font-size: .9375rem; }
   .consult-form { padding: 24px 20px; }
   .cta-banner, .counseling-cta-banner { padding-block: var(--space-section-small); }
@@ -798,7 +817,7 @@ body[data-page="counseling"] .consult-notice { border-radius: 8px; }
 }
 
 @media (max-width: 768px) {
-  body:not([data-page="about"]) :is(
+  body :is(
     .section-header,
     .section-head,
     .guide-section-head,
@@ -811,9 +830,12 @@ body[data-page="counseling"] .consult-notice { border-radius: 8px; }
     .vital-head,
     .tube-care-text,
     .medication-head
-  ) { margin-bottom: 34px; }
+  ) { margin-bottom: 20px; }
 
-  body:not([data-page="about"]) :is(
+  /* Mobile typography LEVEL 2 — section titles (unified across all pages,
+     mirrors the desktop "H2 체계" list at line ~184 plus the shared
+     section-role classes so about.html matches every other page). */
+  body :is(
     .section-header,
     .section-head,
     .guide-section-head,
@@ -825,8 +847,23 @@ body[data-page="counseling"] .consult-notice { border-radius: 8px; }
     .rehab-head,
     .vital-head,
     .tube-care-text,
-    .medication-head
-  ) h2 { font-size: clamp(1.875rem, 8vw, 2.125rem); }
+    .medication-head,
+    .greeting-text,
+    .compare-wrap,
+    .service-icons-wrap,
+    .system-header,
+    .location-info
+  ) h2,
+  .guide-detail-title,
+  .board-intro h2 { font-size: 18px !important; line-height: 1.4 !important; }
+
+  /* Mobile typography LEVEL 3 — section description copy */
+  body :is(
+    .section-header,
+    .section-head,
+    .guide-section-head
+  ) p,
+  .section-sub { font-size: 15px !important; line-height: 1.6 !important; }
 
   body[data-page="guide"] .guide-panel .process-steps { grid-template-columns: 1fr; }
   body[data-page="case"] .case-card { grid-template-columns: 1fr; }
@@ -1541,6 +1578,18 @@ body[data-page="index"] .home-service-card p {
   }
 }
 
+@media (max-width: 768px) {
+  body[data-page="index"] .home-service-card {
+    min-height: 0;
+    gap: 8px;
+  }
+
+  body[data-page="index"] .home-choice-link {
+    padding: 16px;
+    gap: 12px;
+  }
+}
+
 @media (max-width: 600px) {
   body[data-page="index"] .home-services {
     padding: var(--space-section-small) 0;
@@ -1571,14 +1620,57 @@ body[data-page="index"] .home-service-card p {
     flex: 0 0 auto;
     white-space: nowrap;
     font-size: 18px !important;
-    line-height: 1.45 !important;
+    line-height: 1.4 !important;
   }
 
   body[data-page="index"] .home-service-card p {
     min-width: 0;
     flex: 1 1 auto;
-    font-size: 14px !important;
-    line-height: 1.5 !important;
+    font-size: 15px !important;
+    line-height: 1.6 !important;
+  }
+}
+
+@media (max-width: 600px) {
+  body[data-page="index"] .home-services .container {
+    width: min(calc(100% - 32px), var(--container-max));
+  }
+
+  body[data-page="index"] .home-services-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+  body[data-page="index"] .home-service-card {
+    aspect-ratio: 1;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    padding: 4px;
+    border-radius: 8px;
+    text-align: center;
+  }
+
+  body[data-page="index"] .home-service-card p {
+    display: none;
+  }
+
+  body[data-page="index"] .home-service-icon {
+    width: 24px;
+    height: 24px;
+    flex-shrink: 0;
+    border-radius: 8px;
+  }
+
+  body[data-page="index"] .home-service-icon svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  body[data-page="index"] .home-service-card h3 {
+    font-size: 15px !important;
+    line-height: 1.25 !important;
+    overflow-wrap: anywhere;
   }
 }
 
@@ -1617,6 +1709,8 @@ body[data-page="index"] .home-service-card p {
 @media (max-width: 900px) {
   body[data-page="index"] .home-hero-inner {
     min-height: 0;
+    align-items: flex-end;
+    padding-bottom: 64px;
   }
 
   body[data-page="index"] .home-hero-intro {
@@ -1655,7 +1749,7 @@ body[data-page="index"] .home-service-card p {
   }
 
   body[data-page="index"] .home-hero-background video {
-    object-position: 58% center;
+    object-position: center center;
   }
 
   body[data-page="index"] .home-hero-background::after {
@@ -1675,9 +1769,53 @@ body[data-page="index"] .home-service-card p {
   }
 
   body[data-page="index"] .home-hero-message > p {
+    margin-top: 14px;
     font-size: 1rem;
     line-height: 1.65;
   }
+
+  body[data-page="index"] .home-hero-intro h1 {
+    margin-top: 10px;
+  }
+
+  body[data-page="index"] .home-hero-actions {
+    margin-top: 18px;
+  }
+
+  /* 인사말: 장기요양기관 등록 항목을 종합병원 임상현장 항목보다 앞으로 (모바일만) */
+  body[data-page="about"] #tab-greeting .stats-bar .stat-item:first-child {
+    order: 2;
+  }
+
+  body[data-page="about"] #tab-greeting .stats-bar .stat-item:last-child {
+    order: 1;
+  }
+
+  body[data-page="about"] #tab-greeting .stats-bar .stat-divider {
+    order: 1;
+  }
+
+  /* 방문간호와 방문요양의 차이 표: 구분 열 숨김 */
+  body[data-page="about"] .compare-table .compare-col-label,
+  body[data-page="about"] .compare-table .compare-th-blank,
+  body[data-page="about"] .compare-table tbody th[scope="row"] {
+    display: none;
+  }
+
+  /* "일상생활 지원 (식사·위생·이동)"을 "방문간호" 셀과 두 줄로 높이 맞춤 */
+  body[data-page="about"] .compare-table br.compare-mobile-break {
+    display: block !important;
+  }
+
+  /* 관리시스템 1~5 아이콘: 원이 작아진 만큼 세로선(칸) 가운데로 좌우 정렬 + 크기 축소 */
+  body[data-page="about"] #tab-system .system-step-num {
+    width: 52px;
+    height: 52px;
+    justify-self: center;
+    text-align: center;
+    text-indent: 0;
+  }
+
 
   body[data-page="index"] .home-hero-copy .section-tag,
   body[data-page="index"] .home-hero-message > p,
@@ -1690,12 +1828,17 @@ body[data-page="index"] .home-service-card p {
   }
 
   body[data-page="index"] .home-hero-actions {
-    flex-direction: column;
+    flex-direction: row;
+    flex-wrap: nowrap;
   }
 
   body[data-page="index"] .home-hero-actions .btn {
-    width: 100%;
+    flex: 1 1 0;
+    width: auto;
     min-width: 0;
+    padding-left: 8px;
+    padding-right: 8px;
+    white-space: nowrap;
   }
 
   body[data-page="index"] .home-proof-grid {
@@ -2315,6 +2458,7 @@ main .container-wide {
   }
 }
 
+
 /* Center introduction */
 body[data-page="about"] .about-panel { padding-block: var(--space-section-medium); }
 body[data-page="about"] .about-panel h2 {
@@ -2365,6 +2509,12 @@ body[data-page="about"] .system-step-num {
   font-size: 25px !important;
   font-weight: 800 !important;
   line-height: 1 !important;
+}
+@media (max-width: 768px) {
+  body[data-page="about"] #tab-system .system-step-num {
+    font-size: 18px !important;
+    font-weight: 400 !important;
+  }
 }
 body[data-page="about"] .location-list strong {
   color: #243B4A !important;
@@ -2622,7 +2772,10 @@ body[data-page="counseling"] .info-icon svg { width: var(--icon-sm); height: var
 }
 
 @media (max-width: 600px) {
+  /* Below 600px a 2-col overview card (50-75 char description) wraps to
+     6+ lines per column and reads worse than a single, shorter column. */
   body[data-page="service"] .svc-cards-grid,
+  body[data-page="about"] .service-icons-wrap .svc-cards-grid,
   body[data-page="index"] .home-services-grid { grid-template-columns: 1fr; }
   body[data-page="service"] .svc-card,
   body[data-page="index"] .home-service-card { min-height: 0; }
@@ -2731,7 +2884,9 @@ h6, h6 * {
   line-height: 1.3 !important;
 }
 
-:root { --card-padding: 32px; }
+@media (min-width: 769px) {
+  :root { --card-padding: 32px; }
+}
 
 /* ============================================================
    푸터 전용 — 완전 재설계된 마크업(footer-main/footer-desc/footer-col-*)
@@ -3815,33 +3970,41 @@ body .page-header.page-image-hero.hero-sequence-complete .page-header-content {
 
   body .page-header.page-image-hero > .container {
     width: calc(100% - 32px) !important;
-    min-height: 480px;
+    min-height: 0;
   }
 
+  /* 헤더 내용을 아래쪽부터 시작하도록 배치 */
+  body .page-header.page-image-hero {
+    align-items: flex-end;
+  }
+
+  /* Mobile typography LEVEL 1 — page title */
   body .page-header.page-image-hero h1 {
-    margin-bottom: 10px;
-    font-size: clamp(42px, 11vw, 54px) !important;
+    margin-bottom: 8px;
+    font-size: 24px !important;
+    line-height: 1.25 !important;
   }
 
   body .page-header.page-image-hero .section-tag {
-    font-size: 20px !important;
+    font-size: 13px !important;
   }
 
+  /* Mobile typography LEVEL 3 — page intro copy */
   body .page-header.page-image-hero .page-header-desc,
   body .page-header.page-image-hero > .container > p:last-child {
-    font-size: 1.5rem !important;
-    line-height: 1.6 !important;
+    font-size: 13px !important;
+    line-height: 1.55 !important;
   }
 
   body .page-header.page-image-hero .page-header-desc strong {
-    font-size: 1.5rem !important;
-    line-height: 1.5 !important;
+    font-size: 13px !important;
+    line-height: 1.55 !important;
   }
 
   body .page-header.page-image-hero .page-header-desc span {
     margin-top: 5px;
-    font-size: 1.5rem !important;
-    line-height: 1.6 !important;
+    font-size: 13px !important;
+    line-height: 1.55 !important;
   }
 
   body .page-header.page-image-hero .page-header-desc-break {
@@ -3851,7 +4014,7 @@ body .page-header.page-image-hero.hero-sequence-complete .page-header-content {
 
 @media (max-width: 768px) and (max-height: 680px) {
   body .page-header.page-image-hero {
-    align-items: flex-start;
+    align-items: flex-end;
   }
 
   body .page-header.page-image-hero > .container {
@@ -4110,15 +4273,8 @@ body[data-page="guide"] #tab-cost .guide-cost-source {
 }
 
 @media (max-width: 860px) {
-  body[data-page="guide"] #tab-nursing .guide-nursing-list,
   body[data-page="guide"] #tab-directive .guide-directive-flow {
     grid-template-columns: 1fr;
-  }
-
-  body[data-page="guide"] #tab-nursing .guide-nursing-item,
-  body[data-page="guide"] #tab-nursing .guide-nursing-item:nth-child(odd) {
-    grid-column: auto;
-    border-right: 0;
   }
 
   body[data-page="guide"] #tab-directive .guide-directive-arrow {
@@ -4170,20 +4326,76 @@ body[data-page="guide"] #tab-cost .guide-cost-source {
 
 }
 
-@media (max-width: 560px) {
+@media (max-width: 768px) {
+  /* 모바일 전용: 등급별 안내 표와 동일한 스타일 — 번호 | 제목·내용, 행 구분선만 */
+  body[data-page="guide"] #tab-nursing .guide-nursing-list {
+    display: block;
+    margin-top: 24px;
+    border: 0;
+    background: transparent;
+  }
+
   body[data-page="guide"] #tab-nursing .guide-nursing-item {
-    grid-template-columns: 52px minmax(0, 1fr);
-    gap: 16px;
+    display: grid;
+    grid-template-columns: 40px minmax(0, 1fr);
+    gap: 0 18px;
+    align-items: center;
     min-height: 0;
-    padding: 24px 18px;
+    padding: 12px 0;
+    border: 0;
+    border-bottom: 1px solid var(--color-border);
+    background: transparent;
+  }
+
+  body[data-page="guide"] #tab-nursing .guide-nursing-item:last-child {
+    border-bottom: 0;
+  }
+
+  body[data-page="guide"] #tab-nursing .guide-nursing-item:nth-child(odd) {
+    border-right: 0;
+    border-left: 0;
+  }
+
+  body[data-page="guide"] #tab-nursing .guide-nursing-item > div {
+    display: block;
   }
 
   body[data-page="guide"] #tab-nursing .guide-nursing-num {
-    width: 52px;
-    height: 52px;
-    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    width: auto;
+    height: auto;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    color: var(--color-primary-dark);
+    font-size: 13px;
+    font-weight: 800;
   }
 
+  body[data-page="guide"] #tab-nursing .guide-nursing-item h4 {
+    margin: 0 0 2px;
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 1.4;
+    word-break: keep-all;
+  }
+
+  body[data-page="guide"] #tab-nursing .guide-nursing-item h4 .guide-nursing-nowrap {
+    white-space: nowrap;
+  }
+
+  body[data-page="guide"] #tab-nursing .guide-nursing-item p {
+    margin: 0;
+    font-size: 13px;
+    line-height: 1.45;
+    word-break: keep-all;
+  }
+}
+
+@media (max-width: 560px) {
   body[data-page="guide"] #tab-directive .guide-directive-step {
     padding: 24px 20px;
   }
@@ -4406,12 +4618,6 @@ body[data-page="about"] .service-icons-wrap .svc-card-link {
   }
 }
 
-@media (max-width: 600px) {
-  body[data-page="about"] .service-icons-wrap .svc-cards-grid {
-    grid-template-columns: 1fr;
-  }
-}
-
 /* Mobile layout contract: keep the existing DOM, but give every page the same
    viewport-safe sizing and let component rules own their internal typography. */
 @media (max-width: 768px) {
@@ -4442,8 +4648,80 @@ body[data-page="about"] .service-icons-wrap .svc-card-link {
 
   .site-header .logo-image {
     width: auto;
-    height: 72px;
-    max-height: 72px;
+    height: 96px;
+    max-height: 96px;
+    margin-left: -8px;
+  }
+
+  /* 모바일 메뉴: 오른쪽 슬라이드 패널 대신, 헤더 아래로 펼쳐지는
+     가로 한 줄(6개) 드롭다운으로 변경. 대표 전화번호/온라인 상담 신청하기는 숨김 */
+  .mobile-nav {
+    position: fixed;
+    top: var(--mobile-header-height);
+    right: 0;
+    left: 0;
+    width: 100%;
+    height: auto;
+    max-height: 130px;
+    padding: 10px 8px;
+    margin: 0;
+    overflow: hidden;
+    background: var(--white, #fff);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, .08);
+    opacity: 0;
+    transform: translateY(-6px);
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity .18s ease, transform .18s ease, visibility .18s;
+    will-change: opacity, transform;
+    z-index: 999;
+  }
+
+  .mobile-nav.open {
+    opacity: 1;
+    transform: translateY(0);
+    visibility: visible;
+    pointer-events: auto;
+  }
+
+  .mobile-nav ul {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    width: 100%;
+    gap: 4px 4px;
+  }
+
+  .mobile-nav ul li {
+    min-width: 0;
+    overflow: hidden;
+  }
+
+  .mobile-nav a {
+    display: block;
+    width: 100%;
+    text-align: center;
+    padding: 10px 2px;
+    font-size: 11px;
+    line-height: 1.2;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    border-bottom: 0;
+  }
+
+  .mobile-nav-contact {
+    display: none !important;
+  }
+
+  /* 상시 플로팅 버튼: 전화만 남기고 카카오톡·유튜브 숨김 */
+  .fixed-cta-kakao,
+  .fixed-cta-youtube {
+    display: none !important;
+  }
+
+  /* 전화 버튼만 남았으니 위치를 아래로 */
+  .fixed-cta {
+    bottom: 24px !important;
   }
 
   .main-nav,
@@ -4459,9 +4737,12 @@ body[data-page="about"] .service-icons-wrap .svc-card-link {
   }
 
   .mobile-nav {
-    width: min(320px, calc(100vw - 24px));
+    width: 100%;
     max-width: 100vw;
-    padding: calc(var(--mobile-header-height) + 12px) 16px 24px;
+  }
+
+  .mobile-nav.open {
+    padding: 10px 8px;
   }
 
   .about-tab-wrap,
@@ -4499,8 +4780,8 @@ body[data-page="about"] .service-icons-wrap .svc-card-link {
   body[data-page="guide"] #tab-grade .grade-card p,
   .guide-case-row p,
   .guide-case-text-link {
-    white-space: normal;
-    overflow-wrap: anywhere;
+    white-space: nowrap;
+    text-overflow: ellipsis;
   }
 
   .compare-table-wrap {
@@ -4510,11 +4791,6 @@ body[data-page="about"] .service-icons-wrap .svc-card-link {
   }
 
   .compare-table { min-width: 680px; }
-
-  body[data-page="service"] .svc-cards-grid,
-  body[data-page="about"] .service-icons-grid {
-    grid-template-columns: 1fr;
-  }
 
   body[data-page="counseling"] .info-text {
     grid-template-columns: minmax(72px, 88px) minmax(0, 1fr);
@@ -4546,7 +4822,7 @@ body[data-page="about"] .service-icons-wrap .svc-card-link {
 
 /* Mobile information cards use the same reading scale as page text. */
 @media (max-width: 768px) {
-  body[data-page] :is(
+  body[data-page]:not([data-page="service"]):not([data-page="about"]) :is(
     .service-feat, .case-preview-card, .svc-card, .case-card, .process-card,
     .target-card, .doc-card, .benefit-item, .system-card, .consult-form,
     .info-card, .consult-process, .consult-notice, .chronic-step, .stage-item,
@@ -4555,12 +4831,12 @@ body[data-page="about"] .service-icons-wrap .svc-card-link {
     .faq-item, .target-list li, .home-service-card, .board-card-body,
     .grade-card
   ) :is(p, li, span) {
-    font-size: 16px !important;
+    font-size: 15px !important;
     line-height: 1.6 !important;
     letter-spacing: 0 !important;
   }
 
-  body[data-page] :is(
+  body[data-page]:not([data-page="service"]):not([data-page="about"]) :is(
     .service-feat, .case-preview-card, .svc-card, .case-card, .process-card,
     .target-card, .doc-card, .benefit-item, .system-card, .consult-form,
     .info-card, .consult-process, .consult-notice, .chronic-step, .stage-item,
@@ -4569,7 +4845,7 @@ body[data-page="about"] .service-icons-wrap .svc-card-link {
     .faq-item, .target-list li, .home-service-card, .board-card-body,
     .grade-card
   ) :is(h3, h4, strong, b) {
-    font-size: 20px !important;
+    font-size: 18px !important;
     line-height: 1.4 !important;
     letter-spacing: 0 !important;
   }
@@ -4580,7 +4856,7 @@ body[data-page="about"] .service-icons-wrap .svc-card-link {
     .guide-target-group-description,
     .guide-target-group-item span
   ) {
-    font-size: 16px !important;
+    font-size: 15px !important;
     line-height: 1.6 !important;
     letter-spacing: 0 !important;
   }
@@ -4589,7 +4865,7 @@ body[data-page="about"] .service-icons-wrap .svc-card-link {
     .guide-target-core h3,
     .guide-target-group-item h4
   ) {
-    font-size: 20px !important;
+    font-size: 18px !important;
     line-height: 1.4 !important;
     letter-spacing: 0 !important;
   }
@@ -4598,7 +4874,7 @@ body[data-page="about"] .service-icons-wrap .svc-card-link {
 @media (max-width: 768px) {
   body[data-page="guide"] #tab-target .guide-detail-head h2,
   body[data-page="guide"] #tab-target .guide-target-general-title {
-    font-size: 22px !important;
+    font-size: 18px !important;
     line-height: 1.4 !important;
     letter-spacing: 0 !important;
   }
@@ -4616,7 +4892,7 @@ body[data-page="about"] .service-icons-wrap .svc-card-link {
   body[data-page="guide"] #tab-target .guide-target-group-summary,
   body[data-page="guide"] #tab-target .guide-target-group-item h4 {
     font-size: 18px !important;
-    line-height: 1.45 !important;
+    line-height: 1.4 !important;
     letter-spacing: 0 !important;
   }
 
@@ -4626,7 +4902,7 @@ body[data-page="about"] .service-icons-wrap .svc-card-link {
     .guide-target-group-item p,
     .guide-target-group-description
   ) {
-    font-size: 16px !important;
+    font-size: 15px !important;
     line-height: 1.6 !important;
     letter-spacing: 0 !important;
   }
@@ -4660,13 +4936,13 @@ body[data-page="about"] .service-icons-wrap .svc-card-link {
   body[data-page="guide"] #tab-faq .guide-faq-callout h3,
   body[data-page="guide"] #tab-faq .guide-faq-question-copy {
     font-size: 18px !important;
-    line-height: 1.45 !important;
+    line-height: 1.4 !important;
     letter-spacing: 0 !important;
   }
 
   body[data-page="guide"] #tab-faq .guide-faq-callout p,
   body[data-page="guide"] #tab-faq .guide-faq-answer-panel p {
-    font-size: 16px !important;
+    font-size: 15px !important;
     line-height: 1.6 !important;
     letter-spacing: 0 !important;
   }
@@ -4716,7 +4992,7 @@ body[data-page="about"] .service-icons-wrap .svc-card-link {
   }
 
   body:is([data-page="about"], [data-page="guide"]) .page-header.page-image-hero > .container {
-    min-height: 480px;
+    min-height: 0;
   }
 }
 
@@ -4744,16 +5020,6 @@ body[data-page="about"] .service-icons-wrap .svc-card-link {
     width: 100%;
     min-width: 0;
     white-space: normal;
-  }
-
-  body[data-page="guide"] .cta-banner-text h2 {
-    font-size: 20px !important;
-    line-height: 1.4 !important;
-  }
-
-  body[data-page="guide"] .cta-banner-text p {
-    font-size: 16px !important;
-    line-height: 1.6 !important;
   }
 }
 
@@ -4852,25 +5118,29 @@ body[data-page="about"] .service-icons-wrap .svc-card-link {
     white-space: normal;
   }
 
+  /* 사례 중심 월례 회의 / 감염관리 원칙 / 교육 시스템: 아이콘+제목만, 3개 한 줄, 중앙 정렬 */
   body[data-page="about"] #tab-system .system-features {
-    grid-template-columns: 1fr;
-    gap: 16px;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
     max-width: 100%;
   }
 
   body[data-page="about"] #tab-system .sys-feat-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     width: 100%;
     height: auto;
     min-height: 0;
     aspect-ratio: auto;
-    padding: 16px;
+    padding: 14px 4px;
     justify-content: flex-start;
   }
 
   body[data-page="about"] #tab-system .sys-feat-icon {
     width: 40px;
     height: 40px;
-    margin-bottom: 8px;
+    margin: 0 auto 8px;
   }
 
   body[data-page="about"] #tab-system .sys-feat-icon svg {
@@ -4879,20 +5149,15 @@ body[data-page="about"] .service-icons-wrap .svc-card-link {
   }
 
   body[data-page="about"] #tab-system .sys-feat-item h3 {
-    font-size: 18px !important;
-    line-height: 1.45 !important;
-  }
-
-  body[data-page="about"] #tab-system .sys-feat-list li,
-  body[data-page="about"] #tab-system .sys-feat-item p {
-    font-size: 16px !important;
-    line-height: 1.6 !important;
-    white-space: normal;
+    margin: 0;
+    font-size: 12px !important;
+    line-height: 1.3 !important;
+    text-align: center;
+    word-break: keep-all;
   }
 
   body[data-page="about"] #tab-system .sys-feat-list {
-    gap: 4px;
-    margin-top: 10px;
+    display: none;
   }
 
   body[data-page="about"] .cta-banner-inner {
@@ -4919,16 +5184,6 @@ body[data-page="about"] .service-icons-wrap .svc-card-link {
     min-width: 0;
     white-space: normal;
   }
-
-  body[data-page="about"] .cta-banner-text h2 {
-    font-size: 20px !important;
-    line-height: 1.4 !important;
-  }
-
-body[data-page="about"] .cta-banner-text p {
-    font-size: 16px !important;
-    line-height: 1.6 !important;
-  }
 }
 
 /* 센터소개 간호인력 안내: 기존 인원 표기 대신 읽기 쉬운 문장형 안내를 사용 */
@@ -4941,25 +5196,6 @@ body[data-page="about"] #tab-greeting .stat-staff-copy {
   line-height: 1.6 !important;
 }
 
-@media (max-width: 600px) {
-  body[data-page="index"] .home-service-card h3 {
-    font-size: 18px !important;
-    line-height: 1.45 !important;
-    white-space: nowrap;
-  }
-
-  body[data-page="index"] .home-services .home-service-card h3 {
-    font-size: 18px !important;
-    line-height: 1.45 !important;
-    white-space: nowrap;
-  }
-
-  body[data-page="index"] .home-services .home-service-card p {
-    font-size: 14px !important;
-    line-height: 1.5 !important;
-  }
-}
-
 @media (max-width: 768px) {
   body[data-page="case"] .case-row {
     gap: 20px;
@@ -4970,23 +5206,46 @@ body[data-page="about"] #tab-greeting .stat-staff-copy {
     gap: 12px;
   }
 
-  body[data-page="case"] .case-row-content h3 {
-    font-size: 20px !important;
-    line-height: 1.45 !important;
+  body[data-page="case"] .case-row-content h3,
+  body[data-page="case"] .case-section h4 {
+    font-size: 18px !important;
+    line-height: 1.4 !important;
     letter-spacing: 0 !important;
   }
 
-  body[data-page="case"] .case-section h4,
   body[data-page="case"] .case-index,
   body[data-page="case"] .case-meta span {
-    font-size: 16px !important;
+    font-size: 14px !important;
     line-height: 1.5 !important;
   }
 
   body[data-page="case"] .case-section p,
   body[data-page="case"] .case-process-list li,
   body[data-page="case"] .case-takeaway {
-    font-size: 16px !important;
+    font-size: 15px !important;
+    line-height: 1.6 !important;
+  }
+
+  /* Opening statement reads as this page's primary heading (LEVEL 1) */
+  body[data-page="case"] .case-opening-hero h2 {
+    font-size: 28px !important;
+    line-height: 1.25 !important;
+  }
+
+  body[data-page="case"] .case-opening-lead {
+    font-size: 15px !important;
+    line-height: 1.6 !important;
+  }
+
+  body[data-page="case"] .case-role-heading h3,
+  body[data-page="case"] .case-stories-heading h3 {
+    font-size: 18px !important;
+    line-height: 1.4 !important;
+  }
+
+  body[data-page="case"] .case-role-copy p,
+  body[data-page="case"] .case-stories-copy p {
+    font-size: 15px !important;
     line-height: 1.6 !important;
   }
 
@@ -5050,21 +5309,1412 @@ body[data-page="about"] #tab-greeting .stat-staff-copy {
     min-width: 0;
     white-space: normal;
   }
-
-  body[data-page="service"] .cta-banner-text h2 {
-    font-size: 20px !important;
-    line-height: 1.4 !important;
-  }
-
-  body[data-page="service"] .cta-banner-text p {
-    font-size: 16px !important;
-    line-height: 1.6 !important;
-  }
 }
 
 @media (max-width: 768px) {
   body[data-page="about"] #tab-greeting .stat-staff-copy {
     font-size: 17px !important;
     line-height: 1.6 !important;
+  }
+}
+
+@media (max-width: 600px) {
+  body[data-page="index"] .home-services-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+    gap: 10px;
+    grid-auto-rows: auto;
+  }
+
+  /* 카드 전체가 색 채워진 타일 — 아이콘과 텍스트 모두 타일 안에 배치 */
+  body[data-page="index"] .home-service-card {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    min-width: 0;
+    min-height: 0;
+    overflow: hidden;
+    aspect-ratio: 1 / 1;
+    padding: 6px 4px;
+    border: none;
+    border-radius: 14px;
+    background: var(--color-primary-soft);
+    gap: 6px;
+  }
+
+  body[data-page="index"] .home-service-card:hover {
+    transform: none;
+    border: none;
+    box-shadow: none;
+  }
+
+  body[data-page="index"] .home-service-card.home-service-card-guide {
+    background: var(--blue-gray);
+  }
+
+  body[data-page="index"] .home-service-icon {
+    width: 40%;
+    height: auto;
+    aspect-ratio: 1 / 1;
+    border-radius: 0;
+    background: transparent;
+  }
+
+  body[data-page="index"] .home-service-icon svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  body[data-page="index"] .home-service-card h3 {
+    width: 100%;
+    min-width: 0;
+    margin: 0;
+    height: auto;
+    min-height: 0;
+    overflow: visible;
+    font-size: clamp(9px, 2.5vw, 15px) !important;
+    line-height: 1.25 !important;
+    letter-spacing: -.02em;
+    white-space: nowrap;
+    overflow-wrap: normal;
+    display: block;
+    text-align: center;
+  }
+
+  body[data-page="index"] .home-main .home-services .home-services-grid .home-service-card h3 {
+    font-size: clamp(9px, 2.5vw, 15px) !important;
+  }
+}
+
+/* 데스크톱: 와상 어르신 관리 아이콘 숨김 */
+body[data-page="service"] .bedridden-item-icon {
+  display: none !important;
+}
+
+/* 와상 어르신 방문간호 상담 카드 배경색 */
+body[data-page="service"] .bedridden-grid .bedridden-item-cta {
+  background: #2196F3 !important;
+}
+
+/* 모바일: 센터소개·방문간호서비스 페이지의 서비스 카드도
+   메인 페이지와 동일한 4열 아이콘 타일 형식으로 통일 */
+@media (max-width: 600px) {
+  body[data-page="service"] .svc-cards-grid,
+  body[data-page="about"] .service-icons-wrap .svc-cards-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+    gap: 10px !important;
+  }
+
+  body[data-page="service"] .svc-card,
+  body[data-page="about"] .service-icons-wrap .svc-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    min-width: 0;
+    min-height: 0;
+    height: auto;
+    overflow: hidden;
+    aspect-ratio: 1 / 1;
+    padding: 6px 4px;
+    border: none;
+    border-radius: 14px;
+    background: var(--color-primary-soft);
+    box-shadow: none;
+    gap: 6px;
+  }
+
+  body[data-page="service"] .svc-card:hover,
+  body[data-page="about"] .service-icons-wrap .svc-card:hover {
+    transform: none;
+    border: none;
+    box-shadow: none;
+  }
+
+  body[data-page="service"] .svc-card.svc-card-guide,
+  body[data-page="about"] .service-icons-wrap .svc-card.svc-card-guide {
+    background: var(--blue-gray);
+  }
+
+  body[data-page="service"] .svc-card p,
+  body[data-page="about"] .service-icons-wrap .svc-card p,
+  body[data-page="service"] .svc-card .svc-card-link,
+  body[data-page="about"] .service-icons-wrap .svc-card .svc-card-link {
+    display: none !important;
+  }
+
+  body[data-page="service"] .svc-card-icon,
+  body[data-page="about"] .service-icons-wrap .svc-card-icon {
+    width: 40%;
+    height: auto;
+    aspect-ratio: 1 / 1;
+    margin: 0;
+    border-radius: 0;
+    background: transparent;
+  }
+
+  body[data-page="service"] .svc-card-icon svg,
+  body[data-page="about"] .service-icons-wrap .svc-card-icon svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  body[data-page="service"] .svc-card h3,
+  body[data-page="about"] .service-icons-wrap .svc-card h3 {
+    width: 100%;
+    min-width: 0;
+    margin: 0;
+    font-size: clamp(9px, 2.5vw, 15px) !important;
+    line-height: 1.25 !important;
+    letter-spacing: -.02em;
+    white-space: nowrap;
+    text-align: center;
+  }
+
+  /* Service 페이지: 모바일 카드 내용 텍스트 크기 — 본문(15px) 기준 */
+  body[data-page="service"] .stage-item :is(p, li, span, div),
+  body[data-page="service"] .chronic-step :is(p, li, span, div),
+  body[data-page="service"] .vital-step :is(p, li, span, div),
+  body[data-page="service"] .bedridden-item :is(p, li, span, div),
+  body[data-page="service"] .med-step :is(p, li, span, div),
+  body[data-page="service"] .referral-step :is(p, li, span, div),
+  body[data-page="service"] .medication-panel :is(p, li, span, div),
+  body[data-page="service"] .counseling-card :is(p, li, span, div) {
+    font-size: 15px !important;
+    line-height: 1.6 !important;
+    letter-spacing: 0 !important;
+  }
+
+  body[data-page="service"] .stage-item :is(h3, h4, strong, b),
+  body[data-page="service"] .chronic-step :is(h3, h4, strong, b),
+  body[data-page="service"] .vital-step :is(h3, h4, strong, b),
+  body[data-page="service"] .bedridden-item :is(h3, h4, strong, b),
+  body[data-page="service"] .med-step :is(h3, h4, strong, b),
+  body[data-page="service"] .referral-step :is(h3, h4, strong, b),
+  body[data-page="service"] .medication-panel :is(h3, h4, strong, b),
+  body[data-page="service"] .counseling-card :is(h3, h4, strong, b) {
+    font-size: 18px !important;
+    line-height: 1.4 !important;
+    letter-spacing: 0 !important;
+  }
+
+  /* 튜브 관리: 텍스트 블록과 카드 사이, 카드 사이 여백 축소 */
+  body[data-page="service"] .tube-care-grid {
+    gap: 20px;
+  }
+
+  body[data-page="service"] .tube-care-cards {
+    gap: 10px;
+  }
+
+  body[data-page="service"] .tube-care-text > p {
+    margin-bottom: 14px;
+  }
+
+  body[data-page="service"] .tube-care-list {
+    gap: 6px;
+    margin-bottom: 10px;
+  }
+
+  body[data-page="service"] .tube-care-notice {
+    margin-top: 10px;
+  }
+
+  /* 튜브 관리 카드: 패딩·글자 축소로 카드-내용 사이 공백 줄임 */
+  body[data-page="service"] .tube-card {
+    padding: 12px 14px;
+  }
+
+  body[data-page="service"] .tube-card h3 {
+    font-size: 14px !important;
+    line-height: 1.35 !important;
+    margin-bottom: 4px !important;
+  }
+
+  body[data-page="service"] .tube-card p {
+    font-size: 12px !important;
+    line-height: 1.45 !important;
+  }
+
+  /* 욕창 4단계 분류: 모바일에서 파란 카드(관리 내용) 숨김 */
+  body[data-page="service"] .stage-care-list {
+    display: none !important;
+  }
+
+  /* 욕창 4단계: 모바일에서 중앙 정렬 */
+  body[data-page="service"] .stage-item,
+  body[data-page="service"] .stage-item h4,
+  body[data-page="service"] .stage-item p {
+    text-align: center;
+  }
+
+  body[data-page="service"] .stage-circle {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  /* 만성질환 관리: 모바일에서 3열 정사각형 카드 + 상세 내용 숨김 */
+  body[data-page="service"] .chronic-process {
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 8px;
+    margin: 20px 0;
+  }
+
+  body[data-page="service"] .chronic-step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 4px;
+    aspect-ratio: 1 / 1;
+    text-align: center;
+  }
+
+  body[data-page="service"] .chronic-step p {
+    display: none !important;
+  }
+
+  body[data-page="service"] .chronic-step h3 {
+    font-size: 13px !important;
+    line-height: 1.4 !important;
+    margin: 0 !important;
+    white-space: normal;
+    word-wrap: break-word;
+  }
+
+  body[data-page="service"] .chronic-step-icon {
+    width: 32px;
+    height: 32px;
+    margin-bottom: 4px;
+    background: transparent !important;
+    border-radius: 0 !important;
+    display: inline !important;
+  }
+
+  body[data-page="service"] .chronic-step-icon svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  body[data-page="service"] .chronic-step-num {
+    font-size: 9px !important;
+    margin-bottom: 2px;
+  }
+
+  /* 건강상태 관찰: 모바일에서 3열 정사각형 카드 + 상세 내용 숨김 */
+  body[data-page="service"] .vital-process {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 8px;
+    align-items: auto;
+  }
+
+  body[data-page="service"] .vital-step {
+    flex: none;
+    min-width: 0;
+    width: 100%;
+    padding: 8px 4px;
+    aspect-ratio: 1 / 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    overflow: hidden;
+  }
+
+  body[data-page="service"] .vital-step p {
+    display: none !important;
+  }
+
+  body[data-page="service"] .vital-step h3 {
+    width: 100%;
+    font-size: 11px !important;
+    line-height: 1.3 !important;
+    margin: 0 !important;
+    white-space: normal;
+    word-break: keep-all;
+    overflow-wrap: anywhere;
+  }
+
+  body[data-page="service"] .vital-step-icon {
+    width: 32px;
+    height: 32px;
+    margin-bottom: 4px;
+    background: transparent !important;
+    border-radius: 0 !important;
+    display: inline !important;
+  }
+
+  body[data-page="service"] .vital-step-icon svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  body[data-page="service"] .vital-step-num {
+    font-size: 9px !important;
+    margin-bottom: 2px;
+  }
+
+  body[data-page="service"] .vital-step-connector {
+    display: none !important;
+  }
+
+  body[data-page="service"] br.m-break-vital {
+    display: block;
+  }
+
+  /* 하단 "서비스에 대해 더 궁금하신가요?" 배너 숨김 */
+  body[data-page="service"] .cta-banner {
+    display: none;
+  }
+
+  /* 와상 어르신 관리: 모바일에서 4열 정사각형 카드 + 상세 내용 숨김 */
+  body[data-page="service"] .bedridden-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+    gap: 8px;
+  }
+
+  body[data-page="service"] .bedridden-item {
+    min-height: 0;
+    aspect-ratio: 1 / 1;
+    padding: 8px 4px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-radius: 14px;
+  }
+
+  body[data-page="service"] .bedridden-item::before {
+    display: none !important;
+  }
+
+  body[data-page="service"] .bedridden-item p {
+    display: none !important;
+  }
+
+  body[data-page="service"] .bedridden-item-icon {
+    display: block !important;
+    width: 32px;
+    height: 32px;
+    margin-bottom: 4px;
+    background: transparent !important;
+  }
+
+  body[data-page="service"] .bedridden-item h3 {
+    font-size: 13px !important;
+    line-height: 1.4 !important;
+    margin: 0 !important;
+  }
+
+  body[data-page="service"] .bedridden-item:nth-child(1) h3,
+  body[data-page="service"] .bedridden-item:nth-child(5) h3,
+  body[data-page="service"] .bedridden-item:nth-child(6) h3 {
+    max-width: 50px;
+    word-wrap: break-word;
+  }
+
+  body[data-page="service"] .bedridden-item-cta {
+    aspect-ratio: 1 / 1;
+    background: transparent !important;
+  }
+
+  body[data-page="service"] .bedridden-item-cta h3 {
+    font-size: 13px !important;
+    line-height: 1.3 !important;
+    margin: 0 !important;
+  }
+
+  body[data-page="service"] .bedridden-item-cta p,
+  body[data-page="service"] .bedridden-item-cta .btn {
+    display: none !important;
+  }
+
+  body[data-page="service"] .bedridden-item-cta::before {
+    display: none !important;
+  }
+
+  body[data-page="service"] .counseling-highlight {
+    background: transparent !important;
+    border-left: none !important;
+  }
+
+  body[data-page="service"] .counseling-highlight p {
+    font-size: 14px !important;
+  }
+}
+
+/* ============================================================
+   모바일 전용: 이용대상(#tab-target) 카드 축소 — 다른 탭·페이지 영향 없음
+   ============================================================ */
+@media (max-width: 768px) {
+  body[data-page="guide"] #tab-target .guide-target-core,
+  body[data-page="guide"] #tab-target .guide-target-group,
+  body[data-page="guide"] #tab-target .guide-target-support {
+    padding: 14px 12px;
+    gap: 10px;
+  }
+
+  body[data-page="guide"] #tab-target .guide-target-core h3,
+  body[data-page="guide"] #tab-target .guide-target-support h3,
+  body[data-page="guide"] #tab-target .guide-target-group-head h3,
+  body[data-page="guide"] #tab-target .guide-target-group-item h4 {
+    font-size: 15px !important;
+    line-height: 1.35 !important;
+  }
+
+  body[data-page="guide"] #tab-target :is(
+    .guide-target-core p,
+    .guide-target-support p,
+    .guide-target-group-item p
+  ) {
+    font-size: 13px !important;
+    line-height: 1.5 !important;
+  }
+
+  body[data-page="guide"] #tab-target .guide-target-core-label,
+  body[data-page="guide"] #tab-target .guide-target-support-label {
+    font-size: 12px;
+  }
+
+  body[data-page="guide"] #tab-target .guide-target-core-icon,
+  body[data-page="guide"] #tab-target .guide-target-group-icon,
+  body[data-page="guide"] #tab-target .guide-target-support-icon {
+    width: 34px;
+    height: 34px;
+  }
+
+  body[data-page="guide"] #tab-target .guide-target-core-icon svg,
+  body[data-page="guide"] #tab-target .guide-target-group-icon svg,
+  body[data-page="guide"] #tab-target .guide-target-support-icon svg {
+    width: 18px !important;
+    height: 18px !important;
+  }
+
+  body[data-page="guide"] #tab-target .guide-target-group-head {
+    gap: 8px;
+    margin-bottom: 8px;
+  }
+
+  body[data-page="guide"] #tab-target .guide-target-group-item {
+    padding: 10px 0;
+  }
+
+  /* 일반 이용대상: 상세 항목 숨기고 카드 2개를 한 줄에 배치 */
+  body[data-page="guide"] #tab-target .guide-target-group-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+
+  /* 카드 머리: 아이콘 위, 제목 아래 세로 배치 */
+  body[data-page="guide"] #tab-target .guide-target-group-head {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 8px;
+  }
+
+  body[data-page="guide"] #tab-target .guide-target-group .guide-target-group-item p {
+    display: none;
+  }
+
+  body[data-page="guide"] #tab-target .guide-target-support {
+    grid-column: 1 / -1;
+  }
+
+  /* 두 카드 상하 여백 동일하게 축소 + 내용 세로 중앙 정렬 */
+  body[data-page="guide"] #tab-target .guide-target-group {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 10px;
+    gap: 4px;
+  }
+
+  body[data-page="guide"] #tab-target .guide-target-group .guide-target-group-items {
+    flex: 0 0 auto;
+    margin-top: 6px;
+  }
+
+  body[data-page="guide"] #tab-target .guide-target-group .guide-target-group-item {
+    padding: 5px 0;
+  }
+
+  body[data-page="guide"] #tab-target .guide-target-group .guide-target-group-item:last-child {
+    padding-bottom: 0;
+  }
+
+  body[data-page="guide"] #tab-target .guide-target-group .guide-target-group-head {
+    margin-bottom: 4px;
+  }
+
+  /* 세 카드(간호·질환 관리, 퇴원·재활 지원, 보호자 안심 지원) 내용 중앙 정렬 */
+  body[data-page="guide"] #tab-target .guide-target-group,
+  body[data-page="guide"] #tab-target .guide-target-support {
+    text-align: center;
+  }
+
+  body[data-page="guide"] #tab-target .guide-target-support {
+    grid-template-columns: 1fr;
+    justify-items: center;
+    gap: 8px;
+  }
+
+  /* 제목 통일: 보호자 안심 지원 라벨 크기(17px) 기준 */
+  body[data-page="guide"] #tab-target .guide-target-group-head h3,
+  body[data-page="guide"] #tab-target .guide-target-support-label {
+    font-size: 17px !important;
+    line-height: 1.3 !important;
+  }
+
+  /* 상세 내용은 더 작게 */
+  body[data-page="guide"] #tab-target .guide-target-group-item h4,
+  body[data-page="guide"] #tab-target .guide-target-support h3 {
+    font-size: 13px !important;
+    line-height: 1.45 !important;
+  }
+}
+
+/* ============================================================
+   모바일 전용: 장기요양등급(#tab-grade) — 다른 탭·페이지 영향 없음
+   ============================================================ */
+@media (max-width: 768px) {
+  /* 등급별 안내와 등급 신청 방법 사이의 큰 공백(48px+48px) 축소 */
+  body[data-page="guide"] #tab-grade .guide-block {
+    padding: 28px 0;
+  }
+
+  body[data-page="guide"] #tab-grade .guide-block.is-first {
+    padding-top: 40px;
+  }
+
+  body[data-page="guide"] #tab-grade .guide-grade-scale {
+    margin-top: 20px;
+  }
+
+  /* 안내문의 flex-basis 1120px가 세로 높이로 적용돼 생기던 거대 공백 제거 */
+  body[data-page="guide"] #tab-grade .guide-grade-support p {
+    flex: 0 1 auto;
+    max-width: none;
+  }
+
+  /* 등급 목록: 등급 | 설명 한 줄 (점수는 모바일에서 숨김) */
+  body[data-page="guide"] #tab-grade .guide-grade-row {
+    grid-template-columns: 40px minmax(0, 1fr);
+    grid-template-areas: "num desc";
+    column-gap: 18px;
+    row-gap: 0;
+    align-items: center;
+    padding: 12px 0;
+  }
+
+  /* 표 텍스트 크기 통일 (13px) — 숫자와 "등급" 글자 완전 동일 */
+  body[data-page="guide"] #tab-grade .guide-grade-num,
+  body[data-page="guide"] #tab-grade .guide-grade-num small {
+    font-size: 13px !important;
+    font-weight: 800 !important;
+    line-height: 1.4 !important;
+    letter-spacing: 0 !important;
+  }
+
+  body[data-page="guide"] #tab-grade .guide-grade-desc {
+    font-size: 13px;
+    line-height: 1.45;
+  }
+
+  /* 점수는 모바일에서 표시하지 않음 */
+  body[data-page="guide"] #tab-grade .guide-grade-score {
+    display: none;
+  }
+
+  /* 등급 신청 방법: 번호+제목만 표시, 상세 내용 숨김 */
+  body[data-page="guide"] #tab-grade .guide-apply-item p {
+    display: none;
+  }
+
+  body[data-page="guide"] #tab-grade .guide-apply-flow {
+    gap: 12px;
+  }
+
+  body[data-page="guide"] #tab-grade .guide-apply-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 0;
+  }
+
+  body[data-page="guide"] #tab-grade .guide-apply-num {
+    margin-bottom: 0;
+    flex-shrink: 0;
+  }
+
+  body[data-page="guide"] #tab-grade .guide-apply-item h4 {
+    margin: 0;
+    font-size: 15px;
+    line-height: 1.4;
+  }
+}
+
+/* ============================================================
+   모바일 전용: 방문간호지시서 안내(#tab-directive) 3단계
+   정사각형 카드 3개 한 줄, 번호+제목만 표시 — 다른 탭 영향 없음
+   ============================================================ */
+@media (max-width: 768px) {
+  body[data-page="guide"] #tab-directive .guide-directive-flow {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px;
+  }
+
+  body[data-page="guide"] #tab-directive .guide-directive-arrow {
+    display: none;
+  }
+
+  body[data-page="guide"] #tab-directive .guide-directive-step {
+    aspect-ratio: 1 / 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px;
+    text-align: center;
+    background: var(--color-primary-soft);
+    border-color: rgba(45, 95, 113, .22);
+  }
+
+  body[data-page="guide"] #tab-directive .guide-directive-step .guide-apply-num {
+    background: #fff !important;
+  }
+
+  body[data-page="guide"] #tab-directive .guide-directive-step p {
+    display: none;
+  }
+
+  body[data-page="guide"] #tab-directive .guide-directive-step .guide-apply-num {
+    margin-bottom: 0;
+  }
+
+  body[data-page="guide"] #tab-directive .guide-directive-step h4 {
+    margin: 0;
+    font-size: 13px !important;
+    line-height: 1.35 !important;
+    word-break: keep-all;
+  }
+}
+
+/* ============================================================
+   모바일 전용: 이용요금(#tab-cost) 본인부담 비교 카드 축소
+   ============================================================ */
+@media (max-width: 768px) {
+  /* 두 카드를 한 줄(2열)로 */
+  body[data-page="guide"] #tab-cost .guide-pricing-headline {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  body[data-page="guide"] #tab-cost .guide-pricing-headline-item + .guide-pricing-headline-item {
+    border-top: 0;
+    border-left: 1px solid var(--color-border);
+  }
+
+  body[data-page="guide"] #tab-cost .guide-pricing-headline-item {
+    padding: 12px 10px;
+  }
+
+  body[data-page="guide"] #tab-cost .guide-pricing-headline-item > span:not(.num) {
+    margin-bottom: 4px;
+    font-size: 12px !important;
+  }
+
+  body[data-page="guide"] #tab-cost .guide-pricing-headline-item > .num {
+    margin-bottom: 4px;
+    font-size: 20px !important;
+  }
+
+  body[data-page="guide"] #tab-cost .guide-pricing-headline-item > p {
+    font-size: 12px !important;
+    line-height: 1.45 !important;
+  }
+
+  /* 방문 시간대별 본인부담금 표: 가로 스크롤 제거, 전체 한 화면 표시 */
+  body[data-page="guide"] #tab-cost .guide-price-table.is-visit-fee {
+    min-width: 0;
+    width: 100%;
+  }
+
+  body[data-page="guide"] #tab-cost .guide-price-table.is-visit-fee :is(th, td) {
+    width: auto !important;
+    padding: 8px 3px !important;
+    font-size: 11px !important;
+    line-height: 1.35 !important;
+    white-space: normal;
+    word-break: keep-all;
+    text-align: center !important;
+  }
+
+  body[data-page="guide"] #tab-cost .guide-price-table.is-visit-fee :is(thead th:first-child, tbody th) {
+    width: 27% !important;
+    padding-left: 4px !important;
+    text-align: left !important;
+  }
+}
+
+/* ============================================================
+   모바일 전용: 준비서류(#tab-prepare) 카드 3개 정사각형 한 줄 배치
+   ============================================================ */
+@media (max-width: 768px) {
+  body[data-page="guide"] #tab-prepare .guide-doc-cards {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px;
+  }
+
+  body[data-page="guide"] #tab-prepare .guide-doc-card {
+    aspect-ratio: 1 / 1;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px 8px;
+    text-align: center;
+  }
+
+  body[data-page="guide"] #tab-prepare .guide-doc-card-icon {
+    width: 34px;
+    height: 34px;
+  }
+
+  body[data-page="guide"] #tab-prepare .guide-doc-card-icon svg {
+    width: 16px !important;
+    height: 16px !important;
+  }
+
+  body[data-page="guide"] #tab-prepare .guide-doc-card p {
+    margin: 0;
+    font-size: 12px !important;
+    line-height: 1.4 !important;
+    word-break: keep-all;
+  }
+
+  /* 사례 안내 문장의 nowrap이 가로 넘침(페이지 밀림)을 일으키던 것 해제 */
+  body[data-page="guide"] #tab-prepare .guide-case-row p {
+    white-space: normal;
+    text-overflow: clip;
+  }
+}
+
+/* ============================================================
+   모바일 전용: 자주 묻는 질문(#tab-faq) 상담 안내 카드 축소
+   ============================================================ */
+@media (max-width: 768px) {
+  body[data-page="guide"] #tab-faq .guide-faq-callout h3 {
+    padding: 12px 14px;
+    font-size: 15px !important;
+    line-height: 1.35 !important;
+  }
+
+  body[data-page="guide"] #tab-faq .guide-faq-callout p {
+    padding: 12px 14px;
+    font-size: 13px !important;
+    line-height: 1.5 !important;
+  }
+
+  /* 이용안내 하단 CTA 배너("이용 방법이 궁금하신가요?") 모바일 숨김 */
+  body[data-page="guide"] .cta-banner {
+    display: none;
+  }
+
+  /* 질문 텍스트 축소: 모든 질문이 2줄 이내로 */
+  body[data-page="guide"] #tab-faq .guide-faq-question-copy {
+    font-size: 13px !important;
+    line-height: 1.4 !important;
+    word-break: keep-all;
+  }
+
+  body[data-page="guide"] #tab-faq .guide-faq-trigger {
+    min-height: 0;
+    padding: 12px 14px;
+  }
+}
+
+/* ============================================================
+   모바일 전용: 방문간호 이야기(board) 표 좌우 여백
+   ============================================================ */
+@media (max-width: 768px) {
+  body[data-page="board"] .board-table-wrap {
+    padding-left: 14px;
+    padding-right: 14px;
+  }
+
+  body[data-page="board"] .board-table th,
+  body[data-page="board"] .board-table td {
+    padding-top: 9px;
+    padding-bottom: 9px;
+  }
+
+  /* 글 상세: "이전 글 보기 / 다음 글 보기" 링크만 한 줄 좌우 배치 */
+  body[data-page="board"] .board-related-nav {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+  }
+
+  body[data-page="board"] .board-related-label,
+  body[data-page="board"] .board-related-title {
+    display: none;
+  }
+
+  body[data-page="board"] .board-related-item {
+    text-align: left;
+  }
+
+  body[data-page="board"] .board-related-item.is-next {
+    text-align: right;
+  }
+
+  /* 모바일: 이전 글은 "← 이전 글 보기" 형태로 */
+  body[data-page="board"] .board-related-link .board-arr-left {
+    display: inline;
+  }
+
+  body[data-page="board"] .board-related-item:not(.is-next) .board-related-link .board-arr-right {
+    display: none;
+  }
+}
+
+/* 데스크탑: 기존 "이전 글 보기 →" 그대로 (왼쪽 화살표 숨김) */
+@media (min-width: 769px) {
+  body[data-page="board"] .board-related-link .board-arr-left {
+    display: none;
+  }
+}
+
+/* 모바일: 글 상세 하단 "방문간호 서비스가 필요하신가요?" 배너 숨김 */
+@media (max-width: 768px) {
+  body[data-page="board"] .counseling-cta-banner {
+    display: none;
+  }
+}
+
+/* ============================================================
+   모바일 전용: 상담 신청서(counseling) 항목 간격 통일
+   ============================================================ */
+@media (max-width: 768px) {
+  body[data-page="counseling"] .consult-form {
+    gap: 18px;
+  }
+
+  body[data-page="counseling"] .form-row {
+    gap: 18px;
+  }
+
+  body[data-page="counseling"] .form-group {
+    gap: 8px;
+  }
+
+  /* 빈 오류 메시지 칸이 만들던 불규칙한 추가 여백 제거 */
+  body[data-page="counseling"] .form-error:empty {
+    display: none;
+  }
+
+  /* 연락처 + 어르신 연령 한 줄 배치 (이름은 전체 폭) */
+  body[data-page="counseling"] .consult-form {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px 12px;
+  }
+
+  body[data-page="counseling"] .consult-form > * {
+    grid-column: 1 / -1;
+  }
+
+  body[data-page="counseling"] .consult-form .form-row {
+    display: contents;
+  }
+
+  body[data-page="counseling"] .consult-form .form-row .form-group:first-child {
+    grid-column: 1 / -1;
+  }
+
+  body[data-page="counseling"] .consult-form .form-row .form-group:last-child {
+    grid-column: auto;
+  }
+
+  body[data-page="counseling"] .consult-form .form-row + .form-group {
+    grid-column: auto;
+  }
+
+  /* 상담 방법: 라벨 아래 줄에 전화 상담/방문 상담이 반반씩 꽉 차게 */
+  body[data-page="counseling"] .consult-form .radio-group {
+    flex-direction: row;
+    flex-wrap: nowrap;
+    gap: 8px;
+    width: 100%;
+  }
+
+  body[data-page="counseling"] .consult-form .radio-group .radio-label {
+    flex: 1 1 0;
+    justify-content: center;
+    padding: 10px 8px;
+    white-space: nowrap;
+    border: 1.5px solid var(--border, #d9dee5);
+    border-radius: 8px;
+  }
+
+  /* 표 아래 순서 변경: 상담 진행 안내 → 센터 연락처 */
+  body[data-page="counseling"] .counseling-info {
+    display: flex;
+    flex-direction: column;
+  }
+
+  body[data-page="counseling"] .counseling-info .consult-process {
+    order: -1;
+  }
+
+  /* 센터 연락처 카드 모바일 숨김 */
+  body[data-page="counseling"] .counseling-info .info-card {
+    display: none;
+  }
+
+  /* 하단 주의 안내: nowrap으로 잘리던 문장 정상 줄바꿈 */
+  body[data-page="counseling"] .consult-notice,
+  body[data-page="counseling"] .counseling-main > .container > .consult-notice,
+  body[data-page="counseling"] .consult-notice p {
+    white-space: normal !important;
+    text-overflow: clip;
+  }
+
+  body[data-page="counseling"] .consult-notice {
+    display: block;
+    text-align: center;
+    margin-top: 12px !important;
+  }
+
+  body[data-page="counseling"] .counseling-grid {
+    margin-bottom: 0 !important;
+  }
+
+  body[data-page="counseling"] .counseling-info .consult-process {
+    margin-bottom: 0 !important;
+  }
+
+  body[data-page="counseling"] .consult-notice p {
+    display: inline;
+    font-size: 11px !important;
+    line-height: 1.6 !important;
+  }
+
+  body[data-page="counseling"] .consult-notice svg {
+    display: inline-block;
+    width: 11px;
+    height: 11px;
+    margin-right: 3px;
+    vertical-align: -1px;
+  }
+
+  /* 개인정보 수집·이용 안내(내용 보기) 텍스트 축소 */
+  body[data-page="counseling"] .privacy-detail h4 {
+    font-size: 14px !important;
+    line-height: 1.4 !important;
+  }
+
+  body[data-page="counseling"] .privacy-detail li,
+  body[data-page="counseling"] .privacy-detail p {
+    font-size: 13px !important;
+    line-height: 1.55 !important;
+  }
+}
+
+/* ============================================================
+   모바일 전용: 푸터 정리 — 로고·센터 정보 축소, 바로가기 정렬, 하단 문구
+   ============================================================ */
+@media (max-width: 768px) {
+  .site-footer {
+    padding: 44px 0 0;
+  }
+
+  /* 소개 글은 맨 위, 로고만 바로가기 아래로 */
+  .footer-main {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    padding-bottom: 0;
+  }
+
+  .footer-brand {
+    display: contents;
+  }
+
+  .footer-desc {
+    order: -1;
+    margin: 0;
+  }
+
+  .footer-brand-logos {
+    order: 3;
+  }
+
+  .footer-brand-logos {
+    min-height: 0;
+    gap: 12px;
+    margin-bottom: -16px;
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+  }
+
+  .footer-logo-baekse {
+    height: 88px !important;
+    transform: none !important;
+  }
+
+  .footer-logo-cornex {
+    height: 18px !important;
+    margin-left: -6px;
+  }
+
+  /* 센터 정보 아이콘 축소 */
+  .footer-info .footer-col-list svg {
+    width: 11px !important;
+    height: 11px !important;
+    flex-shrink: 0;
+  }
+
+  /* 센터 정보 4개 항목: 좌우 여백 동일하게 가운데 배치 */
+  .footer-info .footer-col-list {
+    width: fit-content;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .site-footer .footer-desc {
+    font-size: 12px !important;
+    line-height: 1.55 !important;
+  }
+
+  .site-footer .footer-col-title {
+    margin-bottom: 10px;
+    font-size: 12px !important;
+    text-align: left;
+  }
+
+  .footer-col-list {
+    gap: 6px;
+  }
+
+  /* 센터 정보: 계단식 배치 - 첫 항목은 왼쪽 끝, 마지막 항목은 오른쪽 끝까지 */
+  .footer-info .footer-col-list {
+    width: 100% !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    align-items: stretch;
+  }
+
+  .footer-info .footer-col-list li:nth-child(1) { margin-left: 0; }
+  .footer-info .footer-col-list li:nth-child(2) { margin-left: 15%; }
+  .footer-info .footer-col-list li:nth-child(3),
+  .footer-info .footer-col-list li:nth-child(4) {
+    margin-left: 0;
+    justify-content: flex-end;
+    text-align: right;
+  }
+
+  .footer-info .footer-col-list li {
+    white-space: nowrap;
+    overflow: visible;
+  }
+
+  .footer-info .footer-col-list li span {
+    white-space: nowrap;
+  }
+
+  .site-footer .footer-col-list li,
+  .site-footer .footer-info .footer-col-list li span,
+  .site-footer .footer-col-list a {
+    font-size: 11px !important;
+    line-height: 1.5 !important;
+  }
+
+  /* 바로가기: 제목은 그대로, 6개 링크 블록은 좌우 여백 없이 폭 전체 사용 */
+  .footer-nav-list {
+    display: grid !important;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px 12px;
+    width: 100%;
+  }
+
+  .site-footer .footer-nav-list a {
+    margin-left: auto;
+    margin-right: auto;
+    font-size: 11px !important;
+  }
+
+  /* 하단 저작권 영역: 두 문장을 한 문단으로 합쳐 중앙 정렬 */
+  .footer-bottom {
+    display: block;
+    min-height: 0;
+    padding: 14px 0 16px;
+    text-align: center;
+  }
+
+  .site-footer .footer-bottom p {
+    display: block;
+    margin: 0;
+    font-size: 10px !important;
+    line-height: 1.6 !important;
+  }
+}
+
+/* ============================================================
+   모바일 전용: 간호사례(case) 오프닝 왼쪽 정렬 맞춤
+   ============================================================ */
+@media (max-width: 768px) {
+  body[data-page="case"] .case-opening-hero {
+    padding-left: 0;
+    padding-right: 0;
+    text-align: left;
+  }
+
+  /* 6단계 흐름: 3개 × 2줄, 아이콘 크기만 축소 */
+  body[data-page="case"] .case-care-flow {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    row-gap: 30px;
+  }
+
+  body[data-page="case"] .case-care-step:nth-child(2)::after,
+  body[data-page="case"] .case-care-step:nth-child(4)::after,
+  body[data-page="case"] .case-care-step:nth-child(5)::after {
+    display: block;
+  }
+
+  body[data-page="case"] .case-care-step:nth-child(3)::after {
+    display: none;
+  }
+
+  body[data-page="case"] .case-care-icon {
+    width: 44px;
+    height: 44px;
+  }
+
+  body[data-page="case"] .case-care-icon svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  body[data-page="case"] .case-care-step:not(:last-child)::after {
+    top: 12px;
+    left: calc(50% + 28px);
+    width: calc(100% - 56px);
+  }
+
+  /* 케이스 사진을 본문 전체의 반투명 배경으로 (모바일 전용, 화면 꽉 차게) */
+  body[data-page="case"] .case-row {
+    position: relative;
+    overflow: visible;
+    padding-top: 48px;
+    padding-bottom: 48px;
+    border-bottom: 0;
+  }
+
+  body[data-page="case"] .case-row-media {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    width: 100vw;
+    transform: translateX(-50%);
+    aspect-ratio: auto;
+    margin: 0;
+    border-radius: 0;
+    overflow: hidden;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  body[data-page="case"] .case-row-media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0.08;
+  }
+
+  /* 배경 이미지 위 가독성: 회색 본문을 진한 색으로 */
+  body[data-page="case"] .case-section p {
+    color: #2b3442 !important;
+  }
+
+  /* 진행 과정만 남색 계열로 구분 */
+  body[data-page="case"] .case-process-list li {
+    color: #1B3A5C !important;
+  }
+
+  body[data-page="case"] .case-img-fallback {
+    display: none;
+  }
+
+  /* 기존 위/아래 경계 그림자를 이미지 레이어 위에 다시 적용 */
+  body[data-page="case"] .case-row:nth-child(odd) .case-row-media {
+    box-shadow: var(--edge-shadow-top), var(--edge-shadow-bottom);
+  }
+
+  body[data-page="case"] .case-row-content {
+    position: relative;
+    z-index: 1;
+  }
+
+  /* 케이스 본문 가독성: 단락·섹션 구분 강화 */
+  body[data-page="case"] .case-content {
+    gap: 26px;
+    margin-top: 10px;
+  }
+
+  body[data-page="case"] .case-section h4 {
+    margin-bottom: 10px;
+    padding-left: 10px;
+    border-left: 3px solid var(--color-primary);
+    font-size: 13px;
+    line-height: 1.3;
+  }
+
+  body[data-page="case"] .case-section p + p {
+    margin-top: 14px;
+  }
+
+  body[data-page="case"] .case-process-list {
+    gap: 10px;
+  }
+
+  /* 진행 과정: 모바일 전용 수동 줄바꿈(.m-break)으로 두 줄 배분 제어 */
+  body[data-page="case"] .case-process-list li {
+    word-break: keep-all;
+  }
+
+  body[data-page="case"] .m-break {
+    display: inline;
+  }
+}
+
+/* 모바일 전용 줄바꿈: 데스크탑에서는 없는 것처럼 동작 */
+body[data-page="case"] br.m-break {
+  display: none;
+}
+
+.sys-feat-mobile-prefix {
+  display: none !important;
+}
+
+@media (max-width: 768px) {
+  /* 오시는 길 - 찾아오시는 방법: 아이콘 축소, 행 위아래 여백 축소 */
+  body[data-page="about"] #tab-location .location-list li {
+    grid-template-columns: 36px minmax(0, 1fr);
+    gap: 12px;
+    padding: 10px 0;
+  }
+
+  body[data-page="about"] #tab-location .loc-icon {
+    width: 36px;
+    height: 36px;
+  }
+
+  body[data-page="about"] #tab-location .loc-icon svg {
+    width: 16px !important;
+    height: 16px !important;
+  }
+
+  /* 카카오맵으로 길찾기 버튼 축소 */
+  body[data-page="about"] #tab-location .location-map-link {
+    padding: 9px 14px;
+    font-size: 13px;
+  }
+
+  /* 하단 "궁금하신 점이 있으신가요?" 배너 숨김 */
+  body[data-page="about"] .cta-banner {
+    display: none;
+  }
+}
+
+
+@media (max-width: 768px) {
+  body[data-page="case"] br.m-break {
+    display: inline;
+  }
+
+  body[data-page="about"] #tab-system .sys-feat-mobile-prefix {
+    display: inline !important;
+    font-size: inherit !important;
+    font-weight: inherit !important;
+    line-height: inherit !important;
+  }
+
+  body[data-page="case"] .case-takeaway {
+    margin-top: 8px;
+  }
+
+  /* 마무리 6단계: 숫자+제목만, 정사각형 카드 3개 × 2줄 */
+  body[data-page="case"] .case-closing-flow {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px;
+  }
+
+  body[data-page="case"] .case-closing-flow li {
+    aspect-ratio: 1 / 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 6px;
+  }
+
+  body[data-page="case"] .case-closing-flow p {
+    display: none;
+  }
+
+  body[data-page="case"] .case-closing-flow li > span.case-closing-num {
+    width: 32px !important;
+    height: 32px !important;
+    margin: 0 auto 7px;
+    font-size: 12px !important;
+  }
+
+  body[data-page="case"] .case-closing-flow strong {
+    margin: 0;
+    font-size: 13px !important;
+    line-height: 1.25 !important;
+    white-space: nowrap;
+  }
+
+  /* 하단 CTA 배너("비슷한 상황이신가요?") 모바일 숨김 */
+  body[data-page="case"] .cta-banner {
+    display: none;
+  }
+
+  /* 하단 안내문: 아이콘을 문장 첫머리에 붙여 통째로 가운데 정렬 */
+  body[data-page="case"] .case-disclaimer .container {
+    display: block;
+    width: 100%;
+    max-width: none;
+    margin: 0;
+    padding: 0 24px;
+    text-align: center;
+  }
+
+  body[data-page="case"] .case-disclaimer svg {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    margin-right: 3px;
+    vertical-align: -1px;
+  }
+
+  body[data-page="case"] .case-disclaimer p {
+    display: inline;
+    transform: none;
+    font-size: 9px;
+    line-height: 1.6;
   }
 }

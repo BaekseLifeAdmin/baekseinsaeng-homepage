@@ -490,7 +490,7 @@
   .form-row { grid-template-columns: 1fr; }
   .checkbox-group { grid-template-columns: 1fr; }
   .radio-group { flex-direction: column; }
-  .info-card { width: 100%; min-width: 0; grid-template-columns: 1fr; padding: 28px 24px; }
+  .info-card { width: 100%; min-width: 0; grid-template-columns: 1fr; padding: 16px; }
   .consult-process, .consult-notice { width: 100%; min-width: 0; }
 }
 @media (max-width: 480px) {
@@ -686,7 +686,7 @@ body[data-page="counseling"] .counseling-main > .container > .consult-notice {
   width: 100%;
   margin-top: 120px;
   padding: 22px 0 24px;
-  white-space: nowrap;
+  text-align: center;
 }
 
 body[data-page="counseling"] main.counseling-main {

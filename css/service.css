@@ -753,13 +753,20 @@ body[data-page="service"] .stage-item .stage-circle h4 {
   .svc-overview { padding: 56px 0; }
   .svc-cards-grid { grid-template-columns: 1fr 1fr; gap: 14px; }
   .svc-detail { padding: 56px 0; }
+  .stage-item { padding: 16px; }
+  .stage-circle { width: 56px; height: 56px; margin-bottom: 12px; }
   .chronic-process { grid-template-columns: 1fr; }
+  .chronic-step { padding: 16px; }
   .tube-care-grid,
   .medication-grid,
   .counseling-layout {
     grid-template-columns: 1fr;
     gap: 20px;
   }
+  .tube-card,
+  .bedridden-item,
+  .medication-panel,
+  .counseling-card { padding: 16px; }
   .tube-care-cards {
     grid-template-columns: 1fr;
   }
@@ -1086,6 +1093,10 @@ body[data-page="service"] .svc-detail.bg-light :is(
   opacity: 1;
   border: 1px solid #D9E4E8;
   box-shadow: 0 10px 26px rgba(36, 59, 74, .08);
+}
+
+.bedridden-grid .bedridden-item-cta {
+  background-color: #2196F3 !important;
 }
 
 /* 기존 카드 배경색은 하단의 세 관리 항목 영역에만 유지한다. */

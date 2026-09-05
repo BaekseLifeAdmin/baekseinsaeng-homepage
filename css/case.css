@@ -421,7 +421,6 @@ body[data-page="case"] .case-row:last-child {
   max-width: calc(100% - var(--gutter));
   margin-left: auto;
   margin-right: clamp(32px, 6.25vw, 128px);
-  transform: translateX(clamp(0px, 14.45vw, 296px));
   display: flex;
   gap: 8px;
   align-items: center;

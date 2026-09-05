@@ -49,7 +49,7 @@ async function initializeBoardDetail() {
     if (relatedPostsEl) {
       relatedPostsEl.innerHTML = `
         <div class="board-related-item">
-          ${previousPost ? `<span class="board-related-label">이전 글</span><p class="board-related-title">${escapeText(previousPost.title || '제목 없음')}</p><a class="board-related-link" href="board-detail.html?id=${encodeURIComponent(previousPost.id)}&page=${getListPageFromQuery(window.location.search)}&from=board">이전 글 보기 →</a>` : `<span class="board-related-label">이전 글</span><p class="board-related-empty">이전 글이 없습니다.</p>`}
+          ${previousPost ? `<span class="board-related-label">이전 글</span><p class="board-related-title">${escapeText(previousPost.title || '제목 없음')}</p><a class="board-related-link" href="board-detail.html?id=${encodeURIComponent(previousPost.id)}&page=${getListPageFromQuery(window.location.search)}&from=board"><span class="board-arr-left" aria-hidden="true">← </span>이전 글 보기<span class="board-arr-right" aria-hidden="true"> →</span></a>` : `<span class="board-related-label">이전 글</span><p class="board-related-empty">이전 글이 없습니다.</p>`}
         </div>
         <div class="board-related-item is-next">
           ${nextPost ? `<span class="board-related-label">다음 글</span><p class="board-related-title">${escapeText(nextPost.title || '제목 없음')}</p><a class="board-related-link" href="board-detail.html?id=${encodeURIComponent(nextPost.id)}&page=${getListPageFromQuery(window.location.search)}&from=board">다음 글 보기 →</a>` : `<span class="board-related-label">다음 글</span><p class="board-related-empty">다음 글이 없습니다.</p>`}
