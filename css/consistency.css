@@ -4261,7 +4261,7 @@ body[data-page="guide"] #tab-cost .guide-cost-notes {
   border: 0;
   background: transparent;
   color: var(--color-text-sub);
-  font-size: 16px;
+  font-size: 14px;
   line-height: 22px;
   list-style: none;
   text-align: right;
@@ -4420,7 +4420,7 @@ body[data-page="guide"] #tab-cost .guide-cost-source {
   body[data-page="guide"] #tab-cost .guide-cost-notes {
     flex-wrap: wrap;
     padding: 0;
-    font-size: 15px;
+    font-size: 14px;
     white-space: normal;
   }
 }
@@ -6079,12 +6079,12 @@ body[data-page="service"] .bedridden-grid .bedridden-item-cta {
 
   /* 표 아래 "2026년 고시 기준" 안내 문구: 출처 문구와 동일한 크기로 축소 */
   body[data-page="guide"] #tab-cost .guide-cost-notes {
-    font-size: 11px !important;
+    font-size: 14px !important;
     line-height: 1.4 !important;
   }
 
   body[data-page="guide"] #tab-cost .guide-cost-source {
-    font-size: 11px !important;
+    font-size: 14px !important;
     line-height: 1.4 !important;
   }
 }
