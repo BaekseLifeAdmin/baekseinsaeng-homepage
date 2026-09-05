@@ -591,11 +591,11 @@ body[data-page="case"] section.cta-banner {
   transform: translate(0, -50%);
 }
 
-/* 왼쪽 아래 사례 네비게이션 안내 문구 */
+/* 왼쪽 위 사례 네비게이션 안내 문구 */
 .case-nav-hint {
   position: fixed;
   left: 24px;
-  bottom: 48px;
+  top: 112px;
   z-index: 900;
   display: flex;
   flex-wrap: wrap;
@@ -700,4 +700,66 @@ body[data-page="case"] section.cta-banner {
 @media (max-width: 1180px), (max-height: 620px) {
   .case-quick-nav { display: none; }
   .case-nav-hint { display: none; }
+}
+
+/* 모바일: 좌측 세로 바 대신, 헤더 바로 아래 고정된 자리에 가로 바를 배치.
+   본문 위치와 무관하게 화면에 고정(position: fixed)되어 있다가, 사례 목록이 보이는
+   동안에만 그 자리에서 아래로 펼쳐지듯 나타나고, 목록을 벗어나면 다시 사라짐.
+   표시 여부는 IntersectionObserver로 판단(js/case.js) — 데스크탑 스크롤 계산 로직과는 분리. */
+@media (max-width: 768px) {
+  .case-quick-nav {
+    display: flex;
+    position: fixed;
+    top: var(--mobile-header-height, 80px);
+    left: 0;
+    right: 0;
+    bottom: auto;
+    z-index: 90;
+    flex-direction: row;
+    justify-content: center;
+    width: 100%;
+    max-width: 100%;
+    gap: 4px;
+    padding: 6px 8px;
+    margin: 0;
+    border: none;
+    border-bottom: 1px solid var(--color-border);
+    border-radius: 0;
+    background: rgba(255, 255, 255, .96);
+    box-shadow: 0 6px 16px rgba(15, 23, 42, .06);
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transform-origin: top;
+    transform: scaleY(.4);
+    transition: opacity .35s ease, visibility .35s ease, transform .35s ease;
+  }
+  .case-quick-nav::-webkit-scrollbar { display: none; }
+
+  .case-quick-nav.is-visible {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transform: scaleY(1);
+  }
+
+  .case-quick-link {
+    flex: 0 0 auto;
+    width: 34px;
+    height: 34px;
+    border-radius: 8px;
+  }
+
+  .case-quick-link svg {
+    width: 18px;
+    height: 18px;
+    flex: 0 0 18px;
+  }
+
+  .case-quick-link > span { display: none; }
+
+  .case-row[id] { scroll-margin-top: calc(var(--mobile-header-height, 80px) + 56px); }
 }
