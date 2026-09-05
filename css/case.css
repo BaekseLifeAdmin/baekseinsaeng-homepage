@@ -528,15 +528,15 @@ body[data-page="case"] section.cta-banner {
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
-  transform: translateY(-46%);
-  transition: opacity .25s ease, visibility .25s ease, transform .25s ease;
+  transform: translateY(-50%) translate3d(0, 24px, 0);
+  transition: opacity .82s cubic-bezier(.22, 1, .36, 1), visibility .82s cubic-bezier(.22, 1, .36, 1), transform .82s cubic-bezier(.22, 1, .36, 1);
 }
 
 .case-quick-nav.is-visible {
   opacity: 1;
   visibility: visible;
   pointer-events: auto;
-  transform: translateY(-50%);
+  transform: translateY(-50%) translate3d(0, 0, 0);
 }
 
 .case-quick-link {
@@ -624,14 +624,14 @@ body[data-page="case"] section.cta-banner {
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
-  transform: translateY(10px);
-  transition: opacity .25s ease, visibility .25s ease, transform .25s ease;
+  transform: translate3d(0, 24px, 0);
+  transition: opacity .82s cubic-bezier(.22, 1, .36, 1), visibility .82s cubic-bezier(.22, 1, .36, 1), transform .82s cubic-bezier(.22, 1, .36, 1);
 }
 
 .case-nav-hint.is-visible {
   opacity: 1;
   visibility: visible;
-  transform: translateY(0);
+  transform: translate3d(0, 0, 0);
 }
 
 .case-nav-hint strong {

@@ -28,6 +28,7 @@ document.addEventListener('DOMContentLoaded', () => {
     .map(link => document.querySelector(link.getAttribute('href')))
     .filter(Boolean);
   const caseList = document.querySelector('.case-list');
+  const pageHeader = document.querySelector('.page-header');
   const cta = document.querySelector('.cta-banner');
   let lockedId = null;
   let unlockTimer = null;
@@ -67,16 +68,28 @@ document.addEventListener('DOMContentLoaded', () => {
     // 데스크탑에서만 스크롤 퍼센트로 is-visible을 계산한다.
     // 모바일은 위의 IntersectionObserver가 이 클래스를 전담하므로 여기서 건드리지 않음.
     if (!isMobileQuickNav()) {
-      const listTop = caseList ? caseList.getBoundingClientRect().top : Infinity;
-      const ctaTop = cta ? cta.getBoundingClientRect().top : Infinity;
-      const visible = listTop <= window.innerHeight * .72 && ctaTop > window.innerHeight * .35;
+      // 페이지 진입 시 헤더 배너에서 본문으로 자동 스크롤되는 연출(js/main.js의
+      // initSubpageHeroSequence)이 끝나기 전에는 겹쳐 보이지 않도록 아예 숨겨둔다.
+      const autoScrolling = document.documentElement.classList.contains('auto-scroll-active');
 
-      nav.classList.toggle('is-visible', visible);
+      if (autoScrolling) {
+        nav.classList.remove('is-visible');
+        if (navHint) navHint.classList.remove('is-visible');
+      } else {
+        // 자동 스크롤이 끝난 뒤에는, 상단 배너(.page-header)가 nav가 놓일 자리 위로
+        // 완전히 스크롤되어 지나간 뒤에만 나타나게 해서 배너와 겹쳐 보이지 않게 한다.
+        const navRectTop = nav.getBoundingClientRect().top;
+        const pageHeaderBottom = pageHeader ? pageHeader.getBoundingClientRect().bottom : -Infinity;
+        const ctaTop = cta ? cta.getBoundingClientRect().top : Infinity;
+        const visible = pageHeaderBottom <= navRectTop && ctaTop > window.innerHeight * .35;
 
-      if (navHint) {
-        const closingTop = closingSection ? closingSection.getBoundingClientRect().top : Infinity;
-        const hintVisible = visible && closingTop > window.innerHeight * .8;
-        navHint.classList.toggle('is-visible', hintVisible);
+        nav.classList.toggle('is-visible', visible);
+
+        if (navHint) {
+          const closingTop = closingSection ? closingSection.getBoundingClientRect().top : Infinity;
+          const hintVisible = visible && closingTop > window.innerHeight * .8;
+          navHint.classList.toggle('is-visible', hintVisible);
+        }
       }
     }
 
