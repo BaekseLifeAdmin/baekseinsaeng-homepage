@@ -4261,7 +4261,7 @@ body[data-page="guide"] #tab-cost .guide-cost-notes {
   border: 0;
   background: transparent;
   color: var(--color-text-sub);
-  font-size: 14px;
+  font-size: 16px;
   line-height: 22px;
   list-style: none;
   text-align: right;
@@ -4420,7 +4420,7 @@ body[data-page="guide"] #tab-cost .guide-cost-source {
   body[data-page="guide"] #tab-cost .guide-cost-notes {
     flex-wrap: wrap;
     padding: 0;
-    font-size: 14px;
+    font-size: 15px;
     white-space: normal;
   }
 }
@@ -6077,14 +6077,15 @@ body[data-page="service"] .bedridden-grid .bedridden-item-cta {
     text-align: left !important;
   }
 
-  /* 표 아래 "2026년 고시 기준" 안내 문구: 출처 문구와 동일한 크기로 축소 */
-  body[data-page="guide"] #tab-cost .guide-cost-notes {
-    font-size: 14px !important;
+  /* 표 아래 "2026년 고시 기준" 안내 문구: 출처 문구와 동일한 크기(11px)로 축소 */
+  body[data-page="guide"] #tab-cost .guide-cost-notes,
+  body[data-page="guide"] #tab-cost .guide-cost-notes li {
+    font-size: 11px !important;
     line-height: 1.4 !important;
   }
 
   body[data-page="guide"] #tab-cost .guide-cost-source {
-    font-size: 14px !important;
+    font-size: 11px !important;
     line-height: 1.4 !important;
   }
 }
@@ -6434,7 +6435,7 @@ body[data-page="service"] .bedridden-grid .bedridden-item-cta {
     gap: 6px;
   }
 
-  /* 센터 정보: 계단식 배치 - 첫 항목은 왼쪽 끝, 마지막 항목은 오른쪽 끝까지 */
+  /* 센터 정보: 4개 항목 모두 좌측 정렬로 통일 */
   .footer-info .footer-col-list {
     width: 100% !important;
     margin-left: 0 !important;
@@ -6442,13 +6443,10 @@ body[data-page="service"] .bedridden-grid .bedridden-item-cta {
     align-items: stretch;
   }
 
-  .footer-info .footer-col-list li:nth-child(1) { margin-left: 0; }
-  .footer-info .footer-col-list li:nth-child(2) { margin-left: 15%; }
-  .footer-info .footer-col-list li:nth-child(3),
-  .footer-info .footer-col-list li:nth-child(4) {
+  .footer-info .footer-col-list li {
     margin-left: 0;
-    justify-content: flex-end;
-    text-align: right;
+    justify-content: flex-start;
+    text-align: left;
   }
 
   .footer-info .footer-col-list li {
@@ -6465,6 +6463,11 @@ body[data-page="service"] .bedridden-grid .bedridden-item-cta {
   .site-footer .footer-col-list a {
     font-size: 11px !important;
     line-height: 1.5 !important;
+  }
+
+  /* 바로가기 섹션 전체(제목+메뉴)를 살짝 아래로 이동 */
+  .footer-links {
+    margin-top: 14px;
   }
 
   /* 바로가기: 제목은 그대로, 6개 링크 블록은 좌우 여백 없이 폭 전체 사용 */
@@ -6720,13 +6723,19 @@ body[data-page="case"] br.m-break {
     display: none;
   }
 
-  /* 하단 안내문: 아이콘을 문장 첫머리에 붙여 통째로 가운데 정렬 */
+  /* 하단 안내문: 위쪽 구분선과의 간격을 위아래 대칭으로 맞추고 전체를 위로 당김 */
+  body[data-page="case"] .case-disclaimer {
+    padding: 8px 0;
+    margin-top: -40px;
+  }
+
+  /* 하단 안내문: 아이콘을 문장 첫머리에 붙여 통째로 가운데 정렬, 다른 섹션과 같은 좌우 여백(16px) 사용 */
   body[data-page="case"] .case-disclaimer .container {
     display: block;
     width: 100%;
     max-width: none;
     margin: 0;
-    padding: 0 24px;
+    padding: 0 16px;
     text-align: center;
   }
 
