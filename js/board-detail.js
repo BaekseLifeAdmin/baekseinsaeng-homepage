@@ -197,7 +197,8 @@ function initBoardDetailPdfViewer(mediaEl) {
     return renderAllPages();
   }).catch((error) => {
     if (error && error.name === 'RenderingCancelledException') return;
-    showPdfError(mediaEl, 'PDF를 불러오지 못했습니다. 잠시 후 다시 시도해 주세요.');
+    const debugDetail = error ? ` (${error.name || 'Error'}: ${error.message || String(error)})` : '';
+    showPdfError(mediaEl, `PDF를 불러오지 못했습니다. 잠시 후 다시 시도해 주세요.${debugDetail}`);
   });
 }
 
