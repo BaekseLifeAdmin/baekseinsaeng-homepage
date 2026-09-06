@@ -198,7 +198,15 @@ function initBoardDetailPdfViewer(mediaEl) {
   }).catch((error) => {
     if (error && error.name === 'RenderingCancelledException') return;
     const debugDetail = error ? ` (${error.name || 'Error'}: ${error.message || String(error)})` : '';
-    showPdfError(mediaEl, `PDF를 불러오지 못했습니다. 잠시 후 다시 시도해 주세요.${debugDetail}`);
+
+    fetch(url, { method: 'GET', mode: 'cors', cache: 'no-store' })
+      .then((res) => {
+        showPdfError(mediaEl, `PDF를 불러오지 못했습니다. 잠시 후 다시 시도해 주세요.${debugDetail} [fetch:OK ${res.status}]`);
+      })
+      .catch((fetchError) => {
+        const fetchDetail = fetchError ? `${fetchError.name || 'Error'}: ${fetchError.message || String(fetchError)}` : 'unknown';
+        showPdfError(mediaEl, `PDF를 불러오지 못했습니다. 잠시 후 다시 시도해 주세요.${debugDetail} [fetch:FAIL ${fetchDetail}]`);
+      });
   });
 }
 
