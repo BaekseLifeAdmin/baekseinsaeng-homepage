@@ -48,11 +48,6 @@
   overflow: hidden;
 }
 
-.board-detail-media-pdf-native {
-  width: 100%;
-  max-width: 100%;
-}
-
 .board-pdf-native-frame {
   display: block;
   width: 100%;

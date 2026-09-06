@@ -94,15 +94,6 @@ function renderDetailImage(imageUrl, altText) {
   if (isPdfUrl(imageUrl)) {
     const safeTitle = escapeText(altText || '첨부 문서');
 
-    if (isIOSSafari()) {
-      return `
-        <div class="board-detail-media board-detail-media-pdf-native">
-          <iframe class="board-pdf-native-frame" src="${safeUrl}" title="${safeTitle}"></iframe>
-          <hr class="board-detail-divider">
-        </div>
-      `;
-    }
-
     return `
       <div class="board-detail-media board-detail-media-pdf" data-pdf-url="${safeUrl}" data-pdf-title="${safeTitle}">
         <div class="board-pdf-viewer">
@@ -207,8 +198,26 @@ function initBoardDetailPdfViewer(mediaEl) {
     return renderAllPages();
   }).catch((error) => {
     if (error && error.name === 'RenderingCancelledException') return;
+    if (isIOSSafari()) {
+      renderNativeIOSFallback(mediaEl, url, mediaEl.getAttribute('data-pdf-title'));
+      return;
+    }
     showPdfError(mediaEl, 'PDF를 불러오지 못했습니다. 잠시 후 다시 시도해 주세요.');
   });
+}
+
+/**
+ * iOS Safari에서 pdf.js의 모든 로드 방식(fetch 기반)이 실패하면
+ * 브라우저 기본 PDF 뷰어(iframe)로 대체한다. 다른 브라우저는
+ * 캔버스 렌더링이 항상 정상 동작하므로 이 대체 경로를 타지 않는다.
+ */
+function renderNativeIOSFallback(mediaEl, url, title) {
+  mediaEl.innerHTML = `
+    <div class="board-pdf-viewer">
+      <iframe class="board-pdf-native-frame" src="${escapeText(url)}" title="${escapeText(title || '첨부 문서')}"></iframe>
+    </div>
+    <hr class="board-detail-divider">
+  `;
 }
 
 /**
@@ -222,8 +231,8 @@ function isSafariBrowser() {
 }
 
 /**
- * iOS Safari(아이폰/아이패드)는 페이지 내 fetch로 R2 PDF를 불러오면
- * 실패하지만 브라우저 기본 PDF 뷰어(iframe/직접 열기)는 정상 동작한다.
+ * iOS Safari(아이폰/아이패드)는 페이지 내 fetch 기반 PDF 로드가
+ * 다른 방식보다 더 자주 실패해 XHR 재시도와 iframe 대체 경로가 필요하다.
  * 맥 사파리는 영향이 없으므로 iOS 기기인 경우에만 분기한다.
  */
 function isIOSSafari() {
@@ -243,6 +252,35 @@ function loadPdfDocument(url) {
   return pdfjsLib.getDocument(initialParams).promise.catch((error) => {
     if (error && error.name === 'RenderingCancelledException') throw error;
     return pdfjsLib.getDocument({ url, disableWorker: true, disableRange: true, disableStream: true }).promise;
+  }).catch((error) => {
+    if (error && error.name === 'RenderingCancelledException') throw error;
+    if (!isIOSSafari()) throw error;
+
+    return fetchPdfBytesViaXHR(url).then((data) => (
+      pdfjsLib.getDocument({ data, disableWorker: true, disableRange: true, disableStream: true }).promise
+    ));
+  });
+}
+
+/**
+ * iOS Safari에서는 fetch() 기반 로드가 알 수 없는 이유로 계속 실패하지만,
+ * 동일한 요청을 XMLHttpRequest(arraybuffer)로 보내면 성공하는 경우가 있어
+ * 캔버스 렌더링을 포기하기 전 마지막으로 시도한다.
+ */
+function fetchPdfBytesViaXHR(url) {
+  return new Promise((resolve, reject) => {
+    const xhr = new XMLHttpRequest();
+    xhr.open('GET', url, true);
+    xhr.responseType = 'arraybuffer';
+    xhr.onload = () => {
+      if (xhr.status >= 200 && xhr.status < 300 && xhr.response) {
+        resolve(new Uint8Array(xhr.response));
+      } else {
+        reject(new Error(`PDF XHR failed with status ${xhr.status}`));
+      }
+    };
+    xhr.onerror = () => reject(new Error('PDF XHR network error'));
+    xhr.send();
   });
 }
 
