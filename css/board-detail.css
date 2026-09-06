@@ -48,6 +48,19 @@
   overflow: hidden;
 }
 
+.board-detail-media-pdf-native {
+  width: 100%;
+  max-width: 100%;
+}
+
+.board-pdf-native-frame {
+  display: block;
+  width: 100%;
+  height: 85vh;
+  min-height: 480px;
+  border: none;
+}
+
 .board-pdf-viewer {
   display: flex;
   flex-direction: column;

@@ -93,6 +93,16 @@ function renderDetailImage(imageUrl, altText) {
 
   if (isPdfUrl(imageUrl)) {
     const safeTitle = escapeText(altText || '첨부 문서');
+
+    if (isIOSSafari()) {
+      return `
+        <div class="board-detail-media board-detail-media-pdf-native">
+          <iframe class="board-pdf-native-frame" src="${safeUrl}" title="${safeTitle}"></iframe>
+          <hr class="board-detail-divider">
+        </div>
+      `;
+    }
+
     return `
       <div class="board-detail-media board-detail-media-pdf" data-pdf-url="${safeUrl}" data-pdf-title="${safeTitle}">
         <div class="board-pdf-viewer">
@@ -197,16 +207,7 @@ function initBoardDetailPdfViewer(mediaEl) {
     return renderAllPages();
   }).catch((error) => {
     if (error && error.name === 'RenderingCancelledException') return;
-    const debugDetail = error ? ` (${error.name || 'Error'}: ${error.message || String(error)})` : '';
-
-    fetch(url, { method: 'GET', mode: 'cors', cache: 'no-store' })
-      .then((res) => {
-        showPdfError(mediaEl, `PDF를 불러오지 못했습니다. 잠시 후 다시 시도해 주세요.${debugDetail} [fetch:OK ${res.status}]`);
-      })
-      .catch((fetchError) => {
-        const fetchDetail = fetchError ? `${fetchError.name || 'Error'}: ${fetchError.message || String(fetchError)}` : 'unknown';
-        showPdfError(mediaEl, `PDF를 불러오지 못했습니다. 잠시 후 다시 시도해 주세요.${debugDetail} [fetch:FAIL ${fetchDetail}]`);
-      });
+    showPdfError(mediaEl, 'PDF를 불러오지 못했습니다. 잠시 후 다시 시도해 주세요.');
   });
 }
 
@@ -218,6 +219,18 @@ function initBoardDetailPdfViewer(mediaEl) {
 function isSafariBrowser() {
   const ua = navigator.userAgent || '';
   return /^((?!chrome|android|crios|fxios|edgios).)*safari/i.test(ua);
+}
+
+/**
+ * iOS Safari(아이폰/아이패드)는 페이지 내 fetch로 R2 PDF를 불러오면
+ * 실패하지만 브라우저 기본 PDF 뷰어(iframe/직접 열기)는 정상 동작한다.
+ * 맥 사파리는 영향이 없으므로 iOS 기기인 경우에만 분기한다.
+ */
+function isIOSSafari() {
+  const ua = navigator.userAgent || '';
+  const isIOSDevice = /iPad|iPhone|iPod/.test(ua)
+    || (ua.includes('Macintosh') && navigator.maxTouchPoints > 1);
+  return isIOSDevice && isSafariBrowser();
 }
 
 /**
