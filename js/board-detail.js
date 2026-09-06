@@ -192,12 +192,35 @@ function initBoardDetailPdfViewer(mediaEl) {
     }, 250);
   });
 
-  pdfjsLib.getDocument(url).promise.then((doc) => {
+  loadPdfDocument(url).then((doc) => {
     pdfDoc = doc;
     return renderAllPages();
   }).catch((error) => {
     if (error && error.name === 'RenderingCancelledException') return;
     showPdfError(mediaEl, 'PDF를 불러오지 못했습니다. 잠시 후 다시 시도해 주세요.');
+  });
+}
+
+/**
+ * Safari(WebKit)는 동일 URL에 대한 반복적인 Range 요청을 캐시에서
+ * 잘못 조합하는 버그가 있어 PDF.js의 청크 단위 로드가 실패할 수 있다.
+ * Safari에서는 처음부터 Range 요청 없이 전체를 한 번에 받는다.
+ */
+function isSafariBrowser() {
+  const ua = navigator.userAgent || '';
+  return /^((?!chrome|android|crios|fxios|edgios).)*safari/i.test(ua);
+}
+
+/**
+ * 일부 모바일 인앱 브라우저(카카오톡 등)는 Web Worker 생성을 제한해
+ * 기본 로드가 실패할 수 있다. 그 경우 워커 없이(메인 스레드) 재시도한다.
+ */
+function loadPdfDocument(url) {
+  const initialParams = isSafariBrowser() ? { url, disableRange: true, disableStream: true } : url;
+
+  return pdfjsLib.getDocument(initialParams).promise.catch((error) => {
+    if (error && error.name === 'RenderingCancelledException') throw error;
+    return pdfjsLib.getDocument({ url, disableWorker: true, disableRange: true, disableStream: true }).promise;
   });
 }
 

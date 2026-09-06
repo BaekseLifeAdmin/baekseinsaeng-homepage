@@ -411,11 +411,14 @@
   .board-table th:nth-child(3),
   .board-table td:nth-child(3) {
     width: 96px;
+    white-space: normal;
   }
 
   .board-keyword-tag {
     padding: 3px 8px;
     font-size: 0.72rem;
+    white-space: normal;
+    word-break: keep-all;
   }
 
   .board-table th:last-child,
