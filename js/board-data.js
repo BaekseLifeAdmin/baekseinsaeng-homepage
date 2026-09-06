@@ -1,4 +1,4 @@
-const BOARD_API_URL = 'https://script.google.com/macros/s/AKfycbz6hVmhNBZXOp-urmO72MouDRqc5aWxO3qCqq_MGA_6ISs4aY20WvXYbfer1Ncr7tdP8A/exec';
+const BOARD_API_URL = 'https://script.google.com/macros/s/AKfycbw6LUMjuGqqdn3J7d3qnkWicpPlXgTZ7zYaXuy2fCDCn7qPtSPErAClgcpjlGtj9dcDkg/exec';
 
 async function fetchBoardApi(parameters = {}) {
   const url = new URL(BOARD_API_URL);
@@ -69,6 +69,19 @@ async function getBoardPosts(page = 1, limit = 9) {
     total: safeTotal,
     totalPages: safeTotalPages
   };
+}
+
+async function getAllBoardPosts() {
+  const firstPage = await getBoardPosts(1, 50);
+  const allPosts = firstPage.posts.slice();
+  const totalPages = Math.max(1, Number(firstPage.totalPages) || 1);
+
+  for (let page = 2; page <= totalPages; page += 1) {
+    const nextPage = await getBoardPosts(page, 50);
+    allPosts.push(...nextPage.posts);
+  }
+
+  return allPosts;
 }
 
 async function getBoardPostById(postId) {

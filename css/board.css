@@ -39,10 +39,164 @@
   color: var(--text-light);
 }
 
+/* ── Board filter bar (category tabs) + search (in toolbar) ──── */
+.board-filter-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.board-visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.board-category-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.board-category-tab {
+  flex: 0 0 auto;
+  padding: 9px 16px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--white);
+  color: var(--text-body);
+  font-size: 0.88rem;
+  font-weight: 600;
+  white-space: nowrap;
+  transition: background var(--transition), color var(--transition), border-color var(--transition);
+}
+
+.board-category-tab:hover {
+  border-color: var(--teal);
+  color: var(--teal);
+}
+
+.board-category-tab.is-active {
+  background: var(--navy);
+  border-color: var(--navy);
+  color: var(--white);
+}
+
+.board-search-form {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex: 0 0 auto;
+  width: 100%;
+  max-width: 360px;
+}
+
+.board-search-input {
+  flex: 1 1 auto;
+  min-width: 0;
+  height: 42px;
+  padding: 0 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--white);
+  color: var(--text-body);
+  font-size: 0.9rem;
+  font-family: inherit;
+  transition: border-color var(--transition);
+}
+
+.board-search-input:focus {
+  outline: none;
+  border-color: var(--teal);
+}
+
+.board-search-input::-webkit-search-cancel-button {
+  display: none;
+}
+
+.board-search-clear {
+  flex: 0 0 auto;
+  width: 42px;
+  height: 42px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--white);
+  color: var(--text-light);
+  font-size: 1.1rem;
+  line-height: 1;
+  transition: border-color var(--transition), color var(--transition);
+}
+
+.board-search-clear:hover {
+  border-color: var(--teal);
+  color: var(--teal);
+}
+
+.board-search-submit {
+  flex: 0 0 auto;
+  height: 42px;
+  padding: 0 18px;
+  border: 1px solid var(--navy);
+  border-radius: var(--radius-sm);
+  background: var(--navy);
+  color: var(--white);
+  font-size: 0.9rem;
+  font-weight: 600;
+  white-space: nowrap;
+  transition: background var(--transition), border-color var(--transition);
+}
+
+.board-search-submit:hover {
+  background: var(--navy-medium);
+  border-color: var(--navy-medium);
+}
+
+@media (max-width: 640px) {
+  .board-filter-bar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 14px;
+  }
+
+  .board-category-tabs {
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    width: 100%;
+    min-width: 0;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+    padding-bottom: 4px;
+    margin: 0 -4px;
+    padding-left: 4px;
+    padding-right: 4px;
+  }
+
+  .board-category-tab {
+    font-size: 0.82rem;
+    padding: 8px 14px;
+  }
+
+  .board-search-form {
+    max-width: none;
+  }
+}
+
 /* ── Board table ──────────────────────────────────────────── */
 .board-table {
   width: 100%;
-  min-width: 460px;
+  min-width: 560px;
   border-collapse: collapse;
 }
 
@@ -92,6 +246,13 @@
   font-variant-numeric: tabular-nums;
 }
 
+.board-table th:nth-child(3),
+.board-table td:nth-child(3) {
+  width: 150px;
+  text-align: center;
+  white-space: nowrap;
+}
+
 .board-table th:last-child,
 .board-table td:last-child {
   width: 120px;
@@ -99,6 +260,17 @@
   color: var(--text-light);
   white-space: nowrap;
   font-variant-numeric: tabular-nums;
+}
+
+.board-keyword-tag {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: var(--blue-gray);
+  color: var(--navy);
+  font-size: 0.78rem;
+  font-weight: 600;
+  white-space: nowrap;
 }
 
 .board-table tbody tr:hover td {
@@ -234,6 +406,16 @@
   .board-table th:first-child,
   .board-table td:first-child {
     width: 46px;
+  }
+
+  .board-table th:nth-child(3),
+  .board-table td:nth-child(3) {
+    width: 96px;
+  }
+
+  .board-keyword-tag {
+    padding: 3px 8px;
+    font-size: 0.72rem;
   }
 
   .board-table th:last-child,

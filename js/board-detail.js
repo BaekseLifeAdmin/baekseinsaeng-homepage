@@ -1,3 +1,7 @@
+if (typeof pdfjsLib !== 'undefined') {
+  pdfjsLib.GlobalWorkerOptions.workerSrc = 'js/vendor/pdfjs/pdf.worker.min.js';
+}
+
 async function initializeBoardDetail() {
   const detailContent = document.getElementById('boardDetailContent');
   const relatedPostsEl = document.getElementById('boardRelatedPosts');
@@ -46,6 +50,11 @@ async function initializeBoardDetail() {
       }, { once: true });
     }
 
+    const pdfMedia = detailContent.querySelector('.board-detail-media-pdf');
+    if (pdfMedia) {
+      initBoardDetailPdfViewer(pdfMedia);
+    }
+
     if (relatedPostsEl) {
       relatedPostsEl.innerHTML = `
         <div class="board-related-item">
@@ -80,8 +89,22 @@ function renderDetailImage(imageUrl, altText) {
   if (!isSafeImageUrl(imageUrl)) {
     return '';
   }
-  const safeAlt = escapeText(altText || '게시글 이미지');
   const safeUrl = escapeText(imageUrl);
+
+  if (isPdfUrl(imageUrl)) {
+    const safeTitle = escapeText(altText || '첨부 문서');
+    return `
+      <div class="board-detail-media board-detail-media-pdf" data-pdf-url="${safeUrl}" data-pdf-title="${safeTitle}">
+        <div class="board-pdf-viewer">
+          <div class="board-pdf-state" role="status">PDF를 불러오는 중입니다...</div>
+          <div class="board-pdf-pages"></div>
+        </div>
+        <hr class="board-detail-divider">
+      </div>
+    `;
+  }
+
+  const safeAlt = escapeText(altText || '게시글 이미지');
 
   return `
     <div class="board-detail-media">
@@ -89,6 +112,105 @@ function renderDetailImage(imageUrl, altText) {
       <hr class="board-detail-divider">
     </div>
   `;
+}
+
+function isPdfUrl(value) {
+  if (typeof value !== 'string') return false;
+  try {
+    const parsed = new URL(value, window.location.href);
+    return /\.pdf$/i.test(parsed.pathname);
+  } catch (error) {
+    const withoutHash = value.split('#')[0].split('?')[0];
+    return /\.pdf$/i.test(withoutHash);
+  }
+}
+
+function initBoardDetailPdfViewer(mediaEl) {
+  const url = mediaEl.getAttribute('data-pdf-url');
+  const stateEl = mediaEl.querySelector('.board-pdf-state');
+  const pagesEl = mediaEl.querySelector('.board-pdf-pages');
+
+  if (!url || !pagesEl) return;
+
+  if (typeof pdfjsLib === 'undefined') {
+    showPdfError(mediaEl, 'PDF 뷰어를 불러오지 못했습니다.');
+    return;
+  }
+
+  let pdfDoc = null;
+  let renderGeneration = 0;
+
+  async function renderAllPages() {
+    const myGeneration = ++renderGeneration;
+    pagesEl.innerHTML = '';
+
+    const containerWidth = pagesEl.clientWidth || mediaEl.clientWidth || 320;
+    const outputScale = window.devicePixelRatio || 1;
+
+    for (let pageNumber = 1; pageNumber <= pdfDoc.numPages; pageNumber++) {
+      if (myGeneration !== renderGeneration) return;
+
+      const page = await pdfDoc.getPage(pageNumber);
+      if (myGeneration !== renderGeneration) return;
+
+      const unscaledViewport = page.getViewport({ scale: 1 });
+      const fitScale = containerWidth > 0 ? containerWidth / unscaledViewport.width : 1;
+      const viewport = page.getViewport({ scale: fitScale });
+
+      const pageWrap = document.createElement('div');
+      pageWrap.className = 'board-pdf-page';
+
+      const canvas = document.createElement('canvas');
+      canvas.className = 'board-pdf-canvas';
+      canvas.width = Math.floor(viewport.width * outputScale);
+      canvas.height = Math.floor(viewport.height * outputScale);
+      canvas.style.width = `${Math.floor(viewport.width)}px`;
+      canvas.style.height = `${Math.floor(viewport.height)}px`;
+      pageWrap.appendChild(canvas);
+      pagesEl.appendChild(pageWrap);
+
+      if (pageNumber === 1 && stateEl) {
+        stateEl.hidden = true;
+      }
+
+      const context = canvas.getContext('2d');
+      const transform = outputScale !== 1 ? [outputScale, 0, 0, outputScale, 0, 0] : null;
+
+      await page.render({ canvasContext: context, transform, viewport }).promise;
+    }
+  }
+
+  let resizeTimer = null;
+  window.addEventListener('resize', () => {
+    if (!pdfDoc) return;
+    window.clearTimeout(resizeTimer);
+    resizeTimer = window.setTimeout(() => {
+      renderAllPages().catch((error) => {
+        if (error && error.name === 'RenderingCancelledException') return;
+        showPdfError(mediaEl, 'PDF 페이지를 표시하지 못했습니다.');
+      });
+    }, 250);
+  });
+
+  pdfjsLib.getDocument(url).promise.then((doc) => {
+    pdfDoc = doc;
+    return renderAllPages();
+  }).catch((error) => {
+    if (error && error.name === 'RenderingCancelledException') return;
+    showPdfError(mediaEl, 'PDF를 불러오지 못했습니다. 잠시 후 다시 시도해 주세요.');
+  });
+}
+
+function showPdfError(mediaEl, message) {
+  const stateEl = mediaEl.querySelector('.board-pdf-state');
+  const pagesEl = mediaEl.querySelector('.board-pdf-pages');
+  if (pagesEl) pagesEl.innerHTML = '';
+  if (stateEl) {
+    stateEl.hidden = false;
+    stateEl.className = 'board-pdf-state board-pdf-state-error';
+    stateEl.setAttribute('role', 'alert');
+    stateEl.textContent = message;
+  }
 }
 
 function escapeText(value) {
