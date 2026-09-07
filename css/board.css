@@ -2,6 +2,17 @@
   --board-gap: 24px;
 }
 
+/*
+  기존 게시판(Google Sheets 연동) 임시 비활성화 스위치 (2026-09-07)
+  - board.html의 .board-section에 .board-legacy-hidden 클래스를 추가해 이 규칙으로 화면 전체를 숨깁니다.
+  - Google Sheets 연동, 검색/카테고리 필터, 페이지네이션, PDF 관련 코드는 전부 그대로 보존되어 있습니다.
+  - 재활성화 방법: board.html에서 <section class="board-section board-legacy-hidden"> 중
+    board-legacy-hidden 클래스만 제거하면 기존 게시판 UI가 그대로 복구됩니다.
+*/
+.board-legacy-hidden {
+  display: none !important;
+}
+
 .board-main {
   padding-bottom: 96px;
 }

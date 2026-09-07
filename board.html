@@ -11,6 +11,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css?v=20260904-r5">
   <link rel="stylesheet" href="css/board.css?v=20260906-r20">
+  <link rel="stylesheet" href="css/story.css?v=20260907-r12">
   <link rel="stylesheet" href="css/consistency.css?v=20260905-r197">
   <link rel="stylesheet" href="css/no-copy.css?v=20260905-r1">
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' https:; connect-src 'self' https://script.google.com https://script.googleusercontent.com; object-src 'none'; base-uri 'self'; form-action 'self';">
@@ -32,7 +33,13 @@
   </section>
 
   <main class="board-main">
-    <section class="board-section">
+    <!--
+      board-legacy-hidden: 기존 Google Sheets 연동 게시판 UI 임시 비활성화 (2026-09-07).
+      추후 새 블로그형 콘텐츠 목록으로 교체하기 전까지 화면 노출만 끈 상태입니다.
+      기존 게시판을 다시 활성화하려면 아래 class="board-section board-legacy-hidden"에서
+      board-legacy-hidden만 제거하세요. (css/board.css의 .board-legacy-hidden 규칙 참고)
+    -->
+    <section class="board-section board-legacy-hidden">
       <div class="container">
         <div class="board-toolbar" aria-live="polite">
           <p class="board-summary" id="boardSummary">게시글을 불러오는 중입니다.</p>
@@ -62,11 +69,36 @@
         <nav id="boardPagination" class="board-pagination" aria-label="페이지 네비게이션"></nav>
       </div>
     </section>
+
+    <!--
+      새 블로그형 「방문간호 이야기」 첫 화면.
+      데이터는 js/story-data.js, 렌더링은 js/story.js가 담당하며 기존 게시판(위 board-section)과는
+      완전히 별개로 동작한다. 콘텐츠는 2주 간격으로 STORY_POSTS 배열에 누적된다.
+    -->
+    <section class="story-section">
+      <div class="container">
+        <div class="section-header">
+          <p class="section-tag">Recent Story</p>
+          <h2>최근 이야기</h2>
+        </div>
+        <div id="storyFeatured" class="story-featured"></div>
+
+        <div id="storyListWrap" class="story-list-wrap" hidden>
+          <div class="section-header">
+            <p class="section-tag">Archive</p>
+            <h2>이야기</h2>
+          </div>
+          <ul id="storyList" class="story-list"></ul>
+        </div>
+      </div>
+    </section>
   </main>
 
   <div id="footer-placeholder"></div>
   <script src="js/board-data.js"></script>
   <script src="js/board.js?v=20260906-r11"></script>
+  <script src="js/story-data.js?v=20260907-r2"></script>
+  <script src="js/story.js?v=20260907-r3"></script>
   <script src="js/main.js?v=20260904-r20"></script>
   <script src="js/no-copy.js?v=20260905-r1"></script>
 </body>
