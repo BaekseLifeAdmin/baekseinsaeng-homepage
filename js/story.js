@@ -37,6 +37,10 @@ function renderFeaturedCard(post) {
       </div>
   ` : '';
 
+  const hintHtml = toc.length
+    ? '<span class="story-featured-hint">오른쪽 항목을 선택하면 해당 주제의 상세 글을 확인할 수 있습니다.</span>'
+    : '';
+
   return `
     <div class="story-featured-card">
       <div class="story-featured-body">
@@ -44,7 +48,7 @@ function renderFeaturedCard(post) {
         <h2 class="story-featured-title"><a href="${detailUrl}">${escapeStoryText(post.title)}</a></h2>
         <p class="story-featured-summary">${escapeStoryText(post.summary)}</p>
         <span class="story-date">${escapeStoryText(post.date)}</span>
-        <a class="story-featured-readmore" href="${detailUrl}">자세히 보기</a>
+        ${hintHtml}
       </div>
       ${tocHtml}
     </div>

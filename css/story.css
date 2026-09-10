@@ -135,23 +135,17 @@
   color: var(--story-gray);
 }
 
-.story-featured-readmore {
+.story-featured-hint {
   margin-top: 4px;
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  font-size: .88rem;
-  font-weight: 700;
-  color: var(--story-navy);
+  font-size: .86rem;
+  color: var(--story-gray);
 }
 
-.story-featured-readmore::after {
+.story-featured-hint::after {
   content: "→";
-  transition: transform var(--transition);
-}
-
-.story-featured-card:hover .story-featured-readmore::after {
-  transform: translateX(4px);
 }
 
 /* ===== 목록 화면: 이전 글 목록 ===== */

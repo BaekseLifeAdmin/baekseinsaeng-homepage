@@ -11,19 +11,14 @@
 */
 
 /*
-  URL 해시(#sec-N)를 곧바로 기억해두고 주소에서 지운다. 해시를 그대로 두면, 아래에서
-  해당 섹션의 hidden 속성을 제거하는 순간 브라우저가 "그 위치로 스크롤"하는 기본 동작을
-  다시 시도해 본문 내용까지 화면이 넘어가 버린다(우리가 원하는 동작이 아님). 상세 페이지는
-  항상 글 제목과 "이 글에서 다루는 내용" 목차부터 보여야 하므로, 해시는 어떤 섹션을 펼칠지
-  결정하는 데만 쓰고 화면 스크롤에는 관여하지 않게 한다.
+  URL 해시(#sec-N)는 js/story-early-hash.js가 <head>에서 이미 떼어냈다(자세한 이유는 그
+  파일 주석 참고). 여기서는 그때 저장해둔 값을 읽기만 한다.
 */
-const STORY_DETAIL_INITIAL_HASH = (window.location.hash || '').replace(/^#/, '');
-if (STORY_DETAIL_INITIAL_HASH && window.history && window.history.replaceState) {
-  window.history.replaceState(null, '', window.location.pathname + window.location.search);
-}
+const STORY_DETAIL_INITIAL_HASH = window.__storyInitialHash || '';
 
 function initializeStoryDetailToc() {
   const articleBody = document.querySelector('.story-article-body');
+  const articleHead = document.querySelector('.story-article-head');
   const toc = document.querySelector('.story-toc');
 
   if (!articleBody || !toc) return;
@@ -51,6 +46,20 @@ function initializeStoryDetailToc() {
     });
   }
 
+  /*
+    처음 페이지에 들어올 때(스크롤 이동 없음)와 목차를 눌러 페이지 안에서 다른 섹션으로
+    이동할 때가 서로 다른 방식으로 위치를 잡으면(하나는 브라우저 기본 위치, 하나는 JS 계산값)
+    두 시작점이 미묘하게 어긋난다. 두 경우 모두 반드시 이 함수 하나로만 스크롤 위치를
+    맞춰서 항상 같은 지점에서 시작하게 한다.
+  */
+  function scrollToArticleStart(smooth) {
+    const scrollTarget = articleHead || articleBody;
+    const siteHeader = document.querySelector('.site-header');
+    const headerOffset = siteHeader ? siteHeader.offsetHeight : 0;
+    const targetTop = scrollTarget.getBoundingClientRect().top + window.pageYOffset - headerOffset;
+    window.scrollTo({ top: targetTop, behavior: smooth ? 'smooth' : 'auto' });
+  }
+
   tocLinks.forEach((link) => {
     link.addEventListener('click', (event) => {
       const targetId = getTargetId(link);
@@ -58,6 +67,7 @@ function initializeStoryDetailToc() {
 
       event.preventDefault();
       showSection(targetId);
+      scrollToArticleStart(true);
     });
   });
 
@@ -67,11 +77,12 @@ function initializeStoryDetailToc() {
     실제로 고른 콘텐츠가 아니라 다른 섹션이 표시되는 문제가 생기므로, 진입 시 URL 해시와
     일치하는 섹션이 있으면 그 섹션을 기본으로 보여준다.
 
-    단, 화면 스크롤 위치는 건드리지 않는다 — 상세 페이지는 항상 글 제목(방문간호 이야기 01)과
-    "이 글에서 다루는 내용" 목차부터 보여야 하며, 본문 내용으로 강제 스크롤하지 않는다.
+    진입 직후에도 scrollToArticleStart를 그대로 호출해(단, 애니메이션 없이 즉시) 목차 클릭
+    때와 완전히 같은 위치에서 시작하게 한다.
   */
   const hasMatchingSection = sections.some((section) => section.id === STORY_DETAIL_INITIAL_HASH);
   showSection(hasMatchingSection ? STORY_DETAIL_INITIAL_HASH : sections[0].id);
+  scrollToArticleStart(false);
 }
 
 if (document.querySelector('.story-toc') && document.querySelector('.story-article-body')) {
